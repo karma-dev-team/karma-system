@@ -1,9 +1,9 @@
 from abc import abstractmethod
 
-from app.base.value_objects.ids import UIDValueObject
+from app.user.dto.user import GetUserDTO, UserDTO
 
 
 class AbstractUserService:
 	@abstractmethod
-	async def get_user(self, user_id: UIDValueObject):
+	async def get_user(self, user_id: GetUserDTO) -> UserDTO:
 		pass
