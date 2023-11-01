@@ -1,15 +1,22 @@
-def get_app() -> FastAPI:
-	load_database()
+from fastapi import FastAPI, APIRouter
 
-	load_value_objects()
+from app.module.module import configure_module_loader
+
+
+def get_app() -> FastAPI:
+	registry, session = load_database()
 
 	app = FastAPI()
 
 	router = APIRouter()
 	app.include_router(router)
 
-	load_providers(app)
-	load_routes(router)
+	module = configure_module_loader(workflow_data={
+		'registry': registry,
+		'app': app,
+		'session': session,
+	})
+	module.load()
 
 	return app
 

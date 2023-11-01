@@ -1,5 +1,5 @@
-from app.base.value_objects.ids import UIDValueObject
+from app.user.value_objects import UserID
 
 
 class UserEntity:
-	id: UIDValueObject
+	id: UserID
