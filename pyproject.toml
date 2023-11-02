@@ -6,11 +6,12 @@ authors = ["pikoUsername <galymzhan.amantaj@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.10"
+python = ">=3.10,<3.13"
 fastapi = "^0.104.1"
 asyncpg = "^0.28.0"
 sqlalchemy = "^2.0.22"
 attrs = "^23.1.0"
+numpy = "^1.26.1"
 
 
 [build-system]
