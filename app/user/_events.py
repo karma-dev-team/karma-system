@@ -1,6 +1,6 @@
-from app.base.event import event_wrapper
-from app.base.events.dispatcher import EventDispatcher
-from app.base.value_objects.ids import UIDValueObject
+from app.infrastructure.event import event_wrapper
+from app.infrastructure.events.dispatcher import EventDispatcher
+from app.infrastructure.value_objects.ids import UIDValueObject
 
 
 @event_wrapper

@@ -1,4 +1,4 @@
-from app.base.typeid import TypeID
+from app.infrastructure.typeid import TypeID
 
 
 class UserID(TypeID):

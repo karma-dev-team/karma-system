@@ -1,4 +1,4 @@
-from app.base.dto import DTO
+from app.infrastructure.dto import DTO
 from app.user.value_objects import UserID
 
 

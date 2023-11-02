@@ -1,4 +1,4 @@
-from app.base.use_cases import UseCase
+from app.infrastructure.use_cases import UseCase
 from app.user.dto.user import GetUserDTO, UserDTO
 
 
