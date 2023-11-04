@@ -1,6 +1,3 @@
-import logging
-from typing import Tuple
-
 from pydantic import BaseModel
 
 

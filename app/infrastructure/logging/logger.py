@@ -1,10 +1,9 @@
 import logging
 import sys
-from pathlib import Path
 
 from loguru import logger
 
-from app.infrastructure.logger.config import LoggingConfig
+from app.infrastructure.logging.config import LoggingConfig
 
 
 _loglevel_mapping = {

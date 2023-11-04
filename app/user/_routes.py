@@ -7,7 +7,7 @@ from app.infrastructure.ioc import AbstractIoContainer
 router = APIRouter()
 
 
-@router.get("")
+@router.get("/")
 def get_user_by_id(
 	ioc: Annotated[AbstractIoContainer, Depends()],
 ):

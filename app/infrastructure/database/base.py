@@ -3,8 +3,6 @@ from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import registry as registry_class
 
-from app.infrastructure.database.config import DatabaseConfig
-
 
 def create_registry() -> registry_class:
 	convention = {

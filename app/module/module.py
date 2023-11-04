@@ -1,6 +1,8 @@
 from typing import Any, Callable
 import inspect
 
+from app import user
+
 
 def filter_workflow(params: list[str], workflow: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in workflow.items()
@@ -21,6 +23,8 @@ class ModuleLoader:
 
 
 def configure_module_loader(workflow_data: dict[str, Any]) -> ModuleLoader:
-    module = ModuleLoader(modules=[], workflow_data=workflow_data)
+    module = ModuleLoader(modules=[
+        user.load_module
+    ], workflow_data=workflow_data)
 
     return module
