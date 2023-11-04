@@ -1,5 +1,5 @@
+import uvicorn
 from fastapi import FastAPI
-from loguru import logger
 
 from app.infrastructure.api.app import create_app
 from app.infrastructure.config import load_config
@@ -13,7 +13,7 @@ def get_app() -> FastAPI:
 	session, registry = load_database(config.db)
 
 	app, router = create_app(config.api, config.debug)
-	configure_logging(config.logging)
+	app.logger = configure_logging(config.logging)
 
 	module = configure_module_loader(workflow_data={
 		'registry': registry,
@@ -25,3 +25,5 @@ def get_app() -> FastAPI:
 
 	return app
 
+
+app = get_app()
