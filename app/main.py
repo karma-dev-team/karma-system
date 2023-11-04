@@ -1,4 +1,5 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI
+from loguru import logger
 
 from app.infrastructure.api.app import create_app
 from app.infrastructure.config import load_config
