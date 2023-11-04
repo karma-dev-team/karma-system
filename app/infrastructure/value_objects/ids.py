@@ -1,6 +1,6 @@
-from app.infrastructure.value_object import value_object
+from app.infrastructure.value_objects.base import value_object, ValueObject
 
 
 @value_object
-class IPUIDValueObject:
+class IPUIDValueObject(ValueObject[str]):
 	pass

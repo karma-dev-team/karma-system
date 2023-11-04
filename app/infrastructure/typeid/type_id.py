@@ -23,6 +23,17 @@ class TypeID:
 		self.suffix = uuid.uuid4() if not suffix else suffix
 
 	@classmethod
+	def generate(cls, type_: str = "uuid4") -> "TypeID":
+		if type_ == "uuid4":
+			return cls(suffix=uuid.uuid4())
+		elif type_ == "uuid7":
+			# install uuid6
+			# return cls(suffix=uuid6.uuid7())
+			pass
+		else:
+			raise ValueError("Not supported uuid")
+
+	@classmethod
 	def from_uuid(cls, uuid_instance: UUID) -> "TypeID":
 		return TypeID(suffix=uuid_instance)
 
