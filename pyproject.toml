@@ -16,6 +16,7 @@ orjson = "^3.9.10"
 toml = "^0.10.2"
 loguru = "^0.7.2"
 uvicorn = "^0.23.2"
+alembic = "^1.12.1"
 
 
 [build-system]

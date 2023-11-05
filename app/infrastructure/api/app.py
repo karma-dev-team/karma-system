@@ -10,6 +10,4 @@ def create_app(config: APIConfig, debug: bool = True) -> Tuple[FastAPI, APIRoute
 
     app = FastAPI(**config.fastapi_kwargs, debug=debug)
 
-    app.include_router(router, prefix=config.api_prefix)
-
     return app, router

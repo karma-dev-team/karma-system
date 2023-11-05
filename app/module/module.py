@@ -13,8 +13,10 @@ class ModuleLoader:
     def __init__(self, modules: list[Callable[..., None]], workflow_data: dict[str, Any]):
         self.modules = modules
         self.workflow_data = workflow_data
+        self.workflow_data["data"] = self.workflow_data
 
     def load(self):
+
         for module in self.modules:
             sig = inspect.signature(module)
 

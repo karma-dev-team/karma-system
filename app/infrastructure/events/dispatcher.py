@@ -1,9 +1,9 @@
 from abc import abstractmethod
 from typing import List, Type
 
-from app.domain.common.events.event import Event
-from app.domain.common.events.observer import Handler, Observer
-from app.infrastructure.logger.logging import get_logger
+from app.infrastructure.events.event import Event
+from app.infrastructure.events.observer import Handler, Observer
+from app.infrastructure.logging.logger import get_logger
 
 
 class EventDispatcher:
