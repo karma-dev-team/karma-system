@@ -12,7 +12,7 @@ from app.infrastructure.logging.config import LoggingConfig
 class GlobalConfig(BaseModel):
 	db: DatabaseConfig
 	logging: LoggingConfig
-	api: APIConfig | None
+	api: APIConfig
 
 	debug: bool = True
 

@@ -16,7 +16,6 @@ def get_app() -> FastAPI:
 	app, router = create_app(config.api, config.debug)
 	configure_logging(config.logging)
 	event_dispatcher = configure_event_dispatcher()
-	app.logger = configure_logging(config.logging)
 
 	module = configure_module_loader(workflow_data={
 		'registry': registry,
@@ -32,4 +31,5 @@ def get_app() -> FastAPI:
 	return app
 
 
+# use this for proper logging
 app = get_app()

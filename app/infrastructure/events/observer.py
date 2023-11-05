@@ -1,10 +1,10 @@
 import functools
-from typing import Any, Awaitable, Callable, Dict, List, Type
+from typing import Any, Callable, Dict, List, Type
 
 from .base import MiddlewareType, NextMiddlewareType
 from .event import Event
 
-Handler = Callable[[Event, Dict[str, Any]], Awaitable[Any]]
+Handler = Callable
 
 
 class Observer:

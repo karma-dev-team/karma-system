@@ -23,7 +23,7 @@ class ValueObject(Generic[VT]):
 
     @classmethod
     def validate(cls, v: VT) -> "ValueObject":
-        return cls(v)
+        return cls(v)  # noqa
 
     @classmethod
     def __get_validators__(cls):

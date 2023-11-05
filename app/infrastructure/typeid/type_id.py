@@ -26,10 +26,10 @@ class TypeID:
 	def generate(cls, type_: str = "uuid4") -> "TypeID":
 		if type_ == "uuid4":
 			return cls(suffix=uuid.uuid4())
-		elif type_ == "uuid7":
-			# install uuid6
-			# return cls(suffix=uuid6.uuid7())
-			pass
+		# elif type_ == "uuid7":
+		# 	# install uuid6
+		# 	# return cls(suffix=uuid6.uuid7())
+		# 	pass
 		else:
 			raise ValueError("Not supported uuid")
 
@@ -52,7 +52,7 @@ class TypeID:
 		value = ""
 		if self.prefix:
 			value += f"{self.prefix}_"
-		value += self.suffix
+		value += str(self.suffix)
 		return value
 
 	def __eq__(self, value: object) -> bool:
@@ -64,7 +64,7 @@ class TypeID:
 		return hash((self.prefix, self.suffix))
 
 
-def validate_prefix(prefix: str) -> NoReturn:
+def validate_prefix(prefix: str) -> None:
 	if not prefix.islower() or not prefix.isascii() or len(prefix) > PREFIX_MAX_LEN or not prefix.isalpha():
 		raise PrefixValidationException(f"Invalid prefix: {prefix}.")
 
