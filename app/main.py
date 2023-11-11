@@ -1,11 +1,11 @@
-import uvicorn
 from fastapi import FastAPI
 
-from app.infrastructure.api.app import create_app
-from app.infrastructure.config import load_config
-from app.infrastructure.database import load_database
-from app.infrastructure.events.main import configure_event_dispatcher
-from app.infrastructure.logging.logger import configure_logging
+
+from app.base.api.app import create_app
+from app.base.config import load_config
+from app.base.database import load_database
+from app.base.events.main import configure_event_dispatcher
+from app.base.logging.logger import configure_logging
 from app.module.module import configure_module_loader
 
 

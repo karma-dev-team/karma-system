@@ -1,4 +1,4 @@
-from app.infrastructure.use_cases import UseCase
+from app.base.use_cases import UseCase
 
 
 class CheckPermissionUseCase(UseCase):

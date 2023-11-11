@@ -1,7 +1,7 @@
 from attrs import field
 
-from app.infrastructure.entity import TimedEntity
-from app.infrastructure.value_objects.ids import IPUIDValueObject
+from app.base.entity import TimedEntity
+from app.base.value_objects.ids import IPUIDValueObject
 from app.server.value_objects import ServerID
 
 

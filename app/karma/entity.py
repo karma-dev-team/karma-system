@@ -1,4 +1,4 @@
-from app.infrastructure.entity import entity
+from app.base.entity import entity
 
 
 @entity

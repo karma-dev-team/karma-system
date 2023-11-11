@@ -1,8 +1,8 @@
 from typing import Any, Dict
 
-from app.infrastructure.event import event_wrapper
-from app.infrastructure.events.dispatcher import EventDispatcher
-from app.infrastructure.events.event import Event
+from app.base.event import event_wrapper
+from app.base.events.dispatcher import EventDispatcher
+from app.base.events.event import Event
 from app.user.value_objects import UserID
 
 

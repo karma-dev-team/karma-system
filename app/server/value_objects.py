@@ -1,4 +1,4 @@
-from app.infrastructure.typeid import TypeID
+from app.base.typeid import TypeID
 
 
 class ServerID(TypeID):

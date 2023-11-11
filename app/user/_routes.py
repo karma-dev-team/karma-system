@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from app.infrastructure.ioc import AbstractIoContainer
+from app.base.ioc import AbstractIoContainer
 
 router = APIRouter()
 
