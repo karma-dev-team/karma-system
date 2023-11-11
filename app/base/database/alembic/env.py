@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.base.config import load_config
 from app.base.database import load_database
+from app.base.database.models import load_all_models
 from app.base.logging.logger import get_logger
 
 # i made it bc alembic will not allow project files
@@ -16,6 +17,8 @@ sys.path.append(str(pathlib.Path(__file__).resolve().parents[3]))
 
 app_config = load_config('./deploy/config.toml')
 session, registry = load_database(app_config.db)
+
+load_all_models(registry)
 
 config = context.config
 logger = get_logger(__name__)
