@@ -32,4 +32,3 @@ def load_config(path: str | Path) -> GlobalConfig:
 		data = toml.loads(s)
 
 	return GlobalConfig(**data)
-

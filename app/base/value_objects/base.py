@@ -23,7 +23,7 @@ class ValueObject(Generic[VT]):
 
     @classmethod
     def validate(cls, v: VT) -> "ValueObject":
-        return cls(v)  # noqa
+        return cls(v)
 
     @classmethod
     def __get_validators__(cls):
@@ -39,3 +39,4 @@ class ValueObject(Generic[VT]):
     def _validate(self) -> None:
         """This method checks that a value is valid to create this value object"""
         pass
+
