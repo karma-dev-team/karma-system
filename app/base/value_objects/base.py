@@ -1,6 +1,8 @@
-from typing import Generic, TypeVar, Any
+from typing import Generic, TypeVar, Any, Type, Dict
 
 from attr import define
+from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
+from pydantic_core import CoreSchema
 
 value_object = define(kw_only=True, hash=False)
 
@@ -26,11 +28,17 @@ class ValueObject(Generic[VT]):
         return cls(v)
 
     @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
+    def __get_pydantic_core_schema__(
+        cls,
+        source: Type[Any],
+        handler: GetCoreSchemaHandler,
+    ):
+        pass
 
     @classmethod
-    def __modify_schema__(cls, field_schema: dict[str, Any]):
+    def __get_pydantic_json_schema__(
+        cls, core_schema: CoreSchema, handler: GetJsonSchemaHandler,
+    ) -> Dict[str, Any]:
         pass
 
     def __attrs_post_init__(self) -> None:

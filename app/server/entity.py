@@ -1,12 +1,17 @@
 from attrs import field
 
-from app.base.entity import TimedEntity
+from app.base.aggregate import Aggregate
+from app.base.entity import TimedEntity, entity
 from app.base.value_objects.ids import IPUIDValueObject
 from app.server.value_objects import ServerID
+from app.user.entities import UserEntity
+from app.user.value_objects import UserID
 
 
-class ServerEntity(TimedEntity):
+@entity
+class ServerEntity(TimedEntity, Aggregate):
 	id: ServerID = field(factory=ServerID.generate)
 	name: str
 	ip: IPUIDValueObject
-
+	owner: UserEntity
+	owner_id: UserID

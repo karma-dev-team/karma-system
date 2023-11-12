@@ -1,3 +1,5 @@
+from pydantic import GetCoreSchemaHandler
+
 from app.base.value_objects.base import value_object, ValueObject
 
 
