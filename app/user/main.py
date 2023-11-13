@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from sqlalchemy.orm import registry as reg_class
 
-from . import _routes, _models, _events
+from . import _routes, models, _events
 from app.base.events.dispatcher import EventDispatcher
 
 

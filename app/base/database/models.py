@@ -21,8 +21,8 @@ def timed_columns() -> Sequence[Column]:
 
 
 def load_all_models(registry: registry_class):
-    from app.user._models import load_models as load_users
-    from app.server._models import load_models as load_server
+    from app.user.models import load_models as load_users
+    from app.server.models import load_models as load_server
 
     load_users(registry)
     load_server(registry)
