@@ -1,6 +1,6 @@
 import abc
 
-from app.server.dto.server import GetServerIdDTO
+from app.server.dto.server import GetServerIdDTO, ServerDTO
 
 
 class AbstractServerService:

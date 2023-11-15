@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, Extra
 
 
@@ -8,3 +10,8 @@ class DTO(BaseModel):
         extra = Extra.forbid
         frozen = True
         orm_mode = True
+
+
+class TimedDTO(BaseModel):
+    created_at: datetime
+    updated_at: datetime | None 

@@ -17,3 +17,4 @@ class ServerEntity(TimedEntity, Aggregate):
 	owner: UserEntity
 	owner_id: UserID
 	karma: ServerKarmaAmount
+	category_id: CategoryID
