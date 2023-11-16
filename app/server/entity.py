@@ -3,6 +3,7 @@ from attrs import field
 from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity, entity
 from app.base.value_objects.ids import IPUIDValueObject
+from app.games.value_objects import GameID
 from app.server.value_objects import ServerID, ServerKarmaAmount
 from app.user.entities import UserEntity
 from app.user.value_objects import UserID
@@ -17,4 +18,4 @@ class ServerEntity(TimedEntity, Aggregate):
 	owner: UserEntity
 	owner_id: UserID
 	karma: ServerKarmaAmount
-	category_id: CategoryID
+	game_id: GameID

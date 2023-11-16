@@ -1,8 +1,10 @@
+import decimal
+
 import numpy as np
 
 from app.karma.consts import MAX_BAN_THRESHOLD, SCALE_FACTOR
 
-Number = int | float
+Number = int | float | decimal.Decimal
 
 
 def timed_sigmoid_function(time: Number, threshold: Number):

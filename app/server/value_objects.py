@@ -8,10 +8,6 @@ class ServerID(TypeID):
 	prefix = "server"
 
 
-class IPv4Address:
-	pass
-
-
 DecimalOrNumber = Decimal | float | int
 
 

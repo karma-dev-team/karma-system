@@ -8,5 +8,5 @@ from app.base.events.dispatcher import EventDispatcher
 def load_module(router: APIRouter, registry: reg_class, event_dispatcher: EventDispatcher):
 	router.include_router(_routes.router)
 
-	_models.load_models(registry)
+	models.load_models(registry)
 	_events.load_handler_events(event_dispatcher)

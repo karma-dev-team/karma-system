@@ -1,5 +1,8 @@
+from typing import Sequence
+
 from app.base.dto import DTO
 from app.base.value_objects.ids import IPUIDValueObject
+from app.games.value_objects import GameID
 from app.server.value_objects import ServerID, ServerKarmaAmount
 from app.user.dto.user import UserDTO
 from app.user.value_objects import UserID
@@ -17,3 +20,9 @@ class ServerDTO(DTO):
 	owner_id: UserID
 	owner: UserDTO
 	karma: ServerKarmaAmount
+	game_id: GameID
+
+
+class GetPlayersKarmaDTO:
+	players: Sequence[GetPlayerDTO]
+

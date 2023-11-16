@@ -9,3 +9,4 @@ class GameEntity(TimedEntity):
 	id: GameID = field(factory=GameID.generate)
 	name: str
 	description: str
+
