@@ -1,8 +1,8 @@
 from ipaddress import IPv6Address, IPv4Address
 
 from app.base.dto import DTO
-from app.games.value_objects.ids import PlayerID
-from app.games.value_objects.steam_id import SteamID
+from app.server.value_objects.ids import PlayerID
+from app.server.value_objects.steam_id import SteamID
 
 
 class PlayerDTO(DTO):

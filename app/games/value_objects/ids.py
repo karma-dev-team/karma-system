@@ -7,7 +7,3 @@ class CategoryID(TypeID):
 
 class GameID(TypeID):
 	prefix = 'game'
-
-
-class PlayerID(TypeID):
-	prefix = 'player'

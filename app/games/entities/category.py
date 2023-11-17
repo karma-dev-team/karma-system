@@ -2,7 +2,7 @@ from attrs import field
 
 from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity, entity
-from app.games.value_objects import GameID, CategoryID
+from app.games.value_objects.ids import CategoryID, GameID
 
 
 @entity

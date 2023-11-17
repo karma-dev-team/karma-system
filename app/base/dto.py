@@ -10,6 +10,7 @@ class DTO(BaseModel):
         extra = Extra.forbid
         frozen = True
         orm_mode = True
+        from_attributes = True
 
 
 class TimedDTO(BaseModel):

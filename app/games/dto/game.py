@@ -1,5 +1,5 @@
 from app.base.dto import DTO, TimedDTO
-from app.games.value_objects import GameID
+from app.games.value_objects.ids import GameID
 
 
 class GetGameDTO(DTO):

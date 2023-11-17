@@ -4,9 +4,9 @@ from attr import field
 
 from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity
-from app.games.value_objects.hours import Hours
-from app.games.value_objects.ids import PlayerID
-from app.games.value_objects.steam_id import SteamID
+from app.server.value_objects.hours import Hours
+from app.server.value_objects.ids import PlayerID
+from app.server.value_objects.steam_id import SteamID
 
 
 class PlayerEntity(TimedEntity, Aggregate):

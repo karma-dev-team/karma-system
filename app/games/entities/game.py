@@ -1,7 +1,7 @@
 from attrs import field
 
 from app.base.entity import TimedEntity, entity
-from app.games.value_objects import GameID
+from app.games.value_objects.ids import GameID
 
 
 @entity
