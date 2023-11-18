@@ -1,5 +1,9 @@
+from app.base.entity import TimedEntity, entity
+from app.user.enums import UserRoles
 from app.user.value_objects import UserID
 
 
-class UserEntity:
+@entity
+class UserEntity(TimedEntity):
 	id: UserID
+	role: UserRoles

@@ -14,7 +14,7 @@ def load_models(registry: registry_class) -> None:
 		registry.metadata,
 		*id_columns(),
 		*timed_columns(),
-		Column("role", Enum(UserRoles), nullable=False),
+		Column("role", Enum(UserRoles), nullable=False, default=UserRoles.user),
 	)
 
 	registry.map_imperatively(

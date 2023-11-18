@@ -160,4 +160,4 @@ cython_debug/
 .idea/
 
 # specific configuration files
-./deploy/config.toml
+deploy/config.toml
