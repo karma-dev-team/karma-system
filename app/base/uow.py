@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from typing import AsyncGenerator, Protocol
 
 
-class IUoW(Protocol):
+class AbstractUoW(Protocol):
     async def commit(self) -> None:
         ...
 
