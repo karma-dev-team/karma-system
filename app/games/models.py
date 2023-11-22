@@ -25,7 +25,7 @@ def load_models(registry: registry_class):
 		*id_columns(),
 		*timed_columns(),
 		Column("name", String(STRING_MID_LENGTH), nullable=False),
-		Column("game_id", ForeignKey("GameEntity.id"), nullable=False),
+		Column("game_id", ForeignKey("games.id"), nullable=False),
 	)
 
 	registry.map_imperatively(CategoryEntity, category_table)
