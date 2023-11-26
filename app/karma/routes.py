@@ -2,8 +2,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
+from app.base.api.providers import ioc_provider
 from app.base.ioc import AbstractIoContainer
-from app.karma.dtos.ban import BanDTO
+from app.games.dto.player import PlayerDTO
+from app.karma.dtos.ban import BanDTO, HandleBanDTO
 
 router = APIRouter()
 
@@ -13,6 +15,7 @@ router = APIRouter()
 	name="karma:handle_ban",
 )
 async def handle_ban(
+	dto: HandleBanDTO,
 	ioc_container: Annotated[AbstractIoContainer, Depends(ioc_provider)],
-) -> BanDTO:
-	pass
+) -> PlayerDTO:
+	return await ioc_container.karma_service().handle_ban(dto)

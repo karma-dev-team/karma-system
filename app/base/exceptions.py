@@ -1,9 +1,16 @@
+from attrs import define
+
+exception_wrapper = define()
+
+
 class APIError(Exception):
-	pass
+	def message(self) -> str:
+		return "General API Error"
 
 
 class ApplicationError(Exception):
-	pass
+	def message(self) -> str:
+		return "Application Error"
 
 
 class DomainError(Exception):
