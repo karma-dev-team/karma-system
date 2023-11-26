@@ -1,4 +1,9 @@
+from attr import field
+from attr.converters import optional
+from attr.validators import instance_of
+
 from app.base.exceptions import APIError, ApplicationError, exception_wrapper
+from app.server.dto.player import GetPlayerDTO
 from app.server.value_objects.ids import PlayerID, ServerID
 
 
@@ -12,7 +17,8 @@ class IncorrectAPIServerToken(APIError):
 
 @exception_wrapper
 class PlayerDoesNotExists(ApplicationError):
-	player: PlayerID
+	player_id: PlayerID | None = field(validator=optional(instance_of(PlayerID)))
+	ply_data: GetPlayerDTO | None = field(validator=optional(instance_of(GetPlayerDTO)))
 
 	def message(self) -> str:
 		return f"Specified player does not exists, ID: {self.player_id}"
