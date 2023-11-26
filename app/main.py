@@ -6,6 +6,7 @@ from app.base.config import load_config
 from app.base.database import load_database
 from app.base.events.main import configure_event_dispatcher
 from app.base.logging.logger import configure_logging
+from app.base.api.ioc_impl import load_ioc
 from app.module.module import configure_module_loader
 
 
@@ -16,6 +17,9 @@ def get_app() -> FastAPI:
 	app, router = create_app(config.api, config.debug)
 	configure_logging(config.logging)
 	event_dispatcher = configure_event_dispatcher()
+
+	# preload ioc
+	load_ioc(app)
 
 	module = configure_module_loader(workflow_data={
 		'registry': registry,
