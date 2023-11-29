@@ -10,3 +10,7 @@ class ServerID(TypeID):
 
 class PlayerID(TypeID):
 	prefix = 'player'
+
+
+class ServerTagID(TypeID):
+	prefix = "servertag"
