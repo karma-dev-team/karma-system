@@ -2,7 +2,7 @@ from attr import field
 from attr.converters import optional
 from attr.validators import instance_of
 
-from app.base.exceptions import APIError, ApplicationError, exception_wrapper
+from app.base.exceptions import APIError, ApplicationError, exception_wrapper, RepositoryError
 from app.server.dto.player import GetPlayerDTO
 from app.server.value_objects.ids import PlayerID, ServerID
 
@@ -29,3 +29,12 @@ class ServerNotExists(ApplicationError):
 
 	def message(self) -> str:
 		return f"Specified server does not exists, ID: {self.server_id}"
+
+
+class ServerAlreadyExists(ApplicationError):
+	def message(self) -> str:
+		return "Server with given properties already exists"
+
+
+class IPPortAlreadyTaken(RepositoryError):
+	pass

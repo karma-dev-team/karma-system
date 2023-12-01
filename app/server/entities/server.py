@@ -1,11 +1,15 @@
 from ipaddress import IPv4Address, IPv6Address
+from typing import List, Union, Optional
 
+from attrs.validators import instance_of
 from attrs import field
 
 from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity, entity
 from app.games.value_objects.ids import GameID
 from app.server.dto.server import ServerDTO
+from app.server.entities.player import PlayerEntity
+from app.server.entities.tag import ServerTagEntity
 from app.server.events.server import ServerCreated
 from app.server.value_objects.amount import ServerKarmaAmount
 from app.server.value_objects.ids import ServerID
@@ -19,11 +23,13 @@ class ServerEntity(TimedEntity, Aggregate):
 	name: str
 	ipv4: IPv4Address
 	ipv6: IPv6Address | None
-	port: int
+	port: int = field(validator=instance_of(int))
 	owner: UserEntity
 	owner_id: UserID
 	karma: ServerKarmaAmount
 	game_id: GameID
+	players: List[PlayerEntity] = field(factory=list)
+	tags: List[ServerTagEntity] = field(factory=list)
 
 	@classmethod
 	def create(
@@ -34,7 +40,10 @@ class ServerEntity(TimedEntity, Aggregate):
 		owner_id: UserID,
 		game_id: UserID,
 		ipv6: IPv6Address | None = None,
+		tags: Optional[Union[list[ServerTagEntity], str, list]] = None,
 	) -> "ServerEntity":
+		if not tags:
+			tags = []
 		entity = ServerEntity(
 			name=name,
 			ipv4=ipv4,
@@ -42,7 +51,20 @@ class ServerEntity(TimedEntity, Aggregate):
 			port=port,
 			owner_id=owner_id,
 			game_id=game_id,
+			tags=tags,
 		)
+		if isinstance(tags, (str, list)):
+			if isinstance(tags, str):
+				names = tags.split(";")
+			else:
+				names = tags
+			for name in names:
+				entity.tags.append(
+					ServerTagEntity.create(
+						name=name,
+						server_id=entity.id,
+					)
+				)
 
 		entity.add_event(
 			ServerCreated(

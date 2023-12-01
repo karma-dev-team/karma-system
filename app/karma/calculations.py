@@ -52,4 +52,4 @@ def calc_perma_ban_karma(
 	player_karma: Number,
 	threshold: Number = MAX_BAN_THRESHOLD,
 ) -> Number:
-	pass
+	return 10

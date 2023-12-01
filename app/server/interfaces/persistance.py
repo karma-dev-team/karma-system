@@ -28,3 +28,6 @@ class AbstractPlayerRepo(Protocol):
 class AbstractServerRepo(Protocol):
 	async def find_by_id(self, server_id: ServerID) -> ServerEntity | None:
 		pass
+
+	async def add_server(self, server: ServerEntity) -> Result[ServerEntity, ServerAlreadyExists | IPPortTakenError]:
+		pass

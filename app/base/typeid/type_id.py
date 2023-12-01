@@ -56,7 +56,7 @@ class TypeID:
         value = ""
         if self.prefix:
             value += f"{self.prefix}_"
-        value += self.suffix
+        value += str(self.suffix)
         return value
 
     def __eq__(self, value: object) -> bool:
@@ -66,6 +66,9 @@ class TypeID:
 
     def __hash__(self) -> int:
         return hash((self.prefix, self.suffix))
+
+    def __repr__(self):
+        return str(self)
 
     @classmethod
     def __get_pydantic_core_schema__(

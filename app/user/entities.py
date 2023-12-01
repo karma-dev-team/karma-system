@@ -7,3 +7,8 @@ from app.user.value_objects import UserID
 class UserEntity(TimedEntity):
 	id: UserID
 	role: UserRoles
+	name: str
+	email: str
+
+	# @classmethod
+	# def create(cls, ):

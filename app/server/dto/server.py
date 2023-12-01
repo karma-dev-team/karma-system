@@ -2,6 +2,7 @@ from ipaddress import IPv4Address
 from typing import Sequence
 
 from app.base.dto import DTO, TimedDTO
+from app.files.dtos.input_file import InputFileType
 from app.games.value_objects.ids import GameID
 from app.server.dto.player import GetPlayerDTO
 from app.server.value_objects.amount import ServerKarmaAmount
@@ -31,5 +32,9 @@ class GetPlayersKarmaDTO(DTO):
 
 class RegisterServerDTO(DTO):
 	name: str
+	description: str
+	icon: InputFileType | None
+	country_code: str = "RU"
 	port: int
 	ip: IPv4Address
+	tags: list[str]

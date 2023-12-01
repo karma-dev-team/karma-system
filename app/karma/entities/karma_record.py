@@ -34,14 +34,16 @@ class KarmaRecord(TimedEntity):
         delta_karma: KarmaAmount,
         server: "ServerEntity",
         player: "PlayerEntity",
+        reason: str,
     ) -> "KarmaRecord":
         rec = KarmaRecord(
             delta_karma=delta_karma,
             player_id=player.id,
             server_id=server.id,
+            type=KarmaRecordType.change,
+            reason=reason,
         )
         return rec
-
 
     @classmethod
     def create_from_ban(
@@ -52,18 +54,20 @@ class KarmaRecord(TimedEntity):
         player: "PlayerEntity",
     ) -> "KarmaRecord":
         if duration == 0:
-            return calc_perma_ban_karma(server_karma=server.karma, player_karma=player.karma)
-        calced_karma = calc_ban_karma(
-            duration,
-            server.karma,
-            player.karma,
-        )
+            calced_karma = calc_perma_ban_karma(server_karma=server.karma, player_karma=player.karma)
+        else:
+            calced_karma = calc_ban_karma(
+                duration,
+                server.karma,
+                player.karma,
+            )
 
         rec = KarmaRecord(
             delta_karma=calced_karma,
             server_id=server.id,
             player_id=player.id,
             reason=reason,
+            type=KarmaRecordType.ban,
         )
 
         return rec
@@ -85,6 +89,7 @@ class KarmaRecord(TimedEntity):
             server_id=server.id,
             player_id=player.id,
             reason=reason,
+            type=KarmaRecordType.warn,
         )
 
         return rec
