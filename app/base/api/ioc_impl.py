@@ -4,6 +4,8 @@ from app.base.api.providers import ioc_provider
 from app.base.ioc import AbstractIoContainer
 from app.karma.interfaces.services import AbstractKarmaService
 from app.karma.services import KarmaService
+from app.server.interfaces.service import AbstractServerService, AbstractPlayerService
+from app.server.services import ServerService, PlayerService
 from app.user.services import UserService
 from app.user.interfaces import AbstractUserService
 
@@ -14,6 +16,12 @@ class IoContainerImpl(AbstractIoContainer):
 
     def karma_service(self) -> AbstractKarmaService:
         return KarmaService()
+
+    def server_service(self) -> AbstractServerService:
+        return ServerService()
+
+    def player_service(self) -> AbstractPlayerService:
+        return PlayerService()
 
 
 async def get_ioc() -> IoContainerImpl:

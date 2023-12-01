@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from app.base.api.providers import ioc_provider
 from app.base.ioc import AbstractIoContainer
 from app.games.dto.player import PlayerDTO
-from app.karma.dtos.ban import BanDTO, HandleBanDTO
+from app.karma.dtos.ban import HandleBanDTO
 
 router = APIRouter()
 

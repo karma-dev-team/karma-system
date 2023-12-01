@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 import abc
 
+from app.server.interfaces.service import AbstractServerService, AbstractPlayerService
+
 if TYPE_CHECKING:
 	# новые интерфейсы добавляй тут!
 	from app.karma.interfaces.services import AbstractKarmaService
@@ -19,4 +21,12 @@ class AbstractIoContainer:
 
 	@abc.abstractmethod
 	def karma_service(self) -> AbstractKarmaService:
+		pass
+
+	@abc.abstractmethod
+	def server_service(self) -> AbstractServerService:
+		pass
+
+	@abc.abstractmethod
+	def player_service(self) -> AbstractPlayerService:
 		pass

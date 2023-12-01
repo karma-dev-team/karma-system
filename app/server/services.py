@@ -1,6 +1,7 @@
 from typing import Sequence
 
 from app.games.dto.player import PlayerDTO
+from app.server.dto.player import GetPlayerDTO
 from app.server.dto.server import GetPlayersKarmaDTO, RegisterServerDTO, ServerDTO, GetServerDTO
 from app.server.interfaces.service import AbstractPlayerService, AbstractServerService
 from app.server.interfaces.uow import AbstractServerUoW
@@ -8,6 +9,9 @@ from app.server.interfaces.uow import AbstractServerUoW
 
 class PlayerService(AbstractPlayerService):
 	async def player_karmas(self, dto: GetPlayersKarmaDTO) -> Sequence[PlayerDTO]:
+		pass
+
+	async def player_connected(self, dto: GetPlayerDTO) -> PlayerDTO:
 		pass
 
 
