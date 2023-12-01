@@ -1,4 +1,5 @@
 from app.base.dto import DTO
+from app.user.enums import UserRoles
 from app.user.value_objects import UserID
 
 
@@ -8,3 +9,14 @@ class GetUserDTO(DTO):
 
 class UserDTO(DTO):
 	id: UserID
+	name: str
+	email: str
+	hashed_password: str
+	role: UserRoles = UserRoles.user
+	blocked: bool = False
+
+
+class CreateUserDTO(DTO):
+	name: str
+	email: str
+	password: str
