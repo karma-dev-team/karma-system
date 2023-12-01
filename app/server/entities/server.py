@@ -38,7 +38,7 @@ class ServerEntity(TimedEntity, Aggregate):
 		ipv4: IPv4Address,
 		port: int,
 		owner_id: UserID,
-		game_id: UserID,
+		game_id: GameID,
 		ipv6: IPv6Address | None = None,
 		tags: Optional[Union[list[ServerTagEntity], str, list]] = None,
 	) -> "ServerEntity":

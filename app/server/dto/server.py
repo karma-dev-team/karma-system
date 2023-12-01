@@ -36,5 +36,6 @@ class RegisterServerDTO(DTO):
 	icon: InputFileType | None
 	country_code: str = "RU"
 	port: int
+	game_id: GameID
 	ip: IPv4Address
 	tags: list[str]

@@ -5,6 +5,7 @@ from app.base.database.filters import filter_wrapper
 from app.base.database.result import Result
 from app.server.entities.player import PlayerEntity
 from app.server.entities.server import ServerEntity
+from app.server.exceptions import ServerAlreadyExists, IPPortAlreadyTaken
 from app.server.value_objects.ids import ServerID
 from app.server.value_objects.steam_id import SteamID
 
@@ -29,5 +30,5 @@ class AbstractServerRepo(Protocol):
 	async def find_by_id(self, server_id: ServerID) -> ServerEntity | None:
 		pass
 
-	async def add_server(self, server: ServerEntity) -> Result[ServerEntity, ServerAlreadyExists | IPPortTakenError]:
+	async def add_server(self, server: ServerEntity) -> Result[ServerEntity, ServerAlreadyExists | IPPortAlreadyTaken]:
 		pass
