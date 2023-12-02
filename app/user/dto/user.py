@@ -4,7 +4,9 @@ from app.user.value_objects import UserID
 
 
 class GetUserDTO(DTO):
-	user_id: UserID
+	user_id: UserID | None
+	email: str | None
+	name: str | None
 
 
 class UserDTO(DTO):
