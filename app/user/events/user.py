@@ -5,3 +5,9 @@ from app.user.dto.user import UserDTO
 @event
 class UserCreated(Event):
     user: UserDTO
+
+
+@event
+class GivenSuperUser(Event):
+    by: UserDTO
+    user: UserDTO

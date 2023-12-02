@@ -19,4 +19,5 @@ class UserDTO(DTO):
 class CreateUserDTO(DTO):
 	name: str
 	email: str
-	password: str
+	hashed_password: str
+	registration_code: str
