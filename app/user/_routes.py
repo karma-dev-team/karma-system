@@ -11,4 +11,4 @@ router = APIRouter()
 def get_user_by_id(
 	ioc: Annotated[AbstractIoContainer, Depends()],
 ) -> None:
-	pass
+	ioc.user_service().get_user()
