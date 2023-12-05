@@ -1,10 +1,7 @@
-from typing import Any, Dict
+from pydantic_core import Url
 
-from pydantic import root_validator
-
-from app.application.common.dto import DTO
-from app.domain.common.value_objects.url import URLValueObject
-from app.domain.common.value_objects.uuid import DomainID
+from app.base.dto import DTO
+from app.base.typeid import TypeID
 
 
 class InputFile(DTO):
@@ -14,9 +11,9 @@ class InputFile(DTO):
     Если был передан file_id то репозитории пытается найти
     по file_id.
     """
-    file_id: DomainID | None
+    file_id: TypeID | None
     mime_type: str | None
-    download_url: URLValueObject | None
+    download_url: Url | None
 
 
 InputFileType = InputFile | str

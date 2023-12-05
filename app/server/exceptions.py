@@ -38,3 +38,8 @@ class ServerAlreadyExists(ApplicationError):
 
 class IPPortAlreadyTaken(RepositoryError):
 	pass
+
+
+class ServerNotOwned(ApplicationError):
+	def message(self) -> str:
+		return "You are not server owner"

@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 
 @entity
-class KarmaRecord(TimedEntity):
+class KarmaRecordEntity(TimedEntity):
     id: KarmaRecID
     delta_karma: KarmaAmount
     player_id: PlayerID
@@ -35,8 +35,8 @@ class KarmaRecord(TimedEntity):
         server: "ServerEntity",
         player: "PlayerEntity",
         reason: str,
-    ) -> "KarmaRecord":
-        rec = KarmaRecord(
+    ) -> "KarmaRecordEntity":
+        rec = KarmaRecordEntity(
             delta_karma=delta_karma,
             player_id=player.id,
             server_id=server.id,
@@ -52,7 +52,7 @@ class KarmaRecord(TimedEntity):
         reason: str,
         server: "ServerEntity",
         player: "PlayerEntity",
-    ) -> "KarmaRecord":
+    ) -> "KarmaRecordEntity":
         if duration == 0:
             calced_karma = calc_perma_ban_karma(server_karma=server.karma, player_karma=player.karma)
         else:
@@ -62,7 +62,7 @@ class KarmaRecord(TimedEntity):
                 player.karma,
             )
 
-        rec = KarmaRecord(
+        rec = KarmaRecordEntity(
             delta_karma=calced_karma,
             server_id=server.id,
             player_id=player.id,
@@ -78,13 +78,13 @@ class KarmaRecord(TimedEntity):
         reason: str,
         server: "ServerEntity",
         player: "PlayerEntity",
-    ) -> "KarmaRecord":
+    ) -> "KarmaRecordEntity":
         calced_karma = calc_warn_karma(
             server.karma,
             player.karma,
         )
 
-        rec = KarmaRecord(
+        rec = KarmaRecordEntity(
             delta_karma=calced_karma,
             server_id=server.id,
             player_id=player.id,

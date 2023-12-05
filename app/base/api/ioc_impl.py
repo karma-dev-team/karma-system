@@ -1,13 +1,19 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from fastapi import FastAPI
 
 from app.base.api.providers import ioc_provider
 from app.base.ioc import AbstractIoContainer
-from app.karma.interfaces.services import AbstractKarmaService
+
 from app.karma.services import KarmaService
-from app.server.interfaces.service import AbstractServerService, AbstractPlayerService
 from app.server.services import ServerService, PlayerService
 from app.user.services import UserService
-from app.user.interfaces import AbstractUserService
+
+if TYPE_CHECKING:
+    from app.server.interfaces.service import AbstractServerService, AbstractPlayerService
+    from app.karma.interfaces.services import AbstractKarmaService
+    from app.user.interfaces import AbstractUserService
 
 
 class IoContainerImpl(AbstractIoContainer):

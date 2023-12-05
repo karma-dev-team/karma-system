@@ -3,7 +3,7 @@ from typing import Sequence
 
 from app.games.dto.player import PlayerDTO
 from app.server.dto.player import GetPlayerDTO
-from app.server.dto.server import GetServerDTO, ServerDTO, GetPlayersKarmaDTO, RegisterServerDTO
+from app.server.dto.server import GetServerDTO, ServerDTO, GetPlayersKarmaDTO, RegisterServerDTO, GetServersDTO
 
 
 class AbstractServerService:
@@ -17,6 +17,10 @@ class AbstractServerService:
 
 	@abc.abstractmethod
 	async def get_api_token(self, dto: GetServerDTO) -> str:
+		pass
+
+	@abc.abstractmethod
+	async def get_servers(self, dto: GetServersDTO) -> list[ServerDTO]:
 		pass
 
 

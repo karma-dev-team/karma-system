@@ -1,4 +1,3 @@
-from app.server.value_objects.amount import Amount
+from app.karma.value_objects.karma import KarmaAmount
 
-
-Hours = Amount
+Hours = KarmaAmount

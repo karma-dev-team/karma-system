@@ -1,5 +1,3 @@
-from starlette.templating import Jinja2Templates
-
 from app.base.config import GlobalConfig
 from app.base.ioc import AbstractIoContainer
 

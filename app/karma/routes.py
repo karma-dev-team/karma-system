@@ -11,11 +11,11 @@ router = APIRouter()
 
 
 @router.post(
-	'/ban',
-	name="karma:handle_ban",
+    '/ban',
+    name="karma:handle_ban",
 )
 async def handle_ban(
-	dto: HandleBanDTO,
-	ioc_container: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+        dto: HandleBanDTO,
+        ioc_container: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 ) -> PlayerDTO:
-	return await ioc_container.karma_service().handle_ban(dto)
+    return await ioc_container.karma_service().handle_ban(dto)

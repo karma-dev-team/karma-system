@@ -2,10 +2,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 import abc
 
-from app.server.interfaces.service import AbstractServerService, AbstractPlayerService
-
 if TYPE_CHECKING:
 	# новые интерфейсы добавляй тут!
+	from app.server.interfaces.service import AbstractServerService, AbstractPlayerService
 	from app.karma.interfaces.services import AbstractKarmaService
 	from app.user.interfaces import AbstractUserService
 

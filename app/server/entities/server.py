@@ -11,7 +11,7 @@ from app.server.dto.server import ServerDTO
 from app.server.entities.player import PlayerEntity
 from app.server.entities.tag import ServerTagEntity
 from app.server.events.server import ServerCreated
-from app.server.value_objects.amount import ServerKarmaAmount
+from app.karma.value_objects.karma import KarmaAmount
 from app.server.value_objects.ids import ServerID
 from app.user.entities import UserEntity
 from app.user.value_objects import UserID
@@ -26,7 +26,7 @@ class ServerEntity(TimedEntity, Aggregate):
 	port: int = field(validator=instance_of(int))
 	owner: UserEntity
 	owner_id: UserID
-	karma: ServerKarmaAmount
+	karma: KarmaAmount
 	game_id: GameID
 	players: List[PlayerEntity] = field(factory=list)
 	tags: List[ServerTagEntity] = field(factory=list)

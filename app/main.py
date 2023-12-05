@@ -37,7 +37,7 @@ def get_app() -> FastAPI:
 	})
 	module.load()
 
-	app.include_router(router, prefix="/")
+	app.include_router(router, prefix="")
 
 	return app
 

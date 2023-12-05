@@ -1,10 +1,12 @@
 from ipaddress import IPv4Address, IPv6Address
-from typing import Protocol
+from typing import Protocol, Sequence
 
 from app.base.database.filters import filter_wrapper
 from app.base.database.result import Result
+from app.games.value_objects.ids import GameID
 from app.server.entities.player import PlayerEntity
 from app.server.entities.server import ServerEntity
+from app.server.entities.tag import ServerTagEntity
 from app.server.exceptions import ServerAlreadyExists, IPPortAlreadyTaken
 from app.server.value_objects.ids import ServerID
 from app.server.value_objects.steam_id import SteamID
@@ -18,6 +20,19 @@ class PlayerFilter:
 	name: str | None
 
 
+@filter_wrapper
+class GetServersFilter:
+	game_id: GameID | None
+	tags: Sequence[ServerTagEntity] | None
+	unregistered: bool | None
+
+
+@filter_wrapper
+class GetServerFilter:
+	name: str | None
+	server_id: ServerID | None
+
+
 class AbstractPlayerRepo(Protocol):
 	async def find_by_filters(self, filter_: PlayerFilter) -> PlayerEntity | None:
 		pass
@@ -27,8 +42,11 @@ class AbstractPlayerRepo(Protocol):
 
 
 class AbstractServerRepo(Protocol):
-	async def find_by_id(self, server_id: ServerID) -> ServerEntity | None:
+	async def find_by_filters(self, filter_: GetServerFilter) -> ServerEntity | None:
 		pass
 
 	async def add_server(self, server: ServerEntity) -> Result[ServerEntity, ServerAlreadyExists | IPPortAlreadyTaken]:
+		pass
+
+	async def filter(self, filter: GetServersFilter) -> Sequence[ServerEntity]:
 		pass
