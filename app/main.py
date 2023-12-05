@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+from starlette.staticfiles import StaticFiles
 
 from app.base.api.app import create_app
 from app.base.config import load_config
@@ -8,6 +8,7 @@ from app.base.events.main import configure_event_dispatcher
 from app.base.logging.logger import configure_logging
 from app.base.api.ioc_impl import load_ioc
 from app.module.module import configure_module_loader
+from app.templating.main import load_templating
 
 
 def get_app() -> FastAPI:
@@ -18,8 +19,12 @@ def get_app() -> FastAPI:
 	configure_logging(config.logging)
 	event_dispatcher = configure_event_dispatcher()
 
+	# exclude
+	app.mount("/static", StaticFiles(directory="static"), name="static")
+
 	# preload ioc
 	load_ioc(app)
+	load_templating(app, template_directory="templates")
 
 	module = configure_module_loader(workflow_data={
 		'registry': registry,

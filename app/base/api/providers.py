@@ -1,5 +1,8 @@
+from starlette.templating import Jinja2Templates
+
 from app.base.ioc import AbstractIoContainer
 
 
 def ioc_provider() -> AbstractIoContainer:
 	...
+
