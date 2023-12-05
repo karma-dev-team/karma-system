@@ -11,3 +11,8 @@ class UserCreated(Event):
 class GivenSuperUser(Event):
     by: UserDTO
     user: UserDTO
+
+
+@event
+class UserBlocked(Event):
+    user: UserDTO

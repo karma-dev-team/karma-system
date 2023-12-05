@@ -24,10 +24,18 @@ class UserService(AbstractUserService):
 		return UserDTO.model_validate(user)
 
 	async def create_user(self, dto: CreateUserDTO) -> UserDTO:
+		user = await self.uow.user.get_user_by_filters(
+			GetUserFilter(
+				name=dto.name,
+				email=dto.email,
+			)
+		)
+		if user:
+			raise UserAlreadyExists()
 		user = UserEntity.create(
 			name=dto.name,
 			email=dto.email,
-			hashed_password=dto.hashed_password,
+			hashed_password=UserEntity.create_password(dto.password),
 		)
 		async with self.uow.transaction():
 			result = await self.uow.user.add_user(user, dto.registration_code)

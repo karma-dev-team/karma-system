@@ -9,7 +9,6 @@ class APIConfig(BaseModel):
     description: str = "API Karma system"
 
     allowed_hosts: list[str] = ["*"]
-    api_prefix: str = "/api"
 
     @property
     def fastapi_kwargs(self) -> dict[str, Any]:
@@ -21,6 +20,4 @@ class APIConfig(BaseModel):
             # "default_response_class": ORJSONResponse,
             "description": self.description,
         }
-
-
 
