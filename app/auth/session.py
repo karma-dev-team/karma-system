@@ -19,8 +19,8 @@ class MemoryAuthSession(AbstractAuthSession):
     def __init__(self):
         self.data = {}
 
-    async def get(self, session_id: str) -> str:
-        return self.data.pop(session_id)
+    async def get(self, session_id: str) -> str | None:
+        return self.data.pop(session_id, None)
 
     async def set(self, session_id: str, id: str) -> None:
         self.data[session_id] = id
@@ -30,7 +30,7 @@ class RedisAuthSession(AbstractAuthSession):
     def __init__(self, redis: Redis) -> None:
         self.redis = redis
 
-    async def get(self, session_id: str) -> str:
+    async def get(self, session_id: str) -> str | None:
         return await self.redis.get(session_id)
 
     async def set(self, session_id: str, id: str) -> None:

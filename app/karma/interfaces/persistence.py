@@ -1,5 +1,5 @@
 from typing import Protocol
 
 
-class KarmaRepository(Protocol):
+class AbstractKarmaRepository(Protocol):
     pass

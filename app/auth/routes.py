@@ -5,7 +5,10 @@ from starlette.requests import Request
 from starlette.responses import RedirectResponse
 from starlette.templating import Jinja2Templates
 
+from app.auth.consts import AUTH_KEY
+from app.auth.providers import auth_session_provider
 from app.auth.secuirty import generate_session_id
+from app.auth.session import AbstractAuthSession
 from app.base.api.providers import ioc_provider, config_provider
 from app.base.config import GlobalConfig
 from app.base.ioc import AbstractIoContainer
@@ -19,14 +22,15 @@ router = APIRouter()
 
 @router.route("/register", name="register-user")
 async def register_user(
-        request: Request,
-        username: Annotated[str, Body(...)],
-        email: Annotated[str, Body(...)],
-        password: Annotated[str, Body(...)],
-        registration_code: Annotated[str, Body(...)],
-        config: Annotated[GlobalConfig, Depends(config_provider)],
-        templates: Annotated[Jinja2Templates, templating_provider],
-        ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+    request: Request,
+    username: Annotated[str, Body(...)],
+    email: Annotated[str, Body(...)],
+    password: Annotated[str, Body(...)],
+    registration_code: Annotated[str, Body(...)],
+    config: Annotated[GlobalConfig, Depends(config_provider)],
+    templates: Annotated[Jinja2Templates, templating_provider],
+    ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+    auth_session: Annotated[AbstractAuthSession, Depends(auth_session_provider)],
 ):
     if request.method == "POST":
         try:
@@ -48,7 +52,9 @@ async def register_user(
             )
 
             response = RedirectResponse("/", status_code=302)
-            response.set_cookie(key="Authorization", value=session_id)
+            response.set_cookie(key=AUTH_KEY, value=session_id)
+
+            await auth_session.set(session_id, str(user.id))
 
             return response
     return templates.TemplateResponse("user/register.html", {'request': request})
@@ -62,8 +68,9 @@ async def login_user(
     config: Annotated[GlobalConfig, Depends(config_provider)],
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
     ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+    auth_session: Annotated[AbstractAuthSession, Depends(auth_session_provider)],
 ):
-    if request.cookies.get("Authorization"):
+    if request.cookies.get(AUTH_KEY):
         response = RedirectResponse("/", status_code=302)
 
         return response
@@ -99,7 +106,9 @@ async def login_user(
         )
 
         response = RedirectResponse("/", status_code=302)
-        response.set_cookie(key="Authorization", value=session_id)
+        response.set_cookie(key=AUTH_KEY, value=session_id)
+
+        await auth_session.set(session_id, str(user.id))
 
         return response
 
