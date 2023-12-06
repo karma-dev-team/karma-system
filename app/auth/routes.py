@@ -9,7 +9,8 @@ from app.auth.consts import AUTH_KEY
 from app.auth.providers import auth_session_provider
 from app.auth.secuirty import generate_session_id
 from app.auth.session import AbstractAuthSession
-from app.base.api.providers import ioc_provider, config_provider
+from app.base.api.providers import config_provider
+from app.base.api.ioc import ioc_provider
 from app.base.config import GlobalConfig
 from app.base.ioc import AbstractIoContainer
 from app.templating.provider import templating_provider
@@ -63,8 +64,8 @@ async def register_user(
 @router.route("/login", name='login-user')
 async def login_user(
     request: Request,
-    username: Annotated[str, Body(...)],
-    password: Annotated[str, Body(...)],
+    username: Annotated[str, Body(default=None)],
+    password: Annotated[str, Body(default=None)],
     config: Annotated[GlobalConfig, Depends(config_provider)],
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
     ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],

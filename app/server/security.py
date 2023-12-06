@@ -30,7 +30,7 @@ def generate_jwt(
 def decode_jwt(
     encoded_jwt: str,
     secret: SecretType,
-    audience: List[str],
+    audience: List[str] | None = None,
     algorithms: List[str] = [JWT_ALGORITHM],
 ) -> Dict[str, Any]:
     return jwt.decode(

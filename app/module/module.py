@@ -3,7 +3,7 @@ import inspect
 
 import loguru
 
-from app import user, server, games, karma
+from app import user, server, games, karma, auth
 
 
 def filter_workflow(params: list[str], workflow: dict[str, Any]) -> dict[str, Any]:
@@ -30,6 +30,8 @@ class ModuleLoader:
                 if self.logger:
                     self.logger.exception(exc)
                 raise
+            else:
+                self.logger.info(f"Loaded {module.__module__} module")
 
 
 def configure_module_loader(workflow_data: dict[str, Any]) -> ModuleLoader:
@@ -38,6 +40,7 @@ def configure_module_loader(workflow_data: dict[str, Any]) -> ModuleLoader:
         server.load_module,
         games.load_module,
         karma.load_module,
+        auth.load_module
     ], workflow_data=workflow_data)
 
     return module

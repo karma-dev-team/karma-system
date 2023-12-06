@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from app.base.api.providers import ioc_provider
+from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
 from app.games.dto.player import PlayerDTO
 from app.karma.dtos.ban import HandleBanDTO

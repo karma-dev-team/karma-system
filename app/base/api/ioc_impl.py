@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from fastapi import FastAPI
 
-from app.base.api.providers import ioc_provider
+from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
 
 from app.karma.services import KarmaService

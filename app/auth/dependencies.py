@@ -34,6 +34,6 @@ def role_required(*roles: UserRoles) -> Callable:
     async def inner(
         user: Annotated[UserEntity, Depends(user_provider)],
     ) -> None:
-        if roles not in user.role:
+        if user.role not in roles:
             raise AccessDenied
     return inner

@@ -7,7 +7,7 @@ from starlette.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
 
 from app.auth.providers import user_provider
-from app.base.api.providers import ioc_provider
+from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
 from app.templating.provider import templating_provider
 from app.user.dto.user import UserDTO, GetUserDTO
@@ -29,10 +29,10 @@ async def get_user_by_id(
 	)
 
 
-@router.get("/account", name="get-account")
+@router.get("/account", name="get-account", response_class=HTMLResponse)
 async def get_account(
 	request: Request,
-	user: Annotated[UserEntity, user_provider],
+	user: Annotated[UserEntity, Depends(user_provider)],
 	templates: Annotated[Jinja2Templates, Depends(templating_provider)],
-) -> HTMLResponse:
+):
 	return templates.TemplateResponse("users/account.html", {'request': request, 'user': user})

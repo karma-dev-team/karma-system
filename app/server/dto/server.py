@@ -12,8 +12,8 @@ from app.user.value_objects import UserID
 
 
 class GetServerDTO(DTO):
-	server_id: ServerID
-	name: str
+	server_id: ServerID | None
+	name: str | None
 
 
 class ServerDTO(DTO, TimedDTO):
