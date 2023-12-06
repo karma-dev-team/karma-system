@@ -1,9 +1,12 @@
+from typing import TYPE_CHECKING
+
 from fastapi import FastAPI
 
-from app.server.entities.server import ServerEntity
+if TYPE_CHECKING:
+	from app.server.entities.server import ServerEntity
 
 
-async def server_provider() -> ServerEntity:
+async def server_provider() -> "ServerEntity":
 	...
 
 

@@ -7,7 +7,7 @@ from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity, entity
 from app.games.dto.player import PlayerDTO
 from app.karma.value_objects.karma import KarmaAmount
-from app.server.events.player import PlayerCreated
+from app.server.events.player import PlayerCreated, PlayerKarmaChanged
 from app.server.value_objects.hours import Hours
 from app.server.value_objects.ids import PlayerID
 from app.server.value_objects.steam_id import SteamID
@@ -62,7 +62,7 @@ class PlayerEntity(TimedEntity, Aggregate):
 		self.karma -= delta_karma
 
 		self.add_event(
-			KarmaChanged(
+			PlayerKarmaChanged(
 				ply=PlayerDTO.model_validate(self)
 			)
 		)

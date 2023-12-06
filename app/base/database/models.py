@@ -24,7 +24,9 @@ def load_all_models(registry: registry_class):
     from app.user.models import load_models as load_users
     from app.server.models import load_models as load_server
     from app.games.models import load_models as load_games
+    from app.karma.models import load_models as load_karma
 
     load_users(registry)
     load_server(registry)
     load_games(registry)
+    load_karma(registry)

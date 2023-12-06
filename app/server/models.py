@@ -1,8 +1,9 @@
 from sqlalchemy import Table, Column, String, Integer, ForeignKey, Numeric, DECIMAL
 from sqlalchemy.orm import registry as registry_class, relationship
 
-from app.base.database.consts import STRING_MID_LENGTH, STRING_MIN_LENGTH
+from app.base.database.consts import STRING_MID_LENGTH, STRING_MIN_LENGTH, STRING_MAX_LENGTH
 from app.base.database.models import id_columns, timed_columns
+from app.server.entities.player import PlayerEntity
 from app.server.entities.server import ServerEntity
 from app.server.entities.tag import ServerTagEntity
 
@@ -32,12 +33,30 @@ def load_models(registry: registry_class):
         Column("server_id", ForeignKey("servers.id"), nullable=False),
     )
 
+    player = Table(
+        'players',
+        registry.metadata,
+        *id_columns(),
+        *timed_columns(),
+        Column("name", String(STRING_MID_LENGTH), nullable=False),
+        Column("steam_id", String(STRING_MAX_LENGTH), nullable=False),
+        Column("ipv4", String(STRING_MID_LENGTH), nullable=False),
+        Column("ipv6", String(STRING_MAX_LENGTH), nullable=True),
+        Column("hours", DECIMAL, default=0),
+        Column("karma", DECIMAL, default=0)
+    )
+
     registry.map_imperatively(
         ServerEntity,
         server,
         properties={
             'tags': relationship('ServerTags', foreign_keys=server.c.game_id),
         }
+    )
+
+    registry.map_imperatively(
+        PlayerEntity,
+        player,
     )
 
     registry.map_imperatively(
