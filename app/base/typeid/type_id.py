@@ -21,7 +21,7 @@ class TypeID:
     UserID.from_uuid(uuid.uuid4())
     """
 
-    prefix: str  # prefix must be singular
+    prefix: str = "" # prefix must be singular
 
     def __init__(self, *, suffix: UUID | None = None):
         self.suffix = uuid.uuid4() if not suffix else suffix

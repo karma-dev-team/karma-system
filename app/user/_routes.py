@@ -17,14 +17,14 @@ from app.user.value_objects import UserID
 router = APIRouter()
 
 
-@router.get("/{user_id}", name="get-user-by-id")
+@router.get("/user/{user_id}", name="get-user-by-id")
 async def get_user_by_id(
-	user_id: UUID,
+	user_id: str,
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 ) -> UserDTO:
 	return await ioc.user_service().get_user(
 		GetUserDTO(
-			user_id=UserID.from_uuid(user_id),
+			user_id=UserID.from_uuid(UUID(user_id)),
 		)
 	)
 

@@ -64,7 +64,7 @@ async def register_user(
         return response
 
 
-@router.get("/register", name="register-user", response_class=HTMLResponse)
+@router.get("/register", name="register-user-get", response_class=HTMLResponse)
 async def register_user(
     request: Request,
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
