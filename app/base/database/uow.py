@@ -5,6 +5,7 @@ from typing import Type, AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.base.uow import AbstractUoW
+from app.games.interfaces.uow import AbstractGameUoW
 from app.karma.interfaces.persistence import AbstractKarmaRepository
 from app.karma.interfaces.uow import AbstractKarmaUoW
 from app.karma.storages.karma import KarmaRepoImpl
@@ -58,7 +59,7 @@ class SQLAlchemyBaseUoW(AbstractUoW):
             self._in_transaction = False
 
 
-class SQLAlchemyUoW(SQLAlchemyBaseUoW, AbstractServerUoW, AbstractKarmaUoW, AbstractUserUoW):
+class SQLAlchemyUoW(SQLAlchemyBaseUoW, AbstractServerUoW, AbstractKarmaUoW, AbstractUserUoW, AbstractGameUoW):
     server: AbstractServerRepo
     player: AbstractPlayerRepo
     user: AbstractUserRepo
@@ -77,6 +78,8 @@ class SQLAlchemyUoW(SQLAlchemyBaseUoW, AbstractServerUoW, AbstractKarmaUoW, Abst
         self.player = player_repo(session)
         self.user = user_repo(session)
         self.karma = karma_repo(session)
+
+        super().__init__(session)
 
     @classmethod
     def create(cls, session: AsyncSession) -> "SQLAlchemyUoW":

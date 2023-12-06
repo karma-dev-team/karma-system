@@ -1,3 +1,4 @@
+from dataclasses import field
 from ipaddress import IPv4Address, IPv6Address
 from typing import Protocol, Sequence
 
@@ -14,23 +15,23 @@ from app.server.value_objects.steam_id import SteamID
 
 @filter_wrapper
 class PlayerFilter:
-	steam_id: SteamID | None
-	ipv4: IPv4Address | None
-	ipv6: IPv6Address | None
-	name: str | None
+	steam_id: SteamID | None = field(default=None)
+	ipv4: IPv4Address | None = field(default=None)
+	ipv6: IPv6Address | None = field(default=None)
+	name: str | None = field(default=None)
 
 
 @filter_wrapper
 class GetServersFilter:
-	game_id: GameID | None
-	tags: Sequence[ServerTagEntity] | None
-	unregistered: bool | None
+	game_id: GameID | None = field(default=None)
+	tags: Sequence[ServerTagEntity] | None = field(default=None)
+	unregistered: bool | None = field(default=None)
 
 
 @filter_wrapper
 class GetServerFilter:
-	name: str | None
-	server_id: ServerID | None
+	name: str | None = field(default=None)
+	server_id: ServerID | None = field(default=None)
 
 
 class AbstractPlayerRepo(Protocol):

@@ -36,7 +36,11 @@ class UserEntity(TimedEntity, Aggregate):
 			role=role,
 		)
 
-		user.add_event(UserCreated(UserDTO.model_validate(user)))
+		user.add_event(
+			UserCreated(
+				user=UserDTO.model_validate(user)
+			)
+		)
 
 		return user
 

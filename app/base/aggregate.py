@@ -2,7 +2,7 @@ from app.base.events.event import Event
 
 
 class Aggregate:
-    events: list[Event]
+    events: list[Event] = []
 
     def get_events(self) -> list[Event]:
         if not self.events:

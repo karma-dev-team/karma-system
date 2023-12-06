@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
 from app.base.api.app import create_app
-from app.base.api.providers import config_provider, uow_provider, session_provider
+from app.base.api.providers import config_provider, uow_provider, session_provider, event_dispatcher_provider
 from app.base.config import load_config
 from app.base.database import load_database
 from app.base.database.dependecies import uow_dependency
@@ -23,9 +23,10 @@ def get_app() -> FastAPI:
 
 	# exclude
 	app.mount("/static", StaticFiles(directory="static"), name="static")
-	app.dependency_overrides[session_provider] = lambda: session
+	app.dependency_overrides[session_provider] = lambda: session()
 	app.dependency_overrides[uow_provider] = uow_dependency
 	app.dependency_overrides[config_provider] = lambda: config
+	app.dependency_overrides[event_dispatcher_provider] = lambda: event_dispatcher
 
 	# preload ioc
 	load_ioc(app)
@@ -40,7 +41,7 @@ def get_app() -> FastAPI:
 	})
 	module.load()
 
-	app.include_router(router, prefix="")
+	app.include_router(router)
 
 	return app
 

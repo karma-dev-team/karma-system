@@ -1,3 +1,4 @@
+from app.base.database.repo import SQLAlchemyRepo
 from app.base.database.result import Result
 from app.user.entities import UserEntity
 from app.user.exceptions import EmailAlreadyTaken, UserAlreadyExists, RegistrationCodeIsNotCorrect
@@ -6,7 +7,7 @@ from app.user.interfaces.persistance import GetUserFilter
 from app.user.value_objects import UserID
 
 
-class UserRepoImpl(AbstractUserRepo):
+class UserRepoImpl(AbstractUserRepo, SQLAlchemyRepo):
     async def get_user_by_id(self, user_id: UserID) -> UserEntity | None:
         pass
 

@@ -85,13 +85,13 @@ class TypeID:
         * Serialization will always return just an int
         """
 
-        def validate_from_uuid(suffix: UUID | None) -> TypeID:
+        def validate_from_uuid(suffix: str | None) -> TypeID:
             result = cls(suffix=suffix)
             return result
 
         from_uuid_schema = core_schema.chain_schema(
             [
-                core_schema.uuid_schema(),
+                core_schema.str_schema(),
                 core_schema.no_info_plain_validator_function(validate_from_uuid),
             ]
         )

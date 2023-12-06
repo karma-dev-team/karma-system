@@ -1,4 +1,5 @@
 import abc
+from dataclasses import Field, field
 from typing import Protocol
 
 from app.base.database.filters import filter_wrapper
@@ -10,9 +11,9 @@ from app.user.value_objects import UserID
 
 @filter_wrapper
 class GetUserFilter:
-	name: str | None
-	email: str | None
-	user_id: UserID | None
+	name: str | None = field(default=None)
+	email: str | None = field(default=None)
+	user_id: UserID | None = field(default=None)
 
 
 class AbstractUserRepo(Protocol):

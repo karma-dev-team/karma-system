@@ -1,4 +1,5 @@
 import abc
+from dataclasses import field
 from typing import Protocol
 
 from app.base.database.filters import filter_wrapper
@@ -10,8 +11,8 @@ from app.games.value_objects.ids import GameID
 
 @filter_wrapper
 class GetGameFilter:
-    name: str | None
-    game_id: GameID | None
+    name: str | None = field(default=None)
+    game_id: GameID | None = field(default=None)
 
 
 class AbstractCategoryRepository(Protocol):
