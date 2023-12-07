@@ -8,7 +8,7 @@ from app.karma.interfaces.services import AbstractKarmaService
 from app.karma.interfaces.uow import AbstractKarmaUoW
 from app.server.dto.server import ServerDTO
 from app.server.exceptions import PlayerDoesNotExists, ServerNotExists
-from app.server.interfaces.persistance import PlayerFilter
+from app.server.interfaces.persistance import PlayerFilter, GetServerFilter
 from app.server.interfaces.uow import AbstractServerUoW
 
 
@@ -34,7 +34,11 @@ class KarmaService(AbstractKarmaService):
 		)
 		if not ply:
 			raise PlayerDoesNotExists(ply_data=dto.ply_id)
-		server = await self.server_uow.server.find_by_id(dto.server_id)
+		server = await self.server_uow.server.find_by_filters(
+			GetServerFilter(
+				server_id=dto.server_id
+			)
+		)
 		if not server:
 			raise ServerNotExists(server.id)
 		delta_karma = calc_ban_karma(dto.duration, server.karma, ply.karma)

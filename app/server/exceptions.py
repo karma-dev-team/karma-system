@@ -40,6 +40,13 @@ class IPPortAlreadyTaken(RepositoryError):
 	pass
 
 
+class ServerNotRegistered(ApplicationError):
+	server_id: ServerID
+
+	def message(self) -> str:
+		return "Server not registered"
+
+
 class ServerNotOwned(ApplicationError):
 	def message(self) -> str:
 		return "You are not server owner"

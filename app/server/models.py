@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, String, Integer, ForeignKey, Numeric, DECIMAL
+from sqlalchemy import Table, Column, String, Integer, ForeignKey, Numeric, DECIMAL, Boolean
 from sqlalchemy.orm import registry as registry_class, relationship
 
 from app.base.database.consts import STRING_MID_LENGTH, STRING_MIN_LENGTH, STRING_MAX_LENGTH
@@ -21,7 +21,8 @@ def load_models(registry: registry_class):
         Column("owner_id", ForeignKey("users.id"), nullable=False),
         Column("karma", DECIMAL, default=.0),
         Column("game_id", ForeignKey("games.id"), nullable=False),
-        Column("country_code", String(STRING_MIN_LENGTH), nullable=False)
+        Column("country_code", String(STRING_MIN_LENGTH), nullable=False),
+        Column("registered", Boolean, default=False),
     )
 
     server_tags = Table(

@@ -24,12 +24,13 @@ class ServerEntity(TimedEntity, Aggregate):
 	ipv4: IPv4Address
 	ipv6: IPv6Address | None
 	port: int = field(validator=instance_of(int))
-	owner: UserEntity
+	owner: UserEntity = field(validator=instance_of(UserEntity))
 	owner_id: UserID
-	karma: KarmaAmount
+	karma: KarmaAmount = field(validator=instance_of(KarmaAmount))
 	game_id: GameID
 	players: List[PlayerEntity] = field(factory=list)
 	tags: List[ServerTagEntity] = field(factory=list)
+	registered: bool = field(default=False)
 
 	@classmethod
 	def create(
