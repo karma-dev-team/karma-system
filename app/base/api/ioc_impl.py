@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, Annotated
 
 from fastapi import FastAPI, Depends
 
-from app.acl.access_policy import BasicAccessPolicy
-from app.auth.providers import user_provider, optional_user
+from app.auth.access_policy import BasicAccessPolicy
+from app.auth.providers import optional_user
 from app.base.api.ioc import ioc_provider
 from app.base.api.providers import uow_provider, config_provider, event_dispatcher_provider
 from app.base.config import GlobalConfig

@@ -1,8 +1,8 @@
 from typing import Sequence
 
-from app.acl.access_policy import BasicAccessPolicy
-from app.acl.exceptions import NotEnoughPermissions
+from app.auth.access_policy import BasicAccessPolicy
 from app.auth.config import SecurityConfig
+from app.auth.exceptions import AccessDenied
 from app.base.database.result import Result
 from app.base.events.dispatcher import EventDispatcher
 from app.games.dto.player import PlayerDTO
@@ -52,7 +52,7 @@ class ServerService(AbstractServerService):
 			tags=dto.tags,
 		)
 		if self.access_policy.user.blocked:
-			raise NotEnoughPermissions(self.access_policy.user.id)
+			raise AccessDenied(self.access_policy.user.id)
 		async with self.uow.transaction():
 			result = await self.uow.server.add_server(server)
 			match result:
