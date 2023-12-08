@@ -35,7 +35,7 @@ COPY --from=builder-base /wait-for-it /wait-for-it
 
 WORKDIR /app
 
-COPY deploy ./
+COPY . ./
 
 RUN mkdir ./.temp
 
