@@ -7,7 +7,8 @@ from ..base.events.dispatcher import EventDispatcher
 
 
 def load_module(router: APIRouter, app: FastAPI, event_dispatcher: EventDispatcher):
-	router.include_router(_routes.router)
+	router.include_router(_routes.server_router)
+	router.include_router(_routes.player_router)
 
 	load_providers(app)
 

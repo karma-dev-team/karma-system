@@ -59,7 +59,9 @@ class IoContainerImpl(AbstractIoContainer):
         )
 
     def player_service(self) -> AbstractPlayerService:
-        return PlayerService()
+        return PlayerService(
+            uow=self.uow,
+        )
 
 
 async def get_ioc(

@@ -20,10 +20,17 @@ from app.server.security import generate_jwt
 
 
 class PlayerService(AbstractPlayerService):
+	def __init__(self, uow: AbstractServerUoW, event_dispatcher: EventDispatcher) -> None:
+		self.uow = uow
+		self.event_dispatcher = event_dispatcher
+
 	async def player_karmas(self, dto: GetPlayersKarmaDTO) -> Sequence[PlayerDTO]:
 		pass
 
 	async def player_connected(self, dto: GetPlayerDTO) -> PlayerDTO:
+		pass
+
+	async def player_disconnect(self, dto: GetPlayerDTO) -> PlayerDTO:
 		pass
 
 

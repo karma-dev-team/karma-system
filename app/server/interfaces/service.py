@@ -32,3 +32,7 @@ class AbstractPlayerService:
 	@abc.abstractmethod
 	async def player_connected(self, dto: GetPlayerDTO) -> PlayerDTO:
 		pass
+
+	@abc.abstractmethod
+	async def player_disconnect(self, dto: GetPlayerDTO) -> PlayerDTO:
+		pass
