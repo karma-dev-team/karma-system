@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+    db:
+        image: postgres:14-alpine
+        restart: "unless-stopped"
+        environment:
+            POSTGRES_USER: ${DB__USER}
+            POSTGRES_PASSWORD: ${DB__PASSWORD}
+            POSTGRES_DB: ${DB__NAME}
+            VOLUMES_DIR: ${VOLUMES_DIR}
+        volumes:
+            - "~/${VOLUMES_DIR}/pg-data:/var/lib/postgresql/data"
+        ports:
+            - "5432:5432"
+    db_migration:
+        build:
+            context: ..
+            dockerfile: ./Dockerfile
+        restart: "on-failure"
+        depends_on:
+            - db
+        command: [ "/wait-for-it/wait-for-it.sh", "db:5432", "-t", "2", "--", "python", "-m", "alembic", "upgrade", "head" ]
+    app:
+        build:
+            context: ..
+        stop_signal: SIGINT
+        restart: "unless-stopped"
+        depends_on:
+            - db
+            - db_migration
+        ports:
+            - "8000:80"
