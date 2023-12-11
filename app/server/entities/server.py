@@ -10,7 +10,7 @@ from app.games.value_objects.ids import GameID
 from app.server.dto.server import ServerDTO
 from app.server.entities.player import PlayerEntity
 from app.server.entities.tag import ServerTagEntity
-from app.server.events.server import ServerCreated
+from app.server.events.server import ServerCreated, ServerRegistered
 from app.karma.value_objects.karma import KarmaAmount
 from app.server.value_objects.ids import ServerID
 from app.user.entities import UserEntity
@@ -74,3 +74,14 @@ class ServerEntity(TimedEntity, Aggregate):
 		)
 
 		return entity
+
+	def register(self):
+		if self.registered:
+			return
+
+		self.registered = True
+		self.add_event(
+			ServerRegistered(
+				server=ServerDTO.model_validate(self)
+			)
+		)

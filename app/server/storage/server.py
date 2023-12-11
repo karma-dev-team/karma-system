@@ -31,8 +31,14 @@ class ServerRepositoryImpl(AbstractServerRepo, SQLAlchemyRepo):
         stmt = select(ServerEntity)
         if filter.game_id is not None:
             stmt = stmt.where(ServerEntity.game_id == filter.game_id)
-        elif filter.unregistered is not None:
+        if filter.unregistered is not None:
             stmt = stmt.where(ServerEntity.registered != filter.unregistered)
+        if filter.server_ids is not None:
+            # to filter out duplicates without using DB resources
+            ids = set(filter.server_ids)
+            for serv_id in ids:
+                stmt = stmt.where(ServerEntity.id == serv_id)
+
         result = await self.session.execute(stmt)
 
         return result.scalars().all()

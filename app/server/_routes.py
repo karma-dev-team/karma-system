@@ -8,7 +8,8 @@ from starlette.templating import Jinja2Templates
 from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
 from app.server.dto.player import GetPlayerDTO, PlayerDTO
-from app.server.dto.server import GetPlayersKarmaDTO, GetServerDTO, GetServersDTO
+from app.server.dto.server import GetPlayersKarmaDTO, GetServerDTO, GetServersDTO, ApproveServerDTO, ServerDTO, \
+	QueueServerDTO
 from app.server.responses import APITokenData
 from app.server.value_objects.ids import ServerID
 from app.templating.provider import templating_provider
@@ -93,3 +94,19 @@ async def server_card_by_id(
 		)
 	)
 	return templates.TemplateResponse('server/server-card.html', {'request': request, 'server': server})
+
+
+@server_router.post("/server/approve", name="server:approve-server")
+async def approve_server(
+	dto: ApproveServerDTO,
+	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+) -> None:
+	return await ioc.server_service().approve_servers(dto)
+
+
+@server_router.post("/server/queue", name="server:queue-server")
+async def queue_server(
+	dto: QueueServerDTO,
+	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+) -> ServerDTO:
+	return await ioc.server_service().queue_server(dto)

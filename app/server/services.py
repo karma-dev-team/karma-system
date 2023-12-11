@@ -10,7 +10,8 @@ from app.games.exceptions import GameNotExists
 from app.games.interfaces.persistance import GetGameFilter
 from app.games.interfaces.uow import AbstractGameUoW
 from app.server.dto.player import GetPlayerDTO, PlayerDTO
-from app.server.dto.server import GetPlayersKarmaDTO, RegisterServerDTO, ServerDTO, GetServerDTO, GetServersDTO
+from app.server.dto.server import GetPlayersKarmaDTO, ApproveServerDTO, ServerDTO, GetServerDTO, GetServersDTO, \
+	QueueServerDTO
 from app.server.entities.player import PlayerEntity, PlayerSelector
 from app.server.entities.server import ServerEntity
 from app.server.exceptions import ServerNotExists, ServerNotOwned, PlayerDoesNotExists
@@ -101,7 +102,7 @@ class ServerService(AbstractServerService):
 		self.access_policy = access_policy
 		self.event_dispatcher = event_dispatcher
 
-	async def register_server(self, dto: RegisterServerDTO) -> ServerDTO:
+	async def queue_server(self, dto: QueueServerDTO) -> ServerDTO:
 		server = ServerEntity.create(
 			name=dto.name,
 			ipv4=dto.ip,
@@ -121,6 +122,21 @@ class ServerService(AbstractServerService):
 					return ServerDTO.model_validate(value)
 				case Result(None, err):
 					raise err
+
+	async def approve_servers(self, dto: ApproveServerDTO) -> None:
+		servers = await self.uow.server.filter(
+			GetServersFilter(
+				server_ids=dto.server_ids,
+			)
+		)
+		if not servers:
+			raise ServerNotExists(dto.server_ids[0])
+		events = []
+
+		for server in servers:
+			server.register()
+			events.extend(server.get_events())
+		await self.event_dispatcher.publish_events(events)
 
 	async def get_api_token(self, dto: GetServerDTO) -> str:
 		server = await self.uow.server.find_by_filters(

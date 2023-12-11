@@ -30,7 +30,11 @@ class GetPlayersKarmaDTO(DTO):
 	players: Sequence[GetPlayerDTO]
 
 
-class RegisterServerDTO(DTO):
+class ApproveServerDTO(DTO):
+	server_ids: Sequence[ServerID]
+
+
+class QueueServerDTO(DTO):
 	name: str
 	description: str
 	icon: InputFileType | None
