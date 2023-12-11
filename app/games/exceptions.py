@@ -9,3 +9,8 @@ class GameAlreadyExists(ApplicationError):
 class GameNotExists(ApplicationError):
     def message(self) -> str:
         return "game with given id does not exists"
+
+
+class CategoryNotExists(ApplicationError):
+    def message(self) -> str:
+        return "category does not exists"

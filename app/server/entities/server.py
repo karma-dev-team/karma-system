@@ -30,6 +30,7 @@ class ServerEntity(TimedEntity, Aggregate):
 	game_id: GameID
 	players: List[PlayerEntity] = field(factory=list)
 	tags: List[ServerTagEntity] = field(factory=list)
+	registered: bool = field(default=False)
 
 	@classmethod
 	def create(

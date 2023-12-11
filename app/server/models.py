@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, String, Integer, ForeignKey, Numeric, DECIMAL
+from sqlalchemy import Table, Column, String, Integer, ForeignKey, Numeric, DECIMAL, Boolean
 from sqlalchemy.orm import registry as registry_class, relationship
 
 from app.base.database.consts import STRING_MID_LENGTH, STRING_MIN_LENGTH, STRING_MAX_LENGTH
@@ -43,7 +43,8 @@ def load_models(registry: registry_class):
         Column("ipv4", String(STRING_MID_LENGTH), nullable=False),
         Column("ipv6", String(STRING_MAX_LENGTH), nullable=True),
         Column("hours", DECIMAL, default=0),
-        Column("karma", DECIMAL, default=0)
+        Column("karma", DECIMAL, default=0),
+        Column("online", Boolean, default=False),
     )
 
     registry.map_imperatively(

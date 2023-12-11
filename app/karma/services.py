@@ -1,5 +1,5 @@
 from app.base.events.dispatcher import EventDispatcher
-from app.games.dto.player import PlayerDTO
+from app.server.dto.player import PlayerDTO
 from app.karma.calculations import calc_ban_karma, calc_warn_karma
 from app.karma.dtos.ban import HandleBanDTO
 from app.karma.dtos.karma import ChangeKarmaDTO

@@ -1,6 +1,6 @@
 import abc
 
-from app.games.dto.player import PlayerDTO
+from app.server.dto.player import PlayerDTO
 from app.karma.dtos.ban import HandleBanDTO
 from app.karma.dtos.karma import ChangeKarmaDTO
 from app.karma.dtos.warn import HandleWarnDTO

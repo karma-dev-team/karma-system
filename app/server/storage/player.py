@@ -1,3 +1,5 @@
+from sqlalchemy import select
+
 from app.base.database.repo import SQLAlchemyRepo
 from app.base.database.result import Result
 from app.server.entities.player import PlayerEntity
@@ -6,7 +8,26 @@ from app.server.interfaces.persistance import AbstractPlayerRepo, PlayerFilter
 
 class PlayerRepositoryImpl(AbstractPlayerRepo, SQLAlchemyRepo):
     async def find_by_filters(self, filter_: PlayerFilter) -> PlayerEntity | None:
-        pass
+        stmt = select(PlayerEntity)
+
+        if filter_.ipv4 is not None:
+            stmt = stmt.where(PlayerEntity.ipv4 == filter_.ipv4)
+        if filter_.ipv6 is not None:
+            stmt = stmt.where(PlayerEntity.ipv6 == filter_.ipv6)
+        if filter_.name is not None:
+            stmt = stmt.where(PlayerEntity.name == filter_.name)
+        if filter_.steam_id is not None:
+            stmt = stmt.where(PlayerEntity.steam_id == filter_.steam_id)
+
+        result = await self.session.execute(stmt)
+        return result.unique().scalar_one()
 
     async def add_player(self, player: PlayerEntity) -> Result[PlayerEntity, None]:
-        pass
+        self.session.add(player)
+
+        try:
+            await self.session.commit()
+            await self.session.refresh(player)
+        except Exception as exc:
+            raise exc
+        return Result.ok(player)

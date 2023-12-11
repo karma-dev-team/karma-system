@@ -7,8 +7,7 @@ from starlette.templating import Jinja2Templates
 
 from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
-from app.games.dto.player import PlayerDTO
-from app.server.dto.player import GetPlayerDTO
+from app.server.dto.player import GetPlayerDTO, PlayerDTO
 from app.server.dto.server import GetPlayersKarmaDTO, GetServerDTO, GetServersDTO
 from app.server.responses import APITokenData
 from app.server.value_objects.ids import ServerID
@@ -21,6 +20,7 @@ server_router = APIRouter(prefix="/server")
 @player_router.post("/connect", name="player:connect_event")
 async def connect_event(
 	data: GetPlayerDTO,
+	# server: Annotated[ServerEntity, Depends(server_provider)],  # TODO: UNCOMMENT ON PRODUCTION
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 ) -> PlayerDTO:
 	return await ioc.player_service().player_connected(data)
@@ -29,14 +29,25 @@ async def connect_event(
 @player_router.post("/disconnect", name='player:disconnect_event')
 async def disconnect_event(
 	data: GetPlayerDTO,
+	# server: Annotated[ServerEntity, Depends(server_provider)],  # TODO: UNCOMMENT ON PRODUCTION
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 ) -> PlayerDTO:
 	return await ioc.player_service().player_disconnect(data)
 
 
+@player_router.get("/player/{ply_id}", name="player:get-player-info")
+async def player_info(
+	data: GetPlayerDTO,
+	# server: Annotated[ServerEntity, Depends(server_provider)],  # TODO: UNCOMMENT ON PRODUCTION
+	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+) -> PlayerDTO:
+	return await ioc.player_service().get_player(data)
+
+
 @player_router.post("/players", name="player:get-players-list")
 async def handle_players_list(
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+	# server: Annotated[ServerEntity, Depends(server_provider)],  # TODO: UNCOMMENT ON PRODUCTION
 	data: GetPlayersKarmaDTO,
 ) -> Sequence[PlayerDTO]:
 	return await ioc.player_service().player_karmas(data)
@@ -46,6 +57,7 @@ async def handle_players_list(
 async def get_api_token(
 	server_id: UUID,
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+	# user: Annotated[UserEntity, Depends(user_provider)]   # TODO: UNCOMMENT ON PRODUCTION
 ) -> APITokenData:
 	return APITokenData(token=(
 		await ioc.server_service().get_api_token(

@@ -5,9 +5,9 @@ from attrs.validators import optional, instance_of
 
 from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity, entity
-from app.games.dto.player import PlayerDTO
+from app.server.dto.player import PlayerDTO
 from app.karma.value_objects.karma import KarmaAmount
-from app.server.events.player import PlayerCreated, PlayerKarmaChanged
+from app.server.events.player import PlayerCreated, PlayerKarmaChanged, PlayerConnected
 from app.server.value_objects.hours import Hours
 from app.server.value_objects.ids import PlayerID
 from app.server.value_objects.steam_id import SteamID
@@ -37,6 +37,7 @@ class PlayerEntity(TimedEntity, Aggregate):
 	ipv6: IPv6Address | None = field(validator=optional(instance_of(IPv6Address)))
 	hours: Hours = field(default=Hours(0))
 	karma: KarmaAmount = field(default=KarmaAmount(0))
+	online: bool = field(default=False)
 
 	@classmethod
 	def create(cls, name: str, selector: PlayerSelector) -> "PlayerEntity":
@@ -67,3 +68,18 @@ class PlayerEntity(TimedEntity, Aggregate):
 			)
 		)
 
+	def player_connectod(self):
+		self.online = True
+		self.add_event(
+			PlayerConnected(
+				player=PlayerDTO.model_validate(self)
+			)
+		)
+
+	def player_disconnected(self):
+		self.online = False
+		self.add_event(
+			PlayerDisconnected(
+				player=PlayerDTO.model_validate(self)
+			)
+		)

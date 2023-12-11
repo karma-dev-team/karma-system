@@ -5,7 +5,10 @@ from typing import Type, AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.base.uow import AbstractUoW
+from app.games.interfaces.persistance import AbstractGamesRepository, AbstractCategoryRepository
 from app.games.interfaces.uow import AbstractGameUoW
+from app.games.storage.category import CategoryRepository
+from app.games.storage.game import GameRepository
 from app.karma.interfaces.persistence import AbstractKarmaRepository
 from app.karma.interfaces.uow import AbstractKarmaUoW
 from app.karma.storages.karma import KarmaRepoImpl
@@ -64,6 +67,9 @@ class SQLAlchemyUoW(SQLAlchemyBaseUoW, AbstractServerUoW, AbstractKarmaUoW, Abst
     player: AbstractPlayerRepo
     user: AbstractUserRepo
     karma: AbstractKarmaRepository
+    game: AbstractGamesRepository
+    category: AbstractCategoryRepository
+
 
     def __init__(
         self,
@@ -72,12 +78,16 @@ class SQLAlchemyUoW(SQLAlchemyBaseUoW, AbstractServerUoW, AbstractKarmaUoW, Abst
         server_repo: Type[AbstractServerRepo],
         player_repo: Type[AbstractPlayerRepo],
         user_repo: Type[AbstractUserRepo],
-        karma_repo: Type[AbstractKarmaRepository]
+        karma_repo: Type[AbstractKarmaRepository],
+        game_repo: Type[AbstractGamesRepository],
+        category: Type[AbstractCategoryRepository],
     ) -> None:
         self.server = server_repo(session)
         self.player = player_repo(session)
         self.user = user_repo(session)
         self.karma = karma_repo(session)
+        self.game = game_repo(session)
+        self.category = category(session)
 
         super().__init__(session)
 
@@ -89,4 +99,6 @@ class SQLAlchemyUoW(SQLAlchemyBaseUoW, AbstractServerUoW, AbstractKarmaUoW, Abst
             player_repo=PlayerRepositoryImpl,
             user_repo=UserRepoImpl,
             karma_repo=KarmaRepoImpl,
+            game_repo=GameRepository,
+            category=CategoryRepository,
         )

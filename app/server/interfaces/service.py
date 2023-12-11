@@ -1,8 +1,7 @@
 import abc
 from typing import Sequence
 
-from app.games.dto.player import PlayerDTO
-from app.server.dto.player import GetPlayerDTO
+from app.server.dto.player import GetPlayerDTO, PlayerDTO
 from app.server.dto.server import GetServerDTO, ServerDTO, GetPlayersKarmaDTO, RegisterServerDTO, GetServersDTO
 
 
@@ -30,9 +29,13 @@ class AbstractPlayerService:
 		pass
 
 	@abc.abstractmethod
+	async def player_disconnect(self, dto: GetPlayerDTO) -> PlayerDTO:
+		pass
+
+	@abc.abstractmethod
 	async def player_connected(self, dto: GetPlayerDTO) -> PlayerDTO:
 		pass
 
 	@abc.abstractmethod
-	async def player_disconnect(self, dto: GetPlayerDTO) -> PlayerDTO:
+	async def get_player(self, dto: GetPlayerDTO) -> PlayerDTO:
 		pass

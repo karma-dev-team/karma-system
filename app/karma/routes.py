@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from app.auth.dependencies import role_required
 from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
-from app.games.dto.player import PlayerDTO
+from app.server.dto.player import PlayerDTO
 from app.karma.dtos.ban import HandleBanDTO
 from app.karma.dtos.karma import ChangeKarmaDTO
 from app.karma.dtos.warn import HandleWarnDTO

@@ -5,6 +5,7 @@ from typing import Protocol, Sequence
 from app.base.database.filters import filter_wrapper
 from app.base.database.result import Result
 from app.games.value_objects.ids import GameID
+from app.server.dto.player import GetPlayerDTO
 from app.server.entities.player import PlayerEntity
 from app.server.entities.server import ServerEntity
 from app.server.entities.tag import ServerTagEntity
@@ -19,6 +20,15 @@ class PlayerFilter:
 	ipv4: IPv4Address | None = field(default=None)
 	ipv6: IPv6Address | None = field(default=None)
 	name: str | None = field(default=None)
+
+	@classmethod
+	def from_dto(cls, dto: GetPlayerDTO) -> "PlayerFilter":
+		return PlayerFilter(
+			steam_id=dto.steam_id,
+			ipv4=dto.ipv4,
+			ipv6=dto.ipv6,
+			name=dto.name,
+		)
 
 
 @filter_wrapper
