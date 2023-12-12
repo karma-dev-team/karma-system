@@ -5,7 +5,6 @@ from uuid import UUID
 from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import core_schema
-
 from app.base.typeid.consts import PREFIX_MAX_LEN
 from app.base.typeid.exceptions import PrefixValidationException, InvalidTypeIDStringException
 
@@ -21,10 +20,12 @@ class TypeID:
     UserID.from_uuid(uuid.uuid4())
     """
 
-    prefix: str = "" # prefix must be singular
+    prefix: str = ""  # prefix must be singular
 
-    def __init__(self, *, suffix: UUID | None = None):
+    def __init__(self, *, suffix: UUID | None = None, **kwargs):
         self.suffix = uuid.uuid4() if not suffix else suffix
+
+        super().__init__(**kwargs)
 
     @classmethod
     def generate(cls, type_: str = "uuid4") -> "TypeID":
@@ -53,11 +54,7 @@ class TypeID:
         return self.suffix
 
     def __str__(self):
-        value = ""
-        if self.prefix:
-            value += f"{self.prefix}_"
-        value += str(self.suffix)
-        return value
+        return str(self.suffix)
 
     def __eq__(self, value: object) -> bool:
         if not isinstance(value, self.__class__):
@@ -68,7 +65,11 @@ class TypeID:
         return hash((self.prefix, self.suffix))
 
     def __repr__(self):
-        return str(self)
+        value = ""
+        if self.prefix:
+            value += f"{self.prefix}_"
+        value += str(self.suffix)
+        return value
 
     @classmethod
     def __get_pydantic_core_schema__(
