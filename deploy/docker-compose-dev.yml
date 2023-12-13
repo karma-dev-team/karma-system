@@ -9,7 +9,7 @@ services:
             POSTGRES_DB: ${DB__NAME}
             VOLUMES_DIR: ${VOLUMES_DIR}
         volumes:
-            - "~/${VOLUMES_DIR}/pg-data:/var/lib/postgresql/data"
+            - "${VOLUMES_DIR}/pg-data:/var/lib/postgresql/data"
         ports:
             - "5432:5432"
     db_migration:
@@ -28,5 +28,18 @@ services:
         depends_on:
             - db
             - db_migration
+            - redis
         ports:
             - "8000:80"
+    redis:
+        image: redis:latest
+        restart: always
+        ports:
+            - "6379:6379"
+        volumes:
+            - "${VOLUMES_DIR}/redis-data:/data/"
+            - "./deploy/redis.conf:/usr/local/etc/redis/redis.conf"
+        environment:
+            - REDIS_PASSWORD=${REDIS__PASSWORD}
+            - REDIS_PORT=6379
+            - REDIS_DATABASES=16

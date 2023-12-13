@@ -1,5 +1,5 @@
 [db]
-database_dsn = "postgresql+asyncpg://postgres:password@localhost:5432/test"
+database_dsn = "postgresql+asyncpg://postgres:password@db/test"
 
 [logging]
 path = "logs/log_{time}.log"
@@ -11,4 +11,4 @@ title = "qwerty123"
 secret_key = "blabla"
 
 [redis]
-dsn = ""
+dsn = "redis://secret@redis/1"

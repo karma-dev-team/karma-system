@@ -39,6 +39,7 @@ def get_app() -> FastAPI:
 		'event_dispatcher': event_dispatcher,
 		'session': session,
 		'router': router,
+		'config': config,
 	})
 	modules.load()
 
