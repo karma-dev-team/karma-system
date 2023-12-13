@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, String, Integer, ForeignKey, Numeric, DECIMAL, Boolean
+from sqlalchemy import Table, Column, String, Integer, ForeignKey, DECIMAL, Boolean
 from sqlalchemy.orm import registry as registry_class, relationship
 
 from app.base.database.consts import STRING_MID_LENGTH, STRING_MIN_LENGTH, STRING_MAX_LENGTH
@@ -51,7 +51,10 @@ def load_models(registry: registry_class):
         ServerEntity,
         server,
         properties={
-            'tags': relationship('ServerTags', foreign_keys=server.c.game_id),
+            'tags': relationship(
+                'ServerTagEntity',
+                lazy="joined"
+            ),
         }
     )
 

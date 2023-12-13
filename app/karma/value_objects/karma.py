@@ -16,7 +16,7 @@ class KarmaAmount(Decimal):  # standalone value object
 
     # don't add __slots__, because this object becames not iterable by vars function
     # vars is used by fastapi.jsonable_encoder, this is way fastapi can encode objects
-    def __init__(self, value: Amount | DecimalOrNumber):
+    def __init__(self, value: KarmaAmount | DecimalOrNumber):
         try:
             self._value = Decimal(str(value))
         except InvalidOperation as exc:
@@ -28,7 +28,7 @@ class KarmaAmount(Decimal):  # standalone value object
     def to_decimal(self) -> Decimal:
         return self._value
 
-    def __add__(self, other: Amount | DecimalOrNumber):
+    def __add__(self, other: KarmaAmount | DecimalOrNumber):
         if isinstance(other, self.__class__):
             return self.__class__(self._value + other._value)
 
@@ -45,7 +45,7 @@ class KarmaAmount(Decimal):  # standalone value object
     def __str__(self):
         return str(self._value)
 
-    def __mul__(self, other: Amount | DecimalOrNumber):
+    def __mul__(self, other: KarmaAmount | DecimalOrNumber):
         if isinstance(other, self.__class__):
             return self.__class__(self._value * other._value)
 
@@ -67,7 +67,7 @@ class KarmaAmount(Decimal):  # standalone value object
         * Serialization will always return just an int
         """
 
-        def validate_from_decimal(value: DecimalOrNumber) -> Amount:
+        def validate_from_decimal(value: DecimalOrNumber) -> KarmaAmount:
             result = cls(value)
             return result
 

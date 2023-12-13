@@ -61,6 +61,7 @@ class IoContainerImpl(AbstractIoContainer):
     def player_service(self) -> AbstractPlayerService:
         return PlayerService(
             uow=self.uow,
+            event_dispatcher=self.event_dispatcher,
         )
 
 

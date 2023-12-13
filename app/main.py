@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
 from app.base.api.app import create_app
+from app.base.api.lifespan import lifespan
 from app.base.api.providers import config_provider, uow_provider, session_provider, event_dispatcher_provider
 from app.base.config import load_config
 from app.base.database import load_database
@@ -17,7 +18,7 @@ def get_app() -> FastAPI:
 	config = load_config('./deploy/config.toml')
 	session, registry = load_database(config.db)
 
-	app, router = create_app(config.api, config.debug)
+	app, router = create_app(config.api, config.debug, lifespan=lifespan(session))
 	configure_logging(config.logging)
 	event_dispatcher = configure_event_dispatcher()
 
@@ -32,14 +33,14 @@ def get_app() -> FastAPI:
 	load_ioc(app)
 	load_templating(app, template_directory="templates")
 
-	module = configure_module_loader(workflow_data={
+	modules = configure_module_loader(workflow_data={
 		'registry': registry,
 		'app': app,
 		'event_dispatcher': event_dispatcher,
 		'session': session,
 		'router': router,
 	})
-	module.load()
+	modules.load()
 
 	app.include_router(router)
 

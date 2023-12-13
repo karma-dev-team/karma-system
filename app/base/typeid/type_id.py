@@ -22,7 +22,7 @@ class TypeID:
 
     prefix: str = ""  # prefix must be singular
 
-    def __init__(self, *, suffix: UUID | None = None, **kwargs):
+    def __init__(self, *, suffix: UUID | None | str = None, **kwargs):
         self.suffix = uuid.uuid4() if not suffix else suffix
 
         super().__init__(**kwargs)
@@ -86,13 +86,12 @@ class TypeID:
         * Serialization will always return just an int
         """
 
-        def validate_from_uuid(suffix: str | None) -> TypeID:
+        def validate_from_uuid(suffix: str | None | UUID) -> TypeID:
             result = cls(suffix=suffix)
             return result
 
         from_uuid_schema = core_schema.chain_schema(
             [
-                core_schema.str_schema(),
                 core_schema.no_info_plain_validator_function(validate_from_uuid),
             ]
         )
@@ -102,7 +101,7 @@ class TypeID:
             python_schema=core_schema.union_schema(
                 [
                     # check if it's an instance first before doing any further work
-                    core_schema.is_instance_schema(cls),
+                    # core_schema.is_instance_schema(cls),
                     from_uuid_schema,
                 ]
             ),

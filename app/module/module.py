@@ -36,11 +36,11 @@ class ModuleLoader:
 
 def configure_module_loader(workflow_data: dict[str, Any]) -> ModuleLoader:
     module = ModuleLoader(modules=[
+        auth.load_module,
         user.load_module,
         server.load_module,
         games.load_module,
         karma.load_module,
-        auth.load_module
     ], workflow_data=workflow_data)
 
     return module

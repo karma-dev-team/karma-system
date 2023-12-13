@@ -16,4 +16,3 @@ def load_module(router: APIRouter, app: FastAPI):
     app.dependency_overrides[optional_user] = _optional_user
 
     router.include_router(routes.router)
-
