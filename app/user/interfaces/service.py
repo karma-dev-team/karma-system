@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from app.user.dto.user import GetUserDTO, UserDTO, CreateUserDTO
+from app.user.dto.user import GetUserDTO, UserDTO, CreateUserDTO, RegCodeDTO, CreateRegCode
 
 
 class AbstractUserService:
@@ -10,4 +10,8 @@ class AbstractUserService:
 
 	@abstractmethod
 	async def create_user(self, dto: CreateUserDTO) -> UserDTO:
+		pass
+
+	@abstractmethod
+	async def create_reg_code(self, dto: CreateRegCode) -> RegCodeDTO:
 		pass

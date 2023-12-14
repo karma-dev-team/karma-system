@@ -1,5 +1,5 @@
 from app.base.exceptions import RepositoryError, ApplicationError
-from app.user.value_objects import UserID
+from app.user.value_objects import UserID, RegCodeID
 
 
 class EmailAlreadyTaken(RepositoryError):
@@ -21,3 +21,10 @@ class UserDoesNotExists(ApplicationError):
 
 	def message(self) -> str:
 		return f"user does not exists, id: {self.user_id}"
+
+
+class RegistrationCodeAlreadyUsed(ApplicationError):
+	reg_code_id: RegCodeID
+
+	def message(self) -> str:
+		return "registration code id already used"

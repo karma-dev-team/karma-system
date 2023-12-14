@@ -1,14 +1,18 @@
+import uuid
+from hashlib import md5
+
+import bcrypt
 from attrs import field
-from attrs.validators import instance_of
+from attrs.validators import instance_of, max_len, optional
 
 from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity, entity
-from app.server.security import generate_jwt
 from app.user.dto.user import UserDTO
 from app.user.enums import UserRoles
 from app.user.events.user import UserCreated, GivenSuperUser, UserBlocked
+from app.user.exceptions import RegistrationCodeAlreadyUsed
 from app.user.security import get_password_hash, verify_password
-from app.user.value_objects import UserID
+from app.user.value_objects import UserID, RegCodeID
 
 
 @entity
@@ -72,3 +76,30 @@ class UserEntity(TimedEntity, Aggregate):
 				UserDTO.model_validate(self)
 			)
 		)
+
+
+@entity
+class RegistrationCodeEntity(TimedEntity):
+	# if user_id is not None then reg code is used!
+	id: RegCodeID = field(factory=RegCodeID.generate)
+	key: str = field(validator=max_len(64))
+	code: str = field(validator=max_len(64))
+	user_id: UserID = field(validator=optional(instance_of(UserID)), default=None)
+
+	@staticmethod
+	def generate_reg_code(key: str | None = None) -> str:
+		return md5(str(key or uuid.uuid4()).encode("utf8")).hexdigest()
+
+	@classmethod
+	def create(cls, key: str) -> "RegistrationCode":
+		reg = RegistrationCodeEntity(
+			key=key,
+			code=cls.generate_reg_code(key),
+		)
+
+		return reg
+
+	def register_user(self, user_id: UserID):
+		if self.user_id:
+			raise RegistrationCodeAlreadyUsed(self.id)
+		self.user_id = user_id

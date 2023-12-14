@@ -17,8 +17,8 @@ class IncorrectAPIServerToken(APIError):
 
 @exception_wrapper
 class PlayerDoesNotExists(ApplicationError):
-	player_id: PlayerID | None = field(validator=optional(instance_of(PlayerID)))
-	ply_data: GetPlayerDTO | None = field(validator=optional(instance_of(GetPlayerDTO)))
+	player_id: PlayerID | None = field(validator=optional(instance_of(PlayerID)), default=None)
+	ply_data: GetPlayerDTO | None = field(validator=optional(instance_of(GetPlayerDTO)), default=None)
 
 	def message(self) -> str:
 		return f"Specified player does not exists, ID: {self.player_id}"

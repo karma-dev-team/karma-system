@@ -1,11 +1,11 @@
 from enum import Enum
 
-from sqlalchemy import Table, Column, Enum, String, Boolean
+from sqlalchemy import Table, Column, Enum, String, Boolean, ForeignKey
 from sqlalchemy.orm import registry as registry_class
 
 from app.base.database.consts import STRING_MID_LENGTH, STRING_EMAIL_LENGTH, STRING_MAX_LENGTH
 from app.base.database.models import id_columns, timed_columns
-from app.user.entities import UserEntity
+from app.user.entities import UserEntity, RegistrationCodeEntity
 from app.user.enums import UserRoles
 
 
@@ -23,7 +23,22 @@ def load_models(registry: registry_class) -> None:
 		Column("superuser", Boolean, default=False),
 	)
 
+	registration_code = Table(
+		'registration_codes',
+		registry.metadata,
+		*id_columns(),
+		*timed_columns(),
+		Column("key", String(STRING_MID_LENGTH), nullable=False),
+		Column("code", String(STRING_MID_LENGTH), nullable=False),
+		Column("user_id", ForeignKey("users.id"), nullable=True),
+	)
+
 	registry.map_imperatively(
 		UserEntity,
 		user_table,
+	)
+
+	registry.map_imperatively(
+		RegistrationCodeEntity,
+		registration_code,
 	)

@@ -32,9 +32,9 @@ class PlayerSelector:
 class PlayerEntity(TimedEntity, Aggregate):
 	id: PlayerID = field(factory=PlayerID.generate)
 	name: str
-	steam_id: SteamID | None = field(validator=optional(instance_of(SteamID)))
-	ipv4: IPv4Address | None = field(validator=optional(instance_of(IPv4Address)))
-	ipv6: IPv6Address | None = field(validator=optional(instance_of(IPv6Address)))
+	steam_id: SteamID | None = field(validator=optional(instance_of(SteamID)), default=None)
+	ipv4: IPv4Address | None = field(validator=optional(instance_of(IPv4Address)), default=None)
+	ipv6: IPv6Address | None = field(validator=optional(instance_of(IPv6Address)), default=None)
 	hours: Hours = field(default=Hours(0))
 	karma: KarmaAmount = field(default=KarmaAmount(0))
 	online: bool = field(default=False)

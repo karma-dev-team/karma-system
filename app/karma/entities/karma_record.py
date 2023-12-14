@@ -21,11 +21,11 @@ class KarmaRecordEntity(TimedEntity):
     id: KarmaRecID
     delta_karma: KarmaAmount
     player_id: PlayerID
-    from_id: UserID | None = field(validator=optional(instance_of(UserID)))
-    from_ply_id: PlayerID | None = field(validator=optional(instance_of(PlayerID)))
+    from_id: UserID | None = field(validator=optional(instance_of(UserID)), default=None)
+    from_ply_id: PlayerID | None = field(validator=optional(instance_of(PlayerID)), default=None)
     server_id: ServerID
     reason: str | None = field(validator=instance_of(str))
-    duration: int | None = field(validator=optional(instance_of(int)))  # in minutes
+    duration: int | None = field(validator=optional(instance_of(int)), default=None)  # in minutes
     type: KarmaRecordType = field(validator=instance_of(KarmaRecordType))
 
     @classmethod
