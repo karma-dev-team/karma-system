@@ -17,7 +17,7 @@ class SteamID(str):
     def __init__(self, value: Any):
         self._validate(value)
 
-        super().__init__(value)
+        super().__init__()
 
     def _validate(self, val: str) -> None:
         if val == "steam_0:0:0":
@@ -75,7 +75,6 @@ class SteamID(str):
             python_schema=core_schema.union_schema(
                 [
                     # check if it's an instance first before doing any further work
-                    core_schema.is_instance_schema(SteamID),
                     from_uuid_schema,
                 ]
             ),

@@ -1,9 +1,9 @@
 import abc
 from typing import Sequence
 
-from app.games.dto.player import PlayerDTO
-from app.server.dto.player import GetPlayerDTO
-from app.server.dto.server import GetServerDTO, ServerDTO, GetPlayersKarmaDTO, RegisterServerDTO, GetServersDTO
+from app.server.dto.player import GetPlayerDTO, PlayerDTO
+from app.server.dto.server import GetServerDTO, ServerDTO, GetPlayersKarmaDTO, ApproveServerDTO, GetServersDTO, \
+	QueueServerDTO
 
 
 class AbstractServerService:
@@ -12,7 +12,13 @@ class AbstractServerService:
 		pass
 
 	@abc.abstractmethod
-	async def register_server(self, dto: RegisterServerDTO) -> ServerDTO:
+	async def approve_servers(self, dto: ApproveServerDTO) -> None:
+		"""adds server to queue of registration to be able see in admin panel"""
+		pass
+
+	@abc.abstractmethod
+	async def queue_server(self, dto: QueueServerDTO) -> ServerDTO:
+		"""adds server to queue of registration to be able see in admin panel"""
 		pass
 
 	@abc.abstractmethod
@@ -30,5 +36,13 @@ class AbstractPlayerService:
 		pass
 
 	@abc.abstractmethod
+	async def player_disconnect(self, dto: GetPlayerDTO) -> PlayerDTO:
+		pass
+
+	@abc.abstractmethod
 	async def player_connected(self, dto: GetPlayerDTO) -> PlayerDTO:
+		pass
+
+	@abc.abstractmethod
+	async def get_player(self, dto: GetPlayerDTO) -> PlayerDTO:
 		pass

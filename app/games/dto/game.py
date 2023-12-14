@@ -11,3 +11,8 @@ class GameDTO(DTO, TimedDTO):
 	id: GameID
 	name: str
 	description: str
+
+
+class AddGameDTO(DTO):
+	name: str
+	description: str

@@ -44,14 +44,18 @@ def load_models(registry: registry_class):
         Column("ipv4", String(STRING_MID_LENGTH), nullable=False),
         Column("ipv6", String(STRING_MAX_LENGTH), nullable=True),
         Column("hours", DECIMAL, default=0),
-        Column("karma", DECIMAL, default=0)
+        Column("karma", DECIMAL, default=0),
+        Column("online", Boolean, default=False),
     )
 
     registry.map_imperatively(
         ServerEntity,
         server,
         properties={
-            'tags': relationship('ServerTags', foreign_keys=server.c.game_id),
+            'tags': relationship(
+                'ServerTagEntity',
+                lazy="joined"
+            ),
         }
     )
 

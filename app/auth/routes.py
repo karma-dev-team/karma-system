@@ -1,6 +1,6 @@
 from typing import Annotated, TYPE_CHECKING
 
-from fastapi import Body, Depends, APIRouter
+from fastapi import Body, Depends, APIRouter, Form
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, HTMLResponse
 from starlette.templating import Jinja2Templates
@@ -26,17 +26,17 @@ if TYPE_CHECKING:
 router = APIRouter()
 
 
-@router.post("/register", name="register-user")
+@router.post("/auth/register", name="register-user")
 async def register_user(
     request: Request,
     config: Annotated["GlobalConfig", Depends(config_provider)],
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
     ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
     auth_session: Annotated[AbstractAuthSession, Depends(auth_session_provider)],
-    username: str = Body(...),
-    email: str = Body(...),
-    password: str = Body(...),
-    registration_code: str = Body(...),
+    username: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...),
+    registration_code: str = Form(...),
 ):
     try:
         user = await ioc.user_service().create_user(
@@ -76,15 +76,15 @@ async def register_user(
     return templates.TemplateResponse("user/register.html", {'request': request})
 
 
-@router.post("/login", name='login-user')
+@router.post("/auth/login", name='login-user-post')
 async def login_user(
     request: Request,
     config: Annotated["GlobalConfig", Depends(config_provider)],
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
     ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
     auth_session: Annotated[AbstractAuthSession, Depends(auth_session_provider)],
-    username: str = Body(default=None),
-    password: str = Body(default=None),
+    username: str = Form(...),
+    password: str = Form(...),
 ):
     try:
         user = await ioc.user_service().get_user(

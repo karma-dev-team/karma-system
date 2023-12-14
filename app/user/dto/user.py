@@ -1,12 +1,14 @@
+from pydantic import Field
+
 from app.base.dto import DTO
 from app.user.enums import UserRoles
 from app.user.value_objects import UserID
 
 
 class GetUserDTO(DTO):
-	user_id: UserID | None
-	email: str | None
-	name: str | None
+	user_id: UserID | None = Field(default=None)
+	email: str | None = Field(default=None)
+	name: str | None = Field(default=None)
 
 
 class UserDTO(DTO):

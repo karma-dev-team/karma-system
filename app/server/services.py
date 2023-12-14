@@ -1,30 +1,90 @@
+import asyncio
 from typing import Sequence
 
-from app.acl.access_policy import BasicAccessPolicy
-from app.acl.exceptions import NotEnoughPermissions
+from app.auth.access_policy import BasicAccessPolicy
 from app.auth.config import SecurityConfig
+from app.auth.exceptions import AccessDenied
 from app.base.database.result import Result
 from app.base.events.dispatcher import EventDispatcher
-from app.games.dto.player import PlayerDTO
 from app.games.exceptions import GameNotExists
 from app.games.interfaces.persistance import GetGameFilter
 from app.games.interfaces.uow import AbstractGameUoW
-from app.server.dto.player import GetPlayerDTO
-from app.server.dto.server import GetPlayersKarmaDTO, RegisterServerDTO, ServerDTO, GetServerDTO, GetServersDTO
+from app.server.dto.player import GetPlayerDTO, PlayerDTO
+from app.server.dto.server import GetPlayersKarmaDTO, ApproveServerDTO, ServerDTO, GetServerDTO, GetServersDTO, \
+	QueueServerDTO
+from app.server.entities.player import PlayerEntity, PlayerSelector
 from app.server.entities.server import ServerEntity
-from app.server.exceptions import ServerNotExists, ServerNotOwned
-from app.server.interfaces.persistance import GetServersFilter, GetServerFilter
+from app.server.exceptions import ServerNotExists, ServerNotOwned, PlayerDoesNotExists
+from app.server.interfaces.persistance import GetServersFilter, GetServerFilter, PlayerFilter
 from app.server.interfaces.service import AbstractPlayerService, AbstractServerService
 from app.server.interfaces.uow import AbstractServerUoW
 from app.server.security import generate_jwt
 
 
 class PlayerService(AbstractPlayerService):
+	def __init__(self, uow: AbstractServerUoW, event_dispatcher: EventDispatcher) -> None:
+		self.uow = uow
+		self.event_dispatcher = event_dispatcher
+
 	async def player_karmas(self, dto: GetPlayersKarmaDTO) -> Sequence[PlayerDTO]:
-		pass
+		return []  # TODO!!!
 
 	async def player_connected(self, dto: GetPlayerDTO) -> PlayerDTO:
-		pass
+		player = await self.uow.player.find_by_filters(
+			PlayerFilter.from_dto(dto)
+		)
+		async with self.uow.transaction():
+			if not player:
+				player = PlayerEntity.create(
+					dto.name,
+					selector=PlayerSelector(
+						steam_id=dto.steam_id,
+						ipv4=dto.ipv4,
+						ipv6=dto.ipv6,
+					)
+				)
+
+				result = await self.uow.player.add_player(player)
+				player = result.value
+
+			player.player_connectod()
+
+			await self.event_dispatcher.publish_events(player.get_events())
+
+		return PlayerDTO.model_validate(player)
+
+	async def player_disconnect(self, dto: GetPlayerDTO) -> PlayerDTO:
+		player = await self.uow.player.find_by_filters(
+			PlayerFilter.from_dto(dto)
+		)
+		async with self.uow.transaction():
+			if not player:
+				player = PlayerEntity.create(
+					dto.name,
+					selector=PlayerSelector(
+						steam_id=dto.steam_id,
+						ipv4=dto.ipv4,
+						ipv6=dto.ipv6,
+					)
+				)
+
+				result = await self.uow.player.add_player(player)
+				player = result.value
+
+			player.player_disconnected()
+
+			await self.event_dispatcher.publish_events(player.get_events())
+
+		return PlayerDTO.model_validate(player)
+
+	async def get_player(self, dto: GetPlayerDTO) -> PlayerDTO:
+		player = await self.uow.player.find_by_filters(
+			PlayerFilter.from_dto(dto)
+		)
+		if not player:
+			raise PlayerDoesNotExists(player_id=player.id)
+
+		return PlayerDTO.model_validate(player)
 
 
 class ServerService(AbstractServerService):
@@ -42,7 +102,7 @@ class ServerService(AbstractServerService):
 		self.access_policy = access_policy
 		self.event_dispatcher = event_dispatcher
 
-	async def register_server(self, dto: RegisterServerDTO) -> ServerDTO:
+	async def queue_server(self, dto: QueueServerDTO) -> ServerDTO:
 		server = ServerEntity.create(
 			name=dto.name,
 			ipv4=dto.ip,
@@ -52,7 +112,7 @@ class ServerService(AbstractServerService):
 			tags=dto.tags,
 		)
 		if self.access_policy.user.blocked:
-			raise NotEnoughPermissions(self.access_policy.user.id)
+			raise AccessDenied(self.access_policy.user.id)
 		async with self.uow.transaction():
 			result = await self.uow.server.add_server(server)
 			match result:
@@ -62,6 +122,21 @@ class ServerService(AbstractServerService):
 					return ServerDTO.model_validate(value)
 				case Result(None, err):
 					raise err
+
+	async def approve_servers(self, dto: ApproveServerDTO) -> None:
+		servers = await self.uow.server.filter(
+			GetServersFilter(
+				server_ids=dto.server_ids,
+			)
+		)
+		if not servers:
+			raise ServerNotExists(dto.server_ids[0])
+		events = []
+
+		for server in servers:
+			server.register()
+			events.extend(server.get_events())
+		await self.event_dispatcher.publish_events(events)
 
 	async def get_api_token(self, dto: GetServerDTO) -> str:
 		server = await self.uow.server.find_by_filters(
