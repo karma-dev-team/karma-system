@@ -18,6 +18,8 @@ class PlayerRepositoryImpl(AbstractPlayerRepo, SQLAlchemyRepo):
             stmt = stmt.where(PlayerEntity.name == filter_.name)
         if filter_.steam_id is not None:
             stmt = stmt.where(PlayerEntity.steam_id == filter_.steam_id)
+        if filter_.player_id is not None:
+            stmt = stmt.where(PlayerEntity.id == filter_.player_id)
 
         result = await self.session.execute(stmt)
         return result.unique().scalar_one()
@@ -30,4 +32,12 @@ class PlayerRepositoryImpl(AbstractPlayerRepo, SQLAlchemyRepo):
             await self.session.refresh(player)
         except Exception as exc:
             raise exc
+        return Result.ok(player)
+
+    async def edit_player(self, player: PlayerEntity) -> Result[PlayerEntity, None]:
+        try:
+            await self.session.merge(player)
+        except Exception:
+            raise
+
         return Result.ok(player)

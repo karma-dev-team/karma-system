@@ -24,7 +24,20 @@ class KarmaService(AbstractKarmaService):
 		self.event_dispatcher = event_dispatcher
 
 	async def change_karma(self, dto: ChangeKarmaDTO) -> PlayerDTO:
-		pass
+		ply = await self.server_uow.player.find_by_filters(
+			PlayerFilter(
+				player_id=dto.to_id,
+			)
+		)
+		if not ply:
+			raise PlayerDoesNotExists(ply_data=dto.to_id)
+		async with self.uow.transaction():
+			ply.change_karma(dto.delta)
+
+			await self.event_dispatcher.publish_events(ply.get_events())
+
+			result = await self.server_uow.player.edit_player(ply)
+			return PlayerDTO.model_validate(result.value)
 
 	async def handle_ban(self, dto: HandleBanDTO) -> PlayerDTO:
 		ply = await self.server_uow.player.find_by_filters(

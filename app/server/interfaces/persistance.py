@@ -10,7 +10,7 @@ from app.server.entities.player import PlayerEntity
 from app.server.entities.server import ServerEntity
 from app.server.entities.tag import ServerTagEntity
 from app.server.exceptions import ServerAlreadyExists, IPPortAlreadyTaken
-from app.server.value_objects.ids import ServerID
+from app.server.value_objects.ids import ServerID, PlayerID
 from app.server.value_objects.steam_id import SteamID
 
 
@@ -20,6 +20,7 @@ class PlayerFilter:
 	ipv4: IPv4Address | None = field(default=None)
 	ipv6: IPv6Address | None = field(default=None)
 	name: str | None = field(default=None)
+	player_id: PlayerID | None = field(default=None)
 
 	@classmethod
 	def from_dto(cls, dto: GetPlayerDTO) -> "PlayerFilter":
@@ -50,6 +51,9 @@ class AbstractPlayerRepo(Protocol):
 		pass
 
 	async def add_player(self, player: PlayerEntity) -> Result[PlayerEntity, None]:
+		pass
+
+	async def edit_player(self, player: PlayerEntity) -> Result[PlayerEntity, None]:
 		pass
 
 
