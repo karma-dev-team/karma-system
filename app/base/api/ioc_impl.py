@@ -39,7 +39,9 @@ class IoContainerImpl(AbstractIoContainer):
     def user_service(self) -> AbstractUserService:
         return UserService(
             uow=self.uow,
-            event_dispatcher=self.event_dispatcher
+            event_dispatcher=self.event_dispatcher,
+            access_policy=BasicAccessPolicy(self.user),
+            config=self.config,
         )
 
     def karma_service(self) -> AbstractKarmaService:

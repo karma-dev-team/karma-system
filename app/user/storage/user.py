@@ -55,7 +55,7 @@ class UserRepoImpl(AbstractUserRepo, SQLAlchemyRepo):
 	]:
 		code = await self._get_reg_code(reg_code)
 		if not code:
-			raise RegistrationCodeIsNotCorrect()
+			return Result.fail(RegistrationCodeIsNotCorrect())
 		self.session.add(user)
 
 		try:

@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from app.auth.access_policy import BasicAccessPolicy
 from app.auth.exceptions import AccessDenied
 from app.base.database.result import Result
@@ -10,17 +14,22 @@ from app.user.interfaces import AbstractUserService
 from app.user.interfaces.persistance import GetUserFilter
 from app.user.interfaces.uow import AbstractUserUoW
 
+if TYPE_CHECKING:
+	from app.base.config import GlobalConfig
+
 
 class UserService(AbstractUserService):
 	def __init__(
 			self,
 			uow: AbstractUserUoW,
 			event_dispatcher: EventDispatcher,
-			access_policy: BasicAccessPolicy
+			access_policy: BasicAccessPolicy,
+			config: GlobalConfig,
 	) -> None:
 		self.uow = uow
 		self.event_dispatcher = event_dispatcher
 		self.access_policy = access_policy
+		self.config = config
 
 	async def get_user(self, dto: GetUserDTO) -> UserDTO:
 		user = await self.uow.user.get_user_by_filters(
@@ -52,7 +61,7 @@ class UserService(AbstractUserService):
 			match result:
 				case Result(value, _):
 					result_user, code = value
-					code.register_user(result_user)
+					code.register_user(result_user.id)
 
 					await self.event_dispatcher.publish_events(user.events)
 
@@ -64,8 +73,9 @@ class UserService(AbstractUserService):
 					raise err
 
 	async def create_reg_code(self, dto: CreateRegCode) -> RegCodeDTO:
-		if self.access_policy.as_int() >= self.access_policy.role_as_int(UserRoles.moderator):
-			raise AccessDenied
+		if not self.config.debug:
+			if self.access_policy.as_int() >= self.access_policy.role_as_int(UserRoles.moderator):
+				raise AccessDenied
 		reg_code = RegistrationCodeEntity.create(dto.key)
 
 		async with self.uow.transaction():

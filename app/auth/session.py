@@ -1,4 +1,5 @@
 import abc
+import asyncio
 
 from redis.asyncio import Redis, ConnectionPool
 
@@ -39,5 +40,4 @@ class RedisAuthSession(AbstractAuthSession):
 
 def load_redis(redis: RedisConfig):
     redis = Redis(connection_pool=ConnectionPool.from_url(redis.dsn))
-
     return RedisAuthSession(redis)

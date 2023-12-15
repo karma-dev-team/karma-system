@@ -10,14 +10,14 @@ from app.auth.providers import user_provider
 from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
 from app.templating.provider import templating_provider
-from app.user.dto.user import UserDTO, GetUserDTO
+from app.user.dto.user import UserDTO, GetUserDTO, CreateRegCode, RegCodeDTO
 from app.user.entities import UserEntity
 from app.user.value_objects import UserID
 
 router = APIRouter()
 
 
-@router.get("/user/{user_id}", name="get-user-by-id")
+@router.get("/user/{user_id}", name="user:get-user-by-id")
 async def get_user_by_id(
 	user_id: str,
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
@@ -29,10 +29,18 @@ async def get_user_by_id(
 	)
 
 
-@router.get("/account", name="get-account", response_class=HTMLResponse)
+@router.get("/account", name="user:get-account", response_class=HTMLResponse)
 async def get_account(
 	request: Request,
 	user: Annotated[UserEntity, Depends(user_provider)],
 	templates: Annotated[Jinja2Templates, Depends(templating_provider)],
 ):
 	return templates.TemplateResponse("users/account.html", {'request': request, 'user': user})
+
+
+@router.post("/register_code", name="user:add-register-code")  # TODO: remove in production
+async def add_register_code(
+	data: CreateRegCode,
+	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+) -> RegCodeDTO:
+	return await ioc.user_service().create_reg_code(data)

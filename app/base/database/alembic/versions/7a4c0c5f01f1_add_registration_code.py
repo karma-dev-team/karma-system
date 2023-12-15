@@ -1,8 +1,8 @@
-"""Initial migration
+"""Add registration code
 
-Revision ID: 8e78c3498f65
+Revision ID: 7a4c0c5f01f1
 Revises: 
-Create Date: 2023-12-06 14:05:53.325680
+Create Date: 2023-12-15 10:15:32.113979
 
 """
 from typing import Sequence, Union
@@ -14,7 +14,7 @@ import app.base.database.types
 
 
 # revision identifiers, used by Alembic.
-revision: str = '8e78c3498f65'
+revision: str = '7a4c0c5f01f1'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -41,6 +41,7 @@ def upgrade() -> None:
     sa.Column('ipv6', sa.String(length=256), nullable=True),
     sa.Column('hours', sa.DECIMAL(), nullable=True),
     sa.Column('karma', sa.DECIMAL(), nullable=True),
+    sa.Column('online', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_players'))
     )
     op.create_index(op.f('ix_players_id'), 'players', ['id'], unique=False)
@@ -69,6 +70,17 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id', name=op.f('pk_categories'))
     )
     op.create_index(op.f('ix_categories_id'), 'categories', ['id'], unique=False)
+    op.create_table('registration_codes',
+    sa.Column('id', app.base.database.types.GUID(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('key', sa.String(length=128), nullable=False),
+    sa.Column('code', sa.String(length=128), nullable=False),
+    sa.Column('user_id', app.base.database.types.GUID(), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_registration_codes_user_id_users')),
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_registration_codes'))
+    )
+    op.create_index(op.f('ix_registration_codes_id'), 'registration_codes', ['id'], unique=False)
     op.create_table('servers',
     sa.Column('id', app.base.database.types.GUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
@@ -81,6 +93,7 @@ def upgrade() -> None:
     sa.Column('karma', sa.DECIMAL(), nullable=True),
     sa.Column('game_id', app.base.database.types.GUID(), nullable=False),
     sa.Column('country_code', sa.String(length=64), nullable=False),
+    sa.Column('registered', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['game_id'], ['games.id'], name=op.f('fk_servers_game_id_games')),
     sa.ForeignKeyConstraint(['owner_id'], ['users.id'], name=op.f('fk_servers_owner_id_users')),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_servers'))
@@ -121,6 +134,8 @@ def downgrade() -> None:
     op.drop_table('karma_record')
     op.drop_index(op.f('ix_servers_id'), table_name='servers')
     op.drop_table('servers')
+    op.drop_index(op.f('ix_registration_codes_id'), table_name='registration_codes')
+    op.drop_table('registration_codes')
     op.drop_index(op.f('ix_categories_id'), table_name='categories')
     op.drop_table('categories')
     op.drop_index(op.f('ix_users_name'), table_name='users')
