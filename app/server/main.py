@@ -9,8 +9,8 @@ from .models import load_models
 
 
 def load_module(router: APIRouter, app: FastAPI, event_dispatcher: EventDispatcher, registry: registry_class):
-	router.include_router(_routes.server_router)
-	router.include_router(_routes.player_router)
+	router.include_router(_routes.server_router, tags=["server"])
+	router.include_router(_routes.player_router, tags=["player"])
 
 	load_providers(app)
 

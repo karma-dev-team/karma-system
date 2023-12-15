@@ -1,11 +1,11 @@
 from typing import Union, Type
 
-from app.application.common.dto import DTO
-from app.domain.common.value_objects.uuid import DomainID
+from app.base.dto import DTO
+from app.files.value_objects import FileID
 
 
 class FileBase(DTO):
-    file_id: DomainID
+    file_id: FileID
     # need to make it to support relative urls
     file_url: str
     file_name: str | None
@@ -14,7 +14,7 @@ class FileBase(DTO):
 
 
 class DocumentDTO(FileBase):
-    file_unique_id: DomainID
+    file_unique_id: FileID
 
 
 class PhotoDTO(FileBase):

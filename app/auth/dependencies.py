@@ -6,7 +6,7 @@ from fastapi import Request, Depends
 from app.auth.consts import AUTH_KEY
 from app.auth.exceptions import AccessDenied
 from app.auth.providers import auth_session_provider, user_provider
-from app.auth.session import AbstractAuthSession
+from app.auth.session import AbstractAuthSession, DBAuthSession
 from app.base.api.providers import uow_provider
 from app.base.database.uow import SQLAlchemyUoW
 from app.user.entities import UserEntity
@@ -45,3 +45,9 @@ def role_required(*roles: UserRoles) -> Callable:
         if user.role not in roles:
             raise AccessDenied
     return inner
+
+
+def auth_session_database(
+    request: Request,
+) -> DBAuthSession:
+    return DBAuthSession(request.app.state.db_session)

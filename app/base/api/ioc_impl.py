@@ -11,6 +11,8 @@ from app.base.config import GlobalConfig
 from app.base.database.uow import SQLAlchemyUoW
 from app.base.events.dispatcher import EventDispatcher
 from app.base.ioc import AbstractIoContainer
+from app.games.interfaces.service import AbstractCategoryService, AbstractGameService
+from app.games.services import GameService, CategoryService
 
 from app.karma.services import KarmaService
 from app.server.services import ServerService, PlayerService
@@ -62,6 +64,18 @@ class IoContainerImpl(AbstractIoContainer):
 
     def player_service(self) -> AbstractPlayerService:
         return PlayerService(
+            uow=self.uow,
+            event_dispatcher=self.event_dispatcher,
+        )
+
+    def category_service(self) -> AbstractCategoryService:
+        return CategoryService(
+            uow=self.uow,
+            event_dispatcher=self.event_dispatcher,
+        )
+
+    def game_service(self) -> AbstractGameService:
+        return GameService(
             uow=self.uow,
             event_dispatcher=self.event_dispatcher,
         )

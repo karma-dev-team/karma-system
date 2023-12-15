@@ -6,6 +6,7 @@ from app.games import routes
 
 
 def load_module(registry: registry_class, router: APIRouter) -> None:
-	router.include_router(routes.router)
+	router.include_router(routes.game_router)
+	router.include_router(routes.category_router)
 
 	load_models(registry)

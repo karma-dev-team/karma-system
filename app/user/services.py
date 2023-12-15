@@ -59,7 +59,7 @@ class UserService(AbstractUserService):
 			result = await self.uow.user.add_user(user, dto.registration_code)
 
 			match result:
-				case Result(value, _):
+				case Result(value, None):
 					result_user, code = value
 					code.register_user(result_user.id)
 

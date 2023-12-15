@@ -31,7 +31,7 @@ def get_app() -> FastAPI:
 
 	# preload ioc
 	load_ioc(app)
-	load_templating(app, template_directory="templates")
+	load_templating(app, template_directory="./static/templates")
 
 	modules = configure_module_loader(workflow_data={
 		'registry': registry,

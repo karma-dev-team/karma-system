@@ -11,4 +11,4 @@ title = "qwerty123"
 secret_key = "blabla"
 
 [redis]
-dsn = "redis://password@localhost:6379/1"
+dsn = "redis://password@localhost:6379"
