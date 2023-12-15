@@ -1,0 +1,233 @@
+.a1,
+.nav-bar-child {
+  text-decoration: none;
+  position: absolute;
+}
+.nav-bar-child {
+  top: 25px;
+  left: 1750px;
+  border-radius: var(--br-49xl);
+  background-color: var(--color-red);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border: 2px solid var(--color-black);
+  box-sizing: border-box;
+  width: 50px;
+  height: 50px;
+}
+.a1 {
+  top: 38px;
+  left: 206px;
+  color: inherit;
+  width: 92px;
+  height: 24px;
+}
+.a1,
+.a2,
+.b {
+  display: inline-block;
+}
+.a2 {
+  text-decoration: none;
+  position: absolute;
+  top: 39px;
+  left: 332px;
+  color: inherit;
+  width: 92px;
+  height: 24px;
+}
+.b {
+  position: relative;
+  width: 109px;
+  height: 21px;
+  flex-shrink: 0;
+}
+.image-6-icon {
+  position: relative;
+  width: 31px;
+  height: 31px;
+  object-fit: cover;
+}
+.search-bar {
+  position: absolute;
+  top: 33px;
+  left: 1186px;
+  border-radius: var(--br-11xl);
+  background-color: var(--color-white);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  width: 541px;
+  height: 35px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: var(--padding-11xs) var(--padding-5xs);
+  box-sizing: border-box;
+  gap: var(--gap-360xl);
+  color: var(--color-silver-100);
+}
+.image-6-icon1 {
+  position: absolute;
+  top: 30px;
+  left: 129px;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+.nav-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--color-gainsboro);
+  width: 1920px;
+  height: 101px;
+  text-align: center;
+  font-size: var(--font-size-xl);
+}
+.accountinfo-child {
+  position: absolute;
+  top: 147px;
+  left: 403px;
+  width: 1114px;
+  height: 54px;
+  object-fit: cover;
+}
+.accountinfo-item {
+  position: absolute;
+  top: 147px;
+  left: 120px;
+  border-radius: 200px;
+  background-color: var(--color-gainsboro);
+  width: 263px;
+  height: 263px;
+}
+.image-14-icon {
+  position: absolute;
+  top: 359px;
+  left: 317px;
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+}
+.accountinfo-inner {
+  position: absolute;
+  top: 201px;
+  left: 403px;
+  background-color: var(--color-gainsboro);
+  width: 1114px;
+  height: 534px;
+}
+.div4,
+.div5,
+.div6 {
+  position: absolute;
+  top: 231px;
+  left: 440px;
+  display: inline-block;
+  width: 233px;
+  height: 29px;
+}
+.div5,
+.div6 {
+  top: 290px;
+}
+.div6 {
+  top: 350px;
+}
+.accountinfo-child1,
+.footer-child {
+  position: absolute;
+  top: 334px;
+  left: 440px;
+  background-color: var(--color-white);
+  width: 1022px;
+  height: 1px;
+}
+.footer-child {
+  top: 0;
+  left: 0;
+  background-color: var(--color-gainsboro);
+  width: 1920px;
+  height: 94.3px;
+}
+.image-3,
+.image-4 {
+  text-decoration: none;
+  position: absolute;
+  top: 17.8px;
+  left: 176px;
+  width: 60px;
+  height: 54.7px;
+  background-image: url(./public/image-3@3x.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+.image-4 {
+  top: 10.5px;
+  left: 249px;
+  width: 77px;
+  height: 70.2px;
+  background-image: url(./public/image-4@3x.png);
+}
+.lorem-ipsum-dolor {
+  flex: 1;
+  position: relative;
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+.body,
+.footer {
+  position: absolute;
+}
+.body {
+  top: 17.6px;
+  left: 1577px;
+  width: 223px;
+  height: 62.9px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.footer {
+  top: 1672px;
+  left: 0;
+  width: 1920px;
+  height: 94.3px;
+  font-size: var(--font-size-lg);
+}
+.accountinfo-child2 {
+  position: absolute;
+  top: 275px;
+  left: 440px;
+  background-color: var(--color-white);
+  width: 1022px;
+  height: 1px;
+}
+.div7,
+.gmailcom,
+.tvoijopanasha {
+  position: absolute;
+  top: 350px;
+  left: 687px;
+  display: inline-block;
+  width: 481px;
+  height: 33px;
+}
+.div7,
+.tvoijopanasha {
+  top: 290px;
+}
+.tvoijopanasha {
+  top: 231px;
+}
+.accountinfo {
+  position: relative;
+  background-color: var(--color-white);
+  width: 100%;
+  height: 1766px;
+  overflow: hidden;
+  text-align: left;
+  font-size: var(--font-size-4xl);
+  color: var(--color-black);
+  font-family: var(--font-inter);
+}

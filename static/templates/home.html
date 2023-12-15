@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <link rel="stylesheet" href="./global.css" />
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/home.css') }}" />
+{% endblock %}
+
+{% block content %}
+  <div class="home">
+    <div class="nav-bar5">
+      <div class="nav-bar-child2"></div>
+      <div class="div76">Главная</div>
+      <div class="div77">Сервера</div>
+      <div class="search-bar5">
+        <b class="b5">Найти...</b>
+        <img class="image-6-icon7" alt="" src="./public/image-6@2x.png" />
+      </div>
+    </div>
+    <img class="image-2-icon" alt="" src="./public/image-2@2x.png" />
+
+    <b class="b6">
+      <p class="p1">Добро</p>
+      <p class="p1">пожаловать</p>
+    </b>
+    <div class="image-3-parent">
+      <a class="image-35" href="https://discord.com/invite/4BxZEjhetP"> </a>
+      <a class="image-45" href="https://steamcommunity.com/groups/IgraKarma">
+      </a>
+      <div class="body5">
+        <div class="copyright">© Все права защищены</div>
+      </div>
+    </div>
+    <img class="image-5-icon" alt="" src="./public/image-6@2x.png" />
+
+    <div class="nav-bar5">
+      <a
+        class="nav-bar-child3"
+        href="{{ url_for('server:account-info') }}"
+      >
+      </a>
+      <a class="a14" href="{{ url_for('server:home') }}">Главная</a>
+      <a class="a15" href="{{ url_for('server:servers') }}">Сервера</a
+      >
+      <div class="search-bar6">
+        <b class="b5">Найти...</b>
+        <img class="image-6-icon7" alt="" src="./public/image-6@2x.png" />
+      </div>
+      <a class="image-66" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+      </a>
+    </div>
+    <a class="a16" href="https://www.youtube.com/watch?v=umoRarxG-vE">👁‍</a>
+  </div>
+{% endblock %}
