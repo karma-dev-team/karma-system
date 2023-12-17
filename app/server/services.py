@@ -14,7 +14,7 @@ from app.server.dto.server import GetPlayersKarmaDTO, ApproveServerDTO, ServerDT
 	QueueServerDTO
 from app.server.entities.player import PlayerEntity, PlayerSelector
 from app.server.entities.server import ServerEntity
-from app.server.exceptions import ServerNotExists, ServerNotOwned, PlayerDoesNotExists
+from app.server.exceptions import ServerNotExists, ServerNotOwned, PlayerDoesNotExists, ServerNotRegistered
 from app.server.interfaces.persistance import GetServersFilter, GetServerFilter, PlayerFilter
 from app.server.interfaces.service import AbstractPlayerService, AbstractServerService
 from app.server.interfaces.uow import AbstractServerUoW

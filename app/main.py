@@ -12,6 +12,7 @@ from app.base.logging.logger import configure_logging
 from app.base.api.ioc_impl import load_ioc
 from app.module.module import configure_module_loader
 from app.templating.main import load_templating
+from app.base.api.router import router as base_router
 
 
 def get_app() -> FastAPI:
@@ -43,6 +44,7 @@ def get_app() -> FastAPI:
 	})
 	modules.load()
 
+	app.include_router(base_router)
 	app.include_router(router)
 
 	return app

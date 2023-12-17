@@ -1,6 +1,8 @@
 from ipaddress import IPv4Address
 from typing import Sequence
 
+from pydantic import Field
+
 from app.base.dto import DTO, TimedDTO
 from app.files.dtos.input_file import InputFileType
 from app.games.value_objects.ids import GameID
@@ -46,6 +48,7 @@ class QueueServerDTO(DTO):
 
 
 class GetServersDTO(DTO):
-	tags: list[str] | None
-	game: str | None
-	unregistered: bool | None
+	tags: list[str] | None = Field(default=None)
+	game: str | None = Field(default=None)
+	unregistered: bool | None = Field(default=None)
+	name: str | None = Field(default=None)

@@ -65,24 +65,6 @@
   gap: var(--gap-360xl);
   color: var(--color-silver-100);
 }
-.image-6-icon1 {
-  position: absolute;
-  top: 30px;
-  left: 129px;
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-}
-.nav-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: var(--color-gainsboro);
-  width: 1920px;
-  height: 101px;
-  text-align: center;
-  font-size: var(--font-size-xl);
-}
 .accountinfo-child {
   position: absolute;
   top: 147px;

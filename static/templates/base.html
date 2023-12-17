@@ -9,6 +9,8 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
     />
+    <link rel="stylesheet" href="{{ url_for('static', path='css/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/base.css') }}">
     {% block head %}
 
     {% endblock %}
@@ -17,7 +19,31 @@
 <body>
     <nav>
         {% block navbar %}
-
+          <div class="navbar">
+              <ul class="main-nav">
+                  <li><a class="logo" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                  <img alt="123" src="{{ url_for('static', path='images/image-6@2x.png') }}" width="40" height="40"/></a>
+                  </li>
+                  <li class="text-elem"><a href="{{ url_for('static', path='./templates/home.html') }}">Главная</a></li>
+                  <li class="text-elem"><a href="{{ url_for('static', path='./templates/about.html') }}">О нас</a></li>
+                  <li class="text-elem"><a href="{{ url_for('static', path='./templates/server/servers.html') }}">Сервера</a></li>
+              </ul>
+              <div class="right-nav">
+                  <div class="search-container">
+                    <form action="{{ url_for('server:get-servers-page') }} ">
+                        <input type="text" class="search-input" placeholder="Поиск" name="name">
+                        <button type="submit" class="search-icon">
+                            <img src="{{ url_for('static', path='images/search.svg' ) }}">
+                        </button>
+                    </form>
+                  </div>
+                {% if user %}
+                <a class="account-icon" href="{{ url_for('static', path='./templates/user/account-info.html') }}"></a>
+                {% else %}
+                <a class="sign-in-icon"><img src="{{ url_for('static', path='images/sign-in.png') }}" alt="damn" width="30" height="30"></a>
+                {% endif %}
+              </div>
+          </div>
         {% endblock %}
     </nav>
 
@@ -26,7 +52,17 @@
     {% endblock %}
 
     <footer>
-
+        {% block footer %}
+            <div class="footer">
+              <a class="discord-link" href="https://discord.com/invite/4BxZEjhetP">
+                  <img src="{{ url_for('static', path='images/image-31@3x.png') }}" alt="1234">
+              </a>
+              <a class="steam-link" href="https://steamcommunity.com/groups/IgraKarma">
+                  <img src="{{ url_for('static', path='images/image-42@3x.png') }}" alt="1234">
+              </a>
+              <div class="copyright">© Все права защищены</div>
+            </div>
+        {% endblock %}
     </footer>
 </body>
 </html>

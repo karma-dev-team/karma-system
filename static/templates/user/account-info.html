@@ -1,59 +1,29 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1, width=device-width" />
+{% extends 'base.html' %}
 
-    <link rel="stylesheet" href="./global.css" />
-    <link rel="stylesheet" href="./account-info.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+{% block head %}
+<link rel="stylesheet" href="./account-info.css" />
+{% endblock %}
+
+{% block content %}
+  <div class="accountinfo">
+
+    <img
+      class="accountinfo-child"
+      alt=""
+      src="./public/rectangle-19@2x.png"
     />
-  </head>
-  <body>
-    <div class="accountinfo">
-      <div class="nav-bar">
-        <a
-          class="nav-bar-child"
-          href="C:\Users\KAnat\Desktop\Site\Account-Info.html"
-        >
-        </a>
-        <a class="a1" href="./home.html">Главная</a>
-        <a class="a2" href="./servers.html">Сервера</a>
-        <div class="search-bar">
-          <b class="b">Найти...</b>
-          <img class="image-6-icon" alt="" src="./public/image-6@2x.png" />
-        </div>
-        <img class="image-6-icon1" alt="" src="./public/image-6@2x.png" />
-      </div>
-      <img
-        class="accountinfo-child"
-        alt=""
-        src="./public/rectangle-19@2x.png"
-      />
 
-      <div class="accountinfo-item"></div>
-      <img class="image-14-icon" alt="" src="./public/image-14@2x.png" />
+    <div class="accountinfo-item"></div>
+    <img class="image-14-icon" alt="" src="./public/image-14@2x.png" />
 
-      <div class="accountinfo-inner"></div>
-      <div class="div4">Имя</div>
-      <div class="div5">Дата создания</div>
-      <div class="div6">Электронная почта</div>
-      <div class="accountinfo-child1"></div>
-      <div class="footer">
-        <div class="footer-child"></div>
-        <a class="image-3" href="https://discord.com/invite/4BxZEjhetP"> </a>
-        <a class="image-4" href="https://steamcommunity.com/groups/IgraKarma">
-        </a>
-        <div class="body">
-          <div class="lorem-ipsum-dolor">© Все права защищены</div>
-        </div>
-      </div>
-      <div class="accountinfo-child2"></div>
-      <div class="gmailcom">ТвояжопаНаша@gmail.com</div>
-      <div class="div7">12.12.2023</div>
-      <div class="tvoijopanasha">TvoiJopaNasha</div>
-    </div>
-  </body>
-</html>
+    <div class="accountinfo-inner"></div>
+    <div class="div4">Имя</div>
+    <div class="div5">Дата создания</div>
+    <div class="div6">Электронная почта</div>
+    <div class="accountinfo-child1"></div>
+    <div class="accountinfo-child2"></div>
+    <div class="gmailcom">ТвояжопаНаша@gmail.com</div>
+    <div class="div7">12.12.2023</div>
+    <div class="tvoijopanasha">TvoiJopaNasha</div>
+  </div>
+{% endblock %}

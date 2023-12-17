@@ -86,52 +86,7 @@
   height: 241px;
   text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
-.image-35,
-.image-45 {
-  text-decoration: none;
-  position: absolute;
-  top: 17.8px;
-  left: 176px;
-  width: 60px;
-  height: 54.7px;
-  background-image: url(./public/image-31@3x.png);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: top;
-}
-.image-45 {
-  top: 10.5px;
-  left: 249px;
-  width: 77px;
-  height: 70.2px;
-  background-image: url(./public/image-42@3x.png);
-}
-.copyright {
-  flex: 1;
-  position: relative;
-  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-}
-.body5 {
-  position: absolute;
-  top: 17.6px;
-  left: 1577px;
-  width: 223px;
-  height: 62.9px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-.image-3-parent {
-  position: absolute;
-  top: 1065.7px;
-  left: 0;
-  background-color: var(--color-gainsboro);
-  width: 1920px;
-  height: 94.3px;
-  text-align: left;
-  font-size: var(--font-size-lg);
-}
+
 .image-5-icon {
   position: absolute;
   top: 30px;

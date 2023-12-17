@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
 
 from app.base.database.repo import SQLAlchemyRepo
@@ -38,6 +38,14 @@ class ServerRepositoryImpl(AbstractServerRepo, SQLAlchemyRepo):
             ids = set(filter.server_ids)
             for serv_id in ids:
                 stmt = stmt.where(ServerEntity.id == serv_id)
+        if filter.name is not None:
+            stmt = select(
+                ServerEntity, func.similarity(ServerEntity.name, filter.name)
+            ).where(
+                ServerEntity.name.bool_op("%")(filter.name),
+            ).order_by(
+                func.similarity(ServerEntity.name, filter.name).desc(),
+            )
 
         result = await self.session.execute(stmt)
 

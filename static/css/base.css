@@ -1,0 +1,96 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  background-color: #D9D9D9; /* Серый фон */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  padding-right: 120px;
+  padding-left: 120px;
+}
+
+.right-nav,
+.main-nav {
+    display: flex;
+}
+
+ul a {
+    text-decoration: none
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.text-elem {
+    margin: auto;
+}
+
+
+.sign-in-icon {
+  margin-left: 20px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: black;
+  margin: 0 10px; /* Расстояние м ссылками */
+  transition: color 0.3s, transform 0.3s;
+  text-transform: uppercase;
+}
+
+.navbar a:hover {
+  color: white; /* Серый цвет при наведении */
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+}
+
+.account-icon {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  background-color: white; /* Цвет круглой иконки аккаунта */
+  margin-right: 10px; /* Расстояние между иконкой аккаунта и поисковым контейнером */
+  margin-left: 20px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+button, input[type="submit"], input[type="reset"] {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+.search-input {
+  width: 250px; /* Начальная ширина */
+  max-width: 400px; /* Максимальная ширина */
+  padding: 5px;
+  border: none;
+  box-shadow: 1px 1px 1px grey;
+  height: 20px;
+  border-radius: 15px;
+  margin-right: 5px; /* Расстояние между текстовым полем и иконкой поиска */
+}
+
+.search-icon img {
+  width: 16px;
+  height: 16px;
+}

@@ -37,7 +37,8 @@ class GetServersFilter:
 	game_id: GameID | None = field(default=None)
 	tags: Sequence[ServerTagEntity] | None = field(default=None)
 	unregistered: bool | None = field(default=None)
-	server_ids: Sequence[ServerID] = field(default=None)
+	server_ids: Sequence[ServerID] | None = field(default=None)
+	name: str | None = field(default=None)
 
 
 @filter_wrapper
