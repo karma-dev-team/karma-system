@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 router = APIRouter()
 
 
-@router.post("/auth/register", name="register-user")
+@router.post("/auth/register", name="auth:register")
 async def register_user(
     request: Request,
     config: Annotated["GlobalConfig", Depends(config_provider)],
@@ -48,7 +48,7 @@ async def register_user(
             )
         )
     except UserAlreadyExists as exc:
-        return templates.TemplateResponse("user/register.html", {'request': request, 'error_msg': exc.message()})
+        return templates.TemplateResponse("auth/register.html", {'request': request, 'error_msg': exc.message()})
     else:
         session_id = generate_session_id(
             username=user.name,
@@ -64,7 +64,7 @@ async def register_user(
         return response
 
 
-@router.get("/register", name="register-user-get", response_class=HTMLResponse)
+@router.get("/register", name="auth:register-get", response_class=HTMLResponse)
 async def register_user(
     request: Request,
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
@@ -73,10 +73,10 @@ async def register_user(
         response = RedirectResponse("/", status_code=302)
 
         return response
-    return templates.TemplateResponse("user/register.html", {'request': request})
+    return templates.TemplateResponse("auth/register.html", {'request': request})
 
 
-@router.post("/auth/login", name='login-user-post')
+@router.post("/auth/login", name='auth:login-post')
 async def login_user(
     request: Request,
     config: Annotated["GlobalConfig", Depends(config_provider)],
@@ -100,7 +100,7 @@ async def login_user(
                 )
             )
         except UserDoesNotExists as exc:
-            return templates.TemplateResponse("user/login.html", {'request': request, 'error_msg': exc.message()})
+            return templates.TemplateResponse("auth/login.html", {'request': request, 'error_msg': exc.message()})
 
     if not UserEntity.verify_password(password, user.hashed_password):
         return templates.TemplateResponse(
@@ -124,7 +124,7 @@ async def login_user(
     return response
 
 
-@router.get("/login", name='login-user', response_class=HTMLResponse)
+@router.get("/login", name='auth:login', response_class=HTMLResponse)
 async def login_user(
     request: Request,
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
@@ -134,4 +134,4 @@ async def login_user(
 
         return response
 
-    return templates.TemplateResponse("user/login.html", {'request': request})
+    return templates.TemplateResponse("auth/login.html", {'request': request})

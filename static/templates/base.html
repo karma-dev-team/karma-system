@@ -24,9 +24,9 @@
                   <li><a class="logo" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                   <img alt="123" src="{{ url_for('static', path='images/image-6@2x.png') }}" width="40" height="40"/></a>
                   </li>
-                  <li class="text-elem"><a href="{{ url_for('static', path='./templates/home.html') }}">Главная</a></li>
-                  <li class="text-elem"><a href="{{ url_for('static', path='./templates/about.html') }}">О нас</a></li>
-                  <li class="text-elem"><a href="{{ url_for('static', path='./templates/server/servers.html') }}">Сервера</a></li>
+                  <li class="text-elem"><a href="{{ url_for('home') }}">Главная</a></li>
+                  <li class="text-elem"><a href="{{ url_for('about') }}">О нас</a></li>
+                  <li class="text-elem"><a href="{{ url_for('server:get-servers-page') }}">Сервера</a></li>
               </ul>
               <div class="right-nav">
                   <div class="search-container">
@@ -38,9 +38,9 @@
                     </form>
                   </div>
                 {% if user %}
-                <a class="account-icon" href="{{ url_for('static', path='./templates/user/account-info.html') }}"></a>
+                <a class="account-icon" href="{{ url_for('user:get-account') }}"></a>
                 {% else %}
-                <a class="sign-in-icon"><img src="{{ url_for('static', path='images/sign-in.png') }}" alt="damn" width="30" height="30"></a>
+                <a class="sign-in-icon" href="{{ url_for('auth:login') }}"><img src="{{ url_for('static', path='images/sign-in.png') }}" alt="damn" width="30" height="30"></a>
                 {% endif %}
               </div>
           </div>

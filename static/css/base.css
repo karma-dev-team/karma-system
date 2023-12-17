@@ -94,3 +94,7 @@ button, input[type="submit"], input[type="reset"] {
   width: 16px;
   height: 16px;
 }
+
+.search-icon {
+    cursor: pointer;
+}

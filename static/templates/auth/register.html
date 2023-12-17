@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1, width=device-width" />
+{% extends 'base.html' %}
 
-    <link rel="stylesheet" href="./global.css" />
-    <link rel="stylesheet" href="./registration.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
-    />
-  </head>
-  <body>
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/register.css') }}" />
+{% endblock %}
+
+{% block navbar %}
+
+{% endblock %}
+
+{% block content %}
     <div class="registration">
       <div class="div50">
         <div class="child16"></div>
@@ -49,5 +46,8 @@
       </div>
       <div class="div56">Условия пользования</div>
     </div>
-  </body>
-</html>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

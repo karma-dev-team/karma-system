@@ -47,6 +47,8 @@ class DBAuthSession(AbstractAuthSession):
 
     async def get(self, session_id: str) -> str | None:
         ent = await self.session.get(UserSession, ident=session_id)
+        if not ent:
+            return
         return ent.id
 
     async def set(self, session_id: str, user_id: str) -> None:
