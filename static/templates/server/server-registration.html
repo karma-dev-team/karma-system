@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1, width=device-width" />
+{% extends 'base.html' %}
 
-    <link rel="stylesheet" href="./global.css" />
-    <link rel="stylesheet" href="./server-registration.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
-    />
-  </head>
-  <body>
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/server-registration.css') }}" />
+{% endblock %}
+
+{% block content %}
     <div class="serverregistration">
       <img class="vector-icon" alt="" src="./public/vector@2x.png" />
 
@@ -59,5 +52,4 @@
       <div class="serverregistration-child"></div>
       <img class="image-13-icon" alt="" src="./public/image-13@2x.png" />
     </div>
-  </body>
-</html>
+{% endblock %} 

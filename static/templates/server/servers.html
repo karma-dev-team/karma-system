@@ -1,35 +1,11 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1, width=device-width" />
+{% extends 'base.html' %}
 
-    <link rel="stylesheet" href="./global.css" />
-    <link rel="stylesheet" href="./servers.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
-    />
-  </head>
-  <body>
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/servers.css') }}" />
+{% endblock %}
+
+{% block content %}
     <div class="servers">
-      <div class="nav-bar4">
-        <a
-          class="nav-bar-child1"
-          href="C:\Users\KAnat\Desktop\Site\Account-Info.html"
-        >
-        </a>
-        <a class="a11" href="C:\Users\KAnat\Desktop\Site\Home.html">Главная</a>
-        <a class="a12" href="C:\Users\KAnat\Desktop\Site\Servers.html"
-          >Сервера</a
-        >
-        <div class="search-bar4">
-          <b class="b4">Найти...</b>
-          <img class="image-6-icon6" alt="" src="./public/image-6@2x.png" />
-        </div>
-        <a class="image-65" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-        </a>
-      </div>
       <div class="servers-child"></div>
       <div class="div57">
         <div class="child19"></div>
@@ -51,14 +27,6 @@
         <div class="garrys-mod1">Garry's mod</div>
         <div class="child22"></div>
         <div class="minecraft1">Minecraft</div>
-      </div>
-      <div class="footer4">
-        <a class="image-34" href="https://discord.com/invite/4BxZEjhetP"> </a>
-        <a class="image-44" href="https://steamcommunity.com/groups/IgraKarma">
-        </a>
-        <div class="body4">
-          <div class="lorem-ipsum-dolor4">© Все права защищены</div>
-        </div>
       </div>
       <div class="div64">
         <div class="child19"></div>
@@ -89,5 +57,4 @@
       </div>
       <a class="a13" href="https://www.youtube.com/watch?v=umoRarxG-vE">👁‍</a>
     </div>
-  </body>
-</html>
+{% endblock %}

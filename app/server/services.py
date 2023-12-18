@@ -176,13 +176,13 @@ class ServerService(AbstractServerService):
 				name=dto.game,
 			)
 		)
-		if not game:
+		if not game and dto.game is not None:
 			raise GameNotExists
 
 		servers = await self.uow.server.filter(
 			GetServersFilter(
 				# tags=tags,  # TODO
-				game_id=game.id,
+				game_id=game.id if game else None,
 				unregistered=dto.unregistered,
 			)
 		)
