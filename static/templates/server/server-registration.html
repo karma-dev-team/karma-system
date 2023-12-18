@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="serverregistration">
-      <img class="vector-icon" alt="" src="./public/vector@2x.png" />
+      <img class="vector-icon" alt="" src="{{ url_for('static', path='images/vector@2x.png') }}" />
 
       <div class="div8">
         <div class="container">
@@ -23,7 +23,7 @@
         <div class="child3"></div>
         <div class="div13">Выбор игры</div>
         <div class="child4"></div>
-        <img class="image-10-icon" alt="" src="./public/image-10@2x.png" />
+        <img class="image-10-icon" alt="" src="{{ url_for('static', path='images/image-10@2x.png') }}" />
 
         <div class="child5"></div>
         <div class="div14">место для ошибок при отправке формы</div>
@@ -43,13 +43,13 @@
         </div>
       </div>
       <div class="div19">
-        <img class="image-11-icon" alt="" src="./public/image-10@2x.png" />
+        <img class="image-11-icon" alt="" src="{{ url_for('static', path='images/image-10@2x.png') }}" />
 
         <div class="russia">Russia</div>
         <div class="child6"></div>
       </div>
       <div class="div20">Тэги</div>
       <div class="serverregistration-child"></div>
-      <img class="image-13-icon" alt="" src="./public/image-13@2x.png" />
+      <img class="image-13-icon" alt="" src="{{ url_for('static', path='images/image-13@2x.png') }}" />
     </div>
 {% endblock %} 

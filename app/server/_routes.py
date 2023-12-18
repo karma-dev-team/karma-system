@@ -6,7 +6,7 @@ from starlette.responses import HTMLResponse
 from starlette.status import HTTP_403_FORBIDDEN
 from starlette.templating import Jinja2Templates
 
-from app.auth.dependencies import user_dependency, user
+from app.auth.dependencies import user_dependency, user, role_required
 from app.auth.providers import optional_user
 from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
@@ -17,6 +17,7 @@ from app.server.responses import APITokenData
 from app.server.value_objects.ids import ServerID
 from app.templating.provider import templating_provider
 from app.user.entities import UserEntity
+from app.user.enums import UserRoles
 
 player_router = APIRouter(prefix="/player")
 server_router = APIRouter()
@@ -128,4 +129,32 @@ async def queue_server_page(
 			detail="Access denied",
 			status_code=HTTP_403_FORBIDDEN,
 		)
-	return templates.TemplateResponse("", {"request": request})
+	return templates.TemplateResponse("server/server-registration.html", {"request": request, 'user': user})
+
+
+@server_router.get(
+	'server/queued',
+	name='server:queued-servers-page',
+	response_class=HTMLResponse,
+	dependencies=[Depends(role_required(UserRoles.moderator))]
+)
+async def show_queued_servers(
+	request: Request,
+	templates: Annotated[Jinja2Templates, Depends(templating_provider)],
+	user: Annotated[UserEntity, Depends(user)],
+	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+):
+	if not user:
+		raise HTTPException(
+			detail="Access denied",
+			status_code=HTTP_403_FORBIDDEN,
+		)
+	servers = ioc.server_service().get_servers(
+		GetServersDTO(
+			unregistered=True,
+		)
+	)
+	return templates.TemplateResponse(
+		"server/queued-servers.html",
+		{'request': request, 'user': user, 'servers': servers}
+	)

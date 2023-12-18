@@ -1,35 +1,11 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1, width=device-width" />
+{% extends 'base.html' %}
 
-    <link rel="stylesheet" href="./global.css" />
-    <link rel="stylesheet" href="./queued-servers.css" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
-    />
-  </head>
-  <body>
-    <div class="queuedservers">
-      <div class="nav-bar3">
-        <a
-          class="rectangle-a"
-          href="C:\Users\KAnat\Desktop\Site\Account-Info.html"
-        >
-        </a>
-        <a class="a7" href="C:\Users\KAnat\Desktop\Site\Home.html">Главная</a>
-        <a class="a8" href="C:\Users\KAnat\Desktop\Site\Servers.html"
-          >Сервера</a
-        >
-        <div class="search-bar3">
-          <b class="b3">Найти...</b>
-          <img class="image-6-icon5" alt="" src="./public/image-6@2x.png" />
-        </div>
-        <a class="image-63" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-        </a>
-      </div>
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/queued-servers.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="queuedservers">
       <div class="queuedservers-child"></div>
       <div class="div32">
         <div class="child8"></div>
@@ -54,14 +30,6 @@
           <div class="wrapper9">
             <div class="div35">Подвердить</div>
           </div>
-        </div>
-      </div>
-      <div class="footer3">
-        <a class="image-33" href="https://discord.com/invite/4BxZEjhetP"> </a>
-        <a class="image-43" href="https://steamcommunity.com/groups/IgraKarma">
-        </a>
-        <div class="body3">
-          <div class="lorem-ipsum-dolor3">© Все права защищены</div>
         </div>
       </div>
       <div class="div41">
@@ -91,22 +59,21 @@
       <img
         class="queuedservers-item"
         alt=""
-        src="./public/rectangle-11@2x.png"
+        src="{{ url_for('static', path='/images/rectangle-11@2x.png') }}"
       />
 
       <img
         class="queuedservers-inner"
         alt=""
-        src="./public/rectangle-11@2x.png"
+        src="{{ url_for('static', path='/images/rectangle-11@2x.png') }}"
       />
 
       <img
         class="queuedservers-child1"
         alt=""
-        src="./public/rectangle-11@2x.png"
+        src="{{ url_for('static', path='/images/rectangle-11@2x.png') }}"
       />
 
       <a class="a9" href="https://www.youtube.com/watch?v=umoRarxG-vE">👁‍</a>
     </div>
-  </body>
-</html>
+{% endblock %}
