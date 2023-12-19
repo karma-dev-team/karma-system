@@ -2,6 +2,7 @@ import abc
 import asyncio
 
 from redis.asyncio import Redis, ConnectionPool
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -46,7 +47,9 @@ class DBAuthSession(AbstractAuthSession):
         self.session = session
 
     async def get(self, session_id: str) -> str | None:
-        ent = await self.session.get(UserSession, ident=session_id)
+        stmt = select(UserSession).where(UserSession.session_id == session_id)
+        ent = await self.session.execute(stmt)
+        ent = ent.unique().scalar_one_or_none()
         if not ent:
             return
         return ent.id
@@ -56,9 +59,9 @@ class DBAuthSession(AbstractAuthSession):
         self.session.add(ent)
 
         try:
-            await self.session.flush((ent,))
+            await self.session.commit()
         except IntegrityError:
-            return 
+            return
 
 
 def load_redis(redis: RedisConfig):

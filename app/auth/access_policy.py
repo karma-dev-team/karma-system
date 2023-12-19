@@ -7,18 +7,24 @@ class BasicAccessPolicy:
         self.user = user
 
     def anonymous(self) -> bool:
-        return bool(self.user)
+        return not bool(self.user)
 
     @staticmethod
     def role_as_int(role: UserRoles):
         return USER_ROLES_AS_INTEGER[role.value]
 
     def as_int(self):
+        if self.user.superuser:
+            return USER_ROLES_AS_INTEGER[UserRoles.admin]
+
         if self.anonymous():
             return
         return USER_ROLES_AS_INTEGER[self.user.role.value]
 
     def check_role(self, role: UserRoles):
+        if self.user.superuser:
+            return True
+
         if self.anonymous():
             return
         role = USER_ROLES_AS_INTEGER[role.value]

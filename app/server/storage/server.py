@@ -49,4 +49,12 @@ class ServerRepositoryImpl(AbstractServerRepo, SQLAlchemyRepo):
 
         result = await self.session.execute(stmt)
 
-        return result.scalars().all()
+        return result.unique().scalars().all()
+
+    async def update_server(self, server: ServerEntity) -> ServerEntity:
+        try:
+            await self.session.merge(server)
+        except Exception:
+            raise
+        return server
+

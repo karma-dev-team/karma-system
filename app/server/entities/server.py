@@ -1,6 +1,7 @@
 from ipaddress import IPv4Address, IPv6Address
 from typing import List, Union, Optional
 
+from attr.validators import optional
 from attrs.validators import instance_of
 from attrs import field
 
@@ -21,16 +22,17 @@ from app.user.value_objects import UserID
 class ServerEntity(TimedEntity, Aggregate):
 	id: ServerID = field(factory=ServerID.generate)
 	name: str
-	ipv4: IPv4Address
-	ipv6: IPv6Address | None
+	ipv4: str
+	ipv6: str | None
 	port: int = field(validator=instance_of(int))
-	owner: UserEntity = field(validator=instance_of(UserEntity))
+	owner: UserEntity = field(validator=optional(instance_of(UserEntity)), default=None)
 	owner_id: UserID
-	karma: KarmaAmount = field(validator=instance_of(KarmaAmount))
+	karma: KarmaAmount = field(validator=instance_of(KarmaAmount), default=KarmaAmount(0))
 	game_id: GameID
 	players: List[PlayerEntity] = field(factory=list)
 	tags: List[ServerTagEntity] = field(factory=list)
 	registered: bool = field(default=False)
+	country_code: str = field(default="RU")
 
 	@classmethod
 	def create(
@@ -38,7 +40,7 @@ class ServerEntity(TimedEntity, Aggregate):
 		name: str,
 		ipv4: IPv4Address,
 		port: int,
-		owner_id: UserID,
+		owner: UserEntity,
 		game_id: GameID,
 		ipv6: IPv6Address | None = None,
 		tags: Optional[Union[list[ServerTagEntity], str, list]] = None,
@@ -47,10 +49,11 @@ class ServerEntity(TimedEntity, Aggregate):
 			tags = []
 		entity = ServerEntity(
 			name=name,
-			ipv4=ipv4,
-			ipv6=ipv6,
+			ipv4=str(ipv4),
+			ipv6=str(ipv6),
 			port=port,
-			owner_id=owner_id,
+			owner_id=owner.id,
+			owner=owner,
 			game_id=game_id,
 			tags=tags,
 		)

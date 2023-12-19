@@ -12,19 +12,19 @@ class CategoryEntity(Aggregate, TimedEntity):
 	id: CategoryID = field(factory=CategoryID.generate)
 	name: str
 	game_id: GameID
-	image: PhotoEntity | None = field(validator=optional(instance_of(PhotoEntity)))
+	image: PhotoEntity | None = field(validator=optional(instance_of(PhotoEntity)), default=None)
 
 	@classmethod
 	def create(
 		cls,
 		name: str,
 		game_id: GameID,
+		image: PhotoEntity | None = None,
 	) -> "CategoryEntity":
 		cat = CategoryEntity(
 			name=name,
 			game_id=game_id,
+			image=image,
 		)
-
-		cat.add_event(CategoryCreated())
 
 		return cat

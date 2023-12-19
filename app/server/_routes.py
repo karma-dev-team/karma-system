@@ -105,8 +105,9 @@ async def server_card_by_id(
 async def approve_server(
 	dto: ApproveServerDTO,
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
-) -> None:
-	return await ioc.server_service().approve_servers(dto)
+) -> dict:
+	await ioc.server_service().approve_servers(dto)
+	return {'ok': True}
 
 
 @server_router.post("/server/queue", name="server:queue-server")
@@ -115,6 +116,7 @@ async def queue_server(
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 	user: Annotated[UserEntity, Depends(user)],
 ) -> ServerDTO:
+
 	return await ioc.server_service().queue_server(dto)
 
 

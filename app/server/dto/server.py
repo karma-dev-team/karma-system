@@ -1,4 +1,4 @@
-from ipaddress import IPv4Address
+from ipaddress import IPv4Address, IPv6Address
 from typing import Sequence
 
 from pydantic import Field
@@ -19,11 +19,13 @@ class GetServerDTO(DTO):
 
 
 class ServerDTO(DTO, TimedDTO):
+	id: ServerID
 	name: str
 	port: int
-	ip: IPv4Address
+	ipv4: str
+	ipv6: str | None = None
 	owner_id: UserID
-	owner: UserDTO
+	owner: UserDTO | None
 	karma: KarmaAmount
 	game_id: GameID
 

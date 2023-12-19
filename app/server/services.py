@@ -103,23 +103,25 @@ class ServerService(AbstractServerService):
 		self.event_dispatcher = event_dispatcher
 
 	async def queue_server(self, dto: QueueServerDTO) -> ServerDTO:
+		if self.access_policy.anonymous():
+			raise AccessDenied
 		server = ServerEntity.create(
 			name=dto.name,
 			ipv4=dto.ip,
 			port=dto.port,
-			owner_id=self.access_policy.user.id,
+			owner=self.access_policy.user,
 			game_id=dto.game_id,
 			tags=dto.tags,
 		)
-		if self.access_policy.user.blocked:
-			raise AccessDenied(self.access_policy.user.id)
+		# if self.access_policy.user.blocked:
+		# 	raise AccessDenied(self.access_policy.user.id)
 		async with self.uow.transaction():
 			result = await self.uow.server.add_server(server)
 			match result:
 				case Result(value, _):
 					await self.event_dispatcher.publish_events(server.get_events())
 
-					return ServerDTO.model_validate(value)
+					return ServerDTO.model_validate(server)
 				case Result(None, err):
 					raise err
 
@@ -132,10 +134,11 @@ class ServerService(AbstractServerService):
 		if not servers:
 			raise ServerNotExists(dto.server_ids[0])
 		events = []
-
-		for server in servers:
-			server.register()
-			events.extend(server.get_events())
+		async with self.uow.transaction():
+			for server in servers:
+				server.register()
+				events.extend(server.get_events())
+				await self.uow.server.update_server(server)
 		await self.event_dispatcher.publish_events(events)
 
 	async def get_api_token(self, dto: GetServerDTO) -> str:

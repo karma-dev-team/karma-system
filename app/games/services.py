@@ -3,6 +3,7 @@ from app.base.events.dispatcher import EventDispatcher
 from app.games.dto.category import AddCategoryDTO, GetCategoryDTO, CategoryDTO
 from app.games.dto.game import GetGameDTO, GameDTO, AddGameDTO
 from app.games.entities.category import CategoryEntity
+from app.games.entities.game import GameEntity
 from app.games.exceptions import CategoryNotExists, GameNotExists
 from app.games.interfaces.persistance import AbstractCategoryRepository, GetCategoryFilter
 from app.games.interfaces.service import AbstractGameService, AbstractCategoryService
@@ -27,17 +28,16 @@ class GameService(AbstractGameService):
 		return GameDTO.model_validate(game)
 
 	async def add_game(self, dto: AddGameDTO) -> GameDTO:
-		game = CategoryEntity.create(
+		game = GameEntity.create(
 			name=dto.name,
-			game_id=dto.game_id,
+			description=dto.description,
+			image=None,
 		)
 
 		async with self.uow.transaction():
-			result = await self.uow.category.add_category(game)
+			result = await self.uow.game.add_game(game)
 			match result:
 				case Result(value, _):
-					await self.event_dispatcher.publish_events(game.get_events())
-
 					return GameDTO.model_validate(value)
 				case Result(None, Exception() as exc):
 					raise exc

@@ -56,6 +56,11 @@ def load_models(registry: registry_class):
                 'ServerTagEntity',
                 lazy="joined"
             ),
+            'owner': relationship(
+                'UserEntity',
+                lazy="joined",
+                join_depth=4,
+            ),
         }
     )
 

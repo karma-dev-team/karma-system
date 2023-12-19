@@ -21,7 +21,7 @@ def user_dependency(required: bool = False):
             uow: Annotated[SQLAlchemyUoW, Depends(uow_provider)]
     ) -> UserEntity | None:
         session_id = request.cookies.get(AUTH_KEY, None)
-        if not required:
+        if not required and not session_id:
             return
         if not session_id:
             raise AccessDenied

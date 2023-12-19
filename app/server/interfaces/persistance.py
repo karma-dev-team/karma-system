@@ -67,3 +67,6 @@ class AbstractServerRepo(Protocol):
 
 	async def filter(self, filter: GetServersFilter) -> Sequence[ServerEntity]:
 		pass
+
+	async def update_server(self, server: ServerEntity) -> ServerEntity:
+		pass
