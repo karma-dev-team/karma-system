@@ -38,9 +38,8 @@ async def get_account(
 	return templates.TemplateResponse("user/account-info.html", {'request': request, 'user': user})
 
 
-@router.post("/register_code", name="user:add-register-code")  # TODO: remove in production
+@router.post("/register_code", name="user:add-register-code")
 async def add_register_code(
-	data: CreateRegCode,
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 ) -> RegCodeDTO:
-	return await ioc.user_service().create_reg_code(data)
+	return await ioc.user_service().create_reg_code()
