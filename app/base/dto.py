@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Extra
+from pydantic import BaseModel, Extra, Field
 
 
 class DTO(BaseModel):
@@ -13,5 +13,5 @@ class DTO(BaseModel):
 
 
 class TimedDTO(BaseModel):
-    created_at: datetime
-    updated_at: datetime | None 
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime | None = Field(default=None)

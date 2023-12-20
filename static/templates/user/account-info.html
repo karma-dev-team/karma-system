@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<link rel="stylesheet" href="./account-info.css" />
+<link rel="stylesheet" href="{{ url_for('static', path='css/account-info.css') }}" />
 {% endblock %}
 
 {% block content %}
@@ -10,11 +10,11 @@
     <img
       class="accountinfo-child"
       alt=""
-      src="./public/rectangle-19@2x.png"
+      src="{{ url_for('static', path='images/rectangle-19@2x.png') }}"
     />
 
     <div class="accountinfo-item"></div>
-    <img class="image-14-icon" alt="" src="./public/image-14@2x.png" />
+    <img class="image-14-icon" alt="" src="{{ url_for('static', path='images/image-13@2x.png') }}" style="opacity: 1"/>
 
     <div class="accountinfo-inner"></div>
     <div class="div4">Имя</div>
@@ -22,8 +22,8 @@
     <div class="div6">Электронная почта</div>
     <div class="accountinfo-child1"></div>
     <div class="accountinfo-child2"></div>
-    <div class="gmailcom">ТвояжопаНаша@gmail.com</div>
-    <div class="div7">12.12.2023</div>
-    <div class="tvoijopanasha">TvoiJopaNasha</div>
+    <div class="gmailcom">{{ user.email }}</div>
+    <div class="div7">{{ user.created_at }}</div>
+    <div class="tvoijopanasha">{{ user.name }}</div>
   </div>
 {% endblock %}

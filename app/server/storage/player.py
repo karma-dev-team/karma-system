@@ -22,7 +22,7 @@ class PlayerRepositoryImpl(AbstractPlayerRepo, SQLAlchemyRepo):
             stmt = stmt.where(PlayerEntity.id == filter_.player_id)
 
         result = await self.session.execute(stmt)
-        return result.unique().scalar_one()
+        return result.unique().scalar_one_or_none()
 
     async def add_player(self, player: PlayerEntity) -> Result[PlayerEntity, None]:
         self.session.add(player)

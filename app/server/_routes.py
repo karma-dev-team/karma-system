@@ -81,9 +81,10 @@ async def get_servers(
 	filter: Annotated[GetServersDTO, Depends()],
 	templates: Annotated[Jinja2Templates, Depends(templating_provider)],
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+	user: Annotated[UserEntity, Depends(optional_user)],
 ):
 	servers = await ioc.server_service().get_servers(filter)
-	return templates.TemplateResponse("server/servers.html", {"request": request, 'servers': servers})
+	return templates.TemplateResponse("server/servers.html", {"request": request, 'servers': servers, 'user': user})
 
 
 @server_router.get("/server/{server_id}/get", name="server:server-card", response_class=HTMLResponse)

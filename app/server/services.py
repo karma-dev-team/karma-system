@@ -51,7 +51,7 @@ class PlayerService(AbstractPlayerService):
 
 			await self.event_dispatcher.publish_events(player.get_events())
 
-		return PlayerDTO.model_validate(player)
+			return PlayerDTO.model_validate(player)
 
 	async def player_disconnect(self, dto: GetPlayerDTO) -> PlayerDTO:
 		player = await self.uow.player.find_by_filters(

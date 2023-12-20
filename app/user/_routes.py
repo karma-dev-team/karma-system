@@ -35,7 +35,7 @@ async def get_account(
 	user: Annotated[UserEntity, Depends(user_provider)],
 	templates: Annotated[Jinja2Templates, Depends(templating_provider)],
 ):
-	return templates.TemplateResponse("users/account.html", {'request': request, 'user': user})
+	return templates.TemplateResponse("user/account-info.html", {'request': request, 'user': user})
 
 
 @router.post("/register_code", name="user:add-register-code")  # TODO: remove in production

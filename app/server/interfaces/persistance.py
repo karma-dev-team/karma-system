@@ -17,8 +17,8 @@ from app.server.value_objects.steam_id import SteamID
 @filter_wrapper
 class PlayerFilter:
 	steam_id: SteamID | None = field(default=None)
-	ipv4: IPv4Address | None = field(default=None)
-	ipv6: IPv6Address | None = field(default=None)
+	ipv4: str | None = field(default=None)
+	ipv6: str | None = field(default=None)
 	name: str | None = field(default=None)
 	player_id: PlayerID | None = field(default=None)
 
@@ -26,8 +26,8 @@ class PlayerFilter:
 	def from_dto(cls, dto: GetPlayerDTO) -> "PlayerFilter":
 		return PlayerFilter(
 			steam_id=dto.steam_id,
-			ipv4=dto.ipv4,
-			ipv6=dto.ipv6,
+			ipv4=str(dto.ipv4),
+			ipv6=str(dto.ipv6),
 			name=dto.name,
 		)
 

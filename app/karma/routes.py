@@ -14,7 +14,7 @@ from app.server.entities.server import ServerEntity
 from app.server.providers import server_provider
 from app.user.enums import UserRoles
 
-router = APIRouter(prefix="/server")
+router = APIRouter(prefix="/karma", tags=["karma"])
 
 
 @router.post(
