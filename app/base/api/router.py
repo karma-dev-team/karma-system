@@ -17,7 +17,7 @@ async def home(
 	user: Annotated[UserEntity, Depends(optional_user)],
 	templates: Annotated[Jinja2Templates, Depends(templating_provider)],
 ):
-	return templates.TemplateResponse('base.html', {'user': user, 'request': request})
+	return templates.TemplateResponse('home.html', {'user': user, 'request': request})
 
 
 @router.get('/about', response_class=HTMLResponse)

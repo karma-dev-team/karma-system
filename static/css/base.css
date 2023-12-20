@@ -98,3 +98,43 @@ button, input[type="submit"], input[type="reset"] {
 .search-icon {
     cursor: pointer;
 }
+
+/* footer */
+
+.footer {
+    background-color: #D9D9D9;
+    padding: 20px;
+    padding-left: 120px;
+    padding-right: 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-left a, .footer-right p {
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.footer-center {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.footer-center img {
+    max-width: 100px;
+    margin: 10px 10px;
+}
+
+/* Опциональные стили для адаптивности (можно изменить по своему усмотрению) */
+@media only screen and (max-width: 768px) {
+    footer {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-left, .footer-right {
+        margin-top: 10px;
+    }
+}
