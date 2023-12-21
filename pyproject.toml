@@ -26,6 +26,9 @@ redis = "^5.0.1"
 passlib = "^1.7.4"
 python-multipart = "^0.0.6"
 pydantic = {extras = ["email"], version = "^2.5.2"}
+aiohttp = "^3.9.1"
+aiofiles = "^23.2.1"
+aioboto3 = "^12.1.0"
 
 
 [build-system]

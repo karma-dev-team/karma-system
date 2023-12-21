@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 import abc
 
+from app.files.interfaces.services import FileService
 
 if TYPE_CHECKING:
 	# новые интерфейсы добавляй тут!
@@ -38,4 +39,8 @@ class AbstractIoContainer:
 
 	@abc.abstractmethod
 	def category_service(self) -> AbstractCategoryService:
+		pass
+
+	@abc.abstractmethod
+	def file_service(self) -> FileService:
 		pass
