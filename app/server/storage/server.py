@@ -7,7 +7,7 @@ from app.base.database.repo import SQLAlchemyRepo
 from app.base.database.result import Result
 from app.server.entities.server import ServerEntity
 from app.server.exceptions import ServerAlreadyExists, IPPortAlreadyTaken
-from app.server.interfaces.persistance import AbstractServerRepo, GetServersFilter
+from app.server.interfaces.persistance import AbstractServerRepo, GetServersFilter, GetServerFilter
 from app.server.value_objects.ids import ServerID
 
 
@@ -37,7 +37,7 @@ class ServerRepositoryImpl(AbstractServerRepo, SQLAlchemyRepo):
             # to filter out duplicates without using DB resources
             ids = set(filter.server_ids)
             for serv_id in ids:
-                stmt = stmt.where(ServerEntity.id == serv_id)
+                stmt = stmt.where(ServerEntity.id == str(serv_id))
         if filter.name is not None:
             stmt = select(
                 ServerEntity, func.similarity(ServerEntity.name, filter.name)
@@ -58,3 +58,13 @@ class ServerRepositoryImpl(AbstractServerRepo, SQLAlchemyRepo):
             raise
         return server
 
+    async def find_by_filters(self, filter_: GetServerFilter) -> ServerEntity | None:
+        stmt = select(ServerEntity)
+
+        if filter_.name is not None:
+            stmt = stmt.where(ServerEntity.name == filter_.name)
+        if filter_.server_id is not None:
+            stmt = stmt.where(ServerEntity.id == filter_.server_id)
+
+        result = await self.session.execute(stmt)
+        return result.unique().scalar_one_or_none()

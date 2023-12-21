@@ -118,7 +118,7 @@ class ServerService(AbstractServerService):
 		async with self.uow.transaction():
 			result = await self.uow.server.add_server(server)
 			match result:
-				case Result(value, _):
+				case Result(value, None):
 					await self.event_dispatcher.publish_events(server.get_events())
 
 					return ServerDTO.model_validate(server)

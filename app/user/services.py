@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import TYPE_CHECKING
 
 from app.auth.access_policy import BasicAccessPolicy
@@ -72,11 +73,13 @@ class UserService(AbstractUserService):
 				case Result(_, err):
 					raise err
 
-	async def create_reg_code(self, dto: CreateRegCode) -> RegCodeDTO:
+	async def create_reg_code(self) -> RegCodeDTO:
 		if not self.config.debug:
 			if self.access_policy.as_int() >= self.access_policy.role_as_int(UserRoles.moderator):
 				raise AccessDenied
-		reg_code = RegistrationCodeEntity.create(dto.key)
+
+		key = os.urandom(32).hex()
+		reg_code = RegistrationCodeEntity.create(key)
 
 		async with self.uow.transaction():
 			result = await self.uow.user.add_reg_code(reg_code)

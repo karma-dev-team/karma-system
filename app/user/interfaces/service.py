@@ -13,5 +13,5 @@ class AbstractUserService:
 		pass
 
 	@abstractmethod
-	async def create_reg_code(self, dto: CreateRegCode) -> RegCodeDTO:
+	async def create_reg_code(self) -> RegCodeDTO:
 		pass
