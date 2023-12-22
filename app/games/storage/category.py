@@ -1,12 +1,20 @@
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 from app.base.database.repo import SQLAlchemyRepo
 from app.base.database.result import Result
 from app.games.entities.category import CategoryEntity
+from app.games.exceptions import CategoryNotExists, CategoryNameAlreadyTaken
 from app.games.interfaces.persistance import GetCategoryFilter, AbstractCategoryRepository
 
 
 class CategoryRepository(AbstractCategoryRepository, SQLAlchemyRepo):
+    def _parse_exception(self, exc: IntegrityError) -> Exception:
+        if not hasattr(exc.__cause__.__cause__, "constraint_name"):
+            raise exc
+        match exc.__cause__.__cause__.constraint_name:  # type: ignore
+            case ""
+
     async def by_filter(self, filter: GetCategoryFilter) -> CategoryEntity | None:
         stmt = select(CategoryEntity)
 
@@ -28,3 +36,18 @@ class CategoryRepository(AbstractCategoryRepository, SQLAlchemyRepo):
         except Exception as exc:
             raise exc
         return Result.ok(cat)
+
+    async def update_category(self, category: CategoryEntity) -> Result[CategoryEntity, CategoryNameAlreadyTaken]:
+        try:
+            await self.session.merge(category)
+        except IntegrityError as exc:
+            return Result.fail(self._parse_exception(exc))
+        return Result.ok(category)
+
+    async def delete_category(self, category: CategoryEntity) -> Result[CategoryEntity, CategoryNotExists]:
+        try:
+            await self.session.delete(category)
+        except Exception:
+            return Result.fail(CategoryNotExists())
+
+        return Result.ok(category)

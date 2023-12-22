@@ -1,9 +1,10 @@
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 from app.base.database.repo import SQLAlchemyRepo
 from app.base.database.result import Result
 from app.games.entities.game import GameEntity
-from app.games.exceptions import GameAlreadyExists
+from app.games.exceptions import GameAlreadyExists, GameNameAlreadyTaken, GameNotExists
 from app.games.interfaces.persistance import GetGameFilter, AbstractGamesRepository
 
 
@@ -30,3 +31,17 @@ class GameRepository(AbstractGamesRepository, SQLAlchemyRepo):
             raise exc
         return Result.ok(game)
 
+    async def update_game(self, game: GameEntity) -> Result[GameEntity, GameNameAlreadyTaken]:
+        try:
+            await self.session.merge(game)
+        except IntegrityError as exc:
+            return Result.fail(self._parse_exception(exc))
+        return Result.ok(game)
+
+    async def delete_game(self, game: GameEntity) -> Result[GameEntity, GameNotExists]:
+        try:
+            await self.session.delete(game)
+        except Exception:
+            return Result.fail(GameNotExists())
+
+        return Result.ok(game)

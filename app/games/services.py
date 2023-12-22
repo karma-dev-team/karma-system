@@ -1,13 +1,14 @@
 from app.base.database.result import Result
 from app.base.events.dispatcher import EventDispatcher
-from app.games.dto.category import AddCategoryDTO, GetCategoryDTO, CategoryDTO
-from app.games.dto.game import GetGameDTO, GameDTO, AddGameDTO
+from app.games.dto.category import AddCategoryDTO, GetCategoryDTO, CategoryDTO, UpdateCategoryDTO
+from app.games.dto.game import GetGameDTO, GameDTO, AddGameDTO, UpdateGameDTO
 from app.games.entities.category import CategoryEntity
 from app.games.entities.game import GameEntity
 from app.games.exceptions import CategoryNotExists, GameNotExists
 from app.games.interfaces.persistance import AbstractCategoryRepository, GetCategoryFilter
 from app.games.interfaces.service import AbstractGameService, AbstractCategoryService
 from app.games.interfaces.uow import AbstractGameUoW
+from app.games.value_objects.ids import CategoryID, GameID
 
 
 class GameService(AbstractGameService):
@@ -42,6 +43,12 @@ class GameService(AbstractGameService):
 				case Result(None, Exception() as exc):
 					raise exc
 
+	async def update_game(self, dto: UpdateGameDTO) -> GameDTO:
+		pass
+
+	async def delete_game(self, game_id: GameID) -> GameDTO:
+		pass
+
 
 class CategoryService(AbstractCategoryService):
 	def __init__(self, uow: AbstractGameUoW, event_dispatcher: EventDispatcher):
@@ -75,3 +82,10 @@ class CategoryService(AbstractCategoryService):
 					return CategoryDTO.model_validate(value)
 				case Result(None, Exception() as exc):
 					raise exc
+
+	async def update_category(self, dto: UpdateCategoryDTO) -> CategoryDTO:
+		pass
+
+	async def delete_category(self, category_id: CategoryID) -> CategoryDTO:
+		pass
+

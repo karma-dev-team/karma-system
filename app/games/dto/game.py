@@ -16,3 +16,13 @@ class GameDTO(DTO, TimedDTO):
 class AddGameDTO(DTO):
 	name: str
 	description: str
+
+
+class UpdateGameDataDTO(DTO):
+	name: str
+	description: str
+
+
+class UpdateGameDTO(DTO):
+	game_id: GameID
+	data: UpdateGameDataDTO

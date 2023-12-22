@@ -14,3 +14,13 @@ class GameNotExists(ApplicationError):
 class CategoryNotExists(ApplicationError):
     def message(self) -> str:
         return "category does not exists"
+
+
+class GameNameAlreadyTaken(ApplicationError):
+    def message(self) -> str:
+        return "game name already taken by other row"
+
+
+class CategoryNameAlreadyTaken(ApplicationError):
+    def message(self) -> str:
+        return "category name already taken by other category"

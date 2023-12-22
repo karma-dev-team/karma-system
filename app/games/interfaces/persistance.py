@@ -6,7 +6,8 @@ from app.base.database.filters import filter_wrapper
 from app.base.database.result import Result
 from app.games.entities.category import CategoryEntity
 from app.games.entities.game import GameEntity
-from app.games.exceptions import GameAlreadyExists
+from app.games.exceptions import GameAlreadyExists, GameNotExists, GameNameAlreadyTaken, CategoryNotExists, \
+    CategoryNameAlreadyTaken
 from app.games.value_objects.ids import GameID, CategoryID
 
 
@@ -31,6 +32,14 @@ class AbstractCategoryRepository(Protocol):
     async def add_category(self, cat: CategoryEntity) -> Result[CategoryEntity, None]:
         pass
 
+    @abc.abstractmethod
+    async def update_category(self, category: CategoryEntity) -> Result[CategoryEntity, CategoryNameAlreadyTaken]:
+        pass
+
+    @abc.abstractmethod
+    async def delete_category(self, category: CategoryEntity) -> Result[CategoryEntity, CategoryNotExists]:
+        pass
+
 
 class AbstractGamesRepository(Protocol):
     @abc.abstractmethod
@@ -39,4 +48,12 @@ class AbstractGamesRepository(Protocol):
 
     @abc.abstractmethod
     async def add_game(self, game: GameEntity) -> Result[GameEntity, GameAlreadyExists]:
+        pass
+
+    @abc.abstractmethod
+    async def update_game(self, game: GameEntity) -> Result[GameEntity, GameNameAlreadyTaken]:
+        pass
+
+    @abc.abstractmethod
+    async def delete_game(self, game: GameEntity) -> Result[GameEntity, GameNotExists]:
         pass
