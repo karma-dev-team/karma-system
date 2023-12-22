@@ -4,6 +4,7 @@ from typing import Sequence
 from pydantic import Field
 
 from app.base.dto import DTO, TimedDTO
+from app.files.dtos.files import PhotoDTO
 from app.files.dtos.input_file import InputFileType
 from app.games.value_objects.ids import GameID
 from app.server.dto.player import GetPlayerDTO
@@ -28,6 +29,7 @@ class ServerDTO(DTO, TimedDTO):
 	owner: UserDTO | None
 	karma: KarmaAmount
 	game_id: GameID
+	icon: PhotoDTO
 
 
 class GetPlayersKarmaDTO(DTO):

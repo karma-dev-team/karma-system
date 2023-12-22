@@ -6,6 +6,7 @@ from app.auth.config import SecurityConfig
 from app.auth.exceptions import AccessDenied
 from app.base.database.result import Result
 from app.base.events.dispatcher import EventDispatcher
+from app.files.interfaces.services import FileService
 from app.games.exceptions import GameNotExists
 from app.games.interfaces.persistance import GetGameFilter
 from app.games.interfaces.uow import AbstractGameUoW
@@ -95,16 +96,20 @@ class ServerService(AbstractServerService):
 		access_policy: BasicAccessPolicy,
 		event_dispatcher: EventDispatcher,
 		config: SecurityConfig,
+		file_service: FileService,
 	):
 		self.config = config
 		self.game_uow = game_uow
 		self.uow = uow
 		self.access_policy = access_policy
 		self.event_dispatcher = event_dispatcher
+		self.file_service = file_service
 
 	async def queue_server(self, dto: QueueServerDTO) -> ServerDTO:
 		if self.access_policy.anonymous():
 			raise AccessDenied
+		icon = await self.file_service.upload_file(dto.icon)
+
 		server = ServerEntity.create(
 			name=dto.name,
 			ipv4=dto.ip,
@@ -112,6 +117,7 @@ class ServerService(AbstractServerService):
 			owner=self.access_policy.user,
 			game_id=dto.game_id,
 			tags=dto.tags,
+			icon=icon,
 		)
 		# if self.access_policy.user.blocked:
 		# 	raise AccessDenied(self.access_policy.user.id)

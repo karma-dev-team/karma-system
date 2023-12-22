@@ -78,18 +78,18 @@
         {% if servers %}
             {% for server in servers %}
             <div class="server-card">
-              <img src="path/to/server-icon.png" alt="Server Icon" class="server-icon">
+              <img src="{{ server.image.file_url }}" alt="Server Icon" class="server-icon">
               <div class="server-details">
-                <div>Название сервера</div>
-                <div>Краткое описание сервера (максимум 50 знаков)</div>
+                <div>{{ server.name }}</div>
+                <div>{{ server.description }}</div>
                 <!-- Место для тегов -->
                 <div class="tags">
-                  <span class="tag">Тег1</span>
-                  <span class="tag">Тег2</span>
-                  <!-- Добавьте другие теги при необходимости -->
+                  {% for tag in tags %}
+                  <span class="tag">{{ tag.name }}</span>
+                  {% endfor %}
                 </div>
               </div>
-              <div class="number">Число</div>
+              <div class="number">{{ server.karma }}</div>
             </div>
             {% endfor %}
         {% else %}

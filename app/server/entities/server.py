@@ -7,6 +7,7 @@ from attrs import field
 
 from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity, entity
+from app.files.entities import PhotoEntity
 from app.games.value_objects.ids import GameID
 from app.server.dto.server import ServerDTO
 from app.server.entities.player import PlayerEntity
@@ -33,6 +34,7 @@ class ServerEntity(TimedEntity, Aggregate):
 	tags: List[ServerTagEntity] = field(factory=list)
 	registered: bool = field(default=False)
 	country_code: str = field(default="RU")
+	icon: PhotoEntity = field(default=None, validator=optional(instance_of(PhotoEntity)))
 
 	@classmethod
 	def create(
@@ -44,6 +46,7 @@ class ServerEntity(TimedEntity, Aggregate):
 		game_id: GameID,
 		ipv6: IPv6Address | None = None,
 		tags: Optional[Union[list[ServerTagEntity], str, list]] = None,
+		icon: Optional[PhotoEntity] = None,
 	) -> "ServerEntity":
 		if not tags:
 			tags = []
@@ -56,6 +59,7 @@ class ServerEntity(TimedEntity, Aggregate):
 			owner=owner,
 			game_id=game_id,
 			tags=tags,
+			icon=icon,
 		)
 		if isinstance(tags, (str, list)):
 			if isinstance(tags, str):

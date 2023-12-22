@@ -65,7 +65,8 @@ class IoContainerImpl(AbstractIoContainer):
             game_uow=self.uow,
             event_dispatcher=self.event_dispatcher,
             config=self.config.security,
-            access_policy=BasicAccessPolicy(self.user)
+            access_policy=BasicAccessPolicy(self.user),
+            file_service=self.file_service(),
         )
 
     def player_service(self) -> AbstractPlayerService:
