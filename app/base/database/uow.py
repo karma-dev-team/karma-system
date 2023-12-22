@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.base.uow import AbstractUoW
 from app.files.interfaces.persistance import AbstractFileRepo
 from app.files.interfaces.uow import AbstractFileUoW
+from app.files.storage.file import FileRepo
 from app.games.interfaces.persistance import AbstractGamesRepository, AbstractCategoryRepository
 from app.games.interfaces.uow import AbstractGameUoW
 from app.games.storage.category import CategoryRepository
@@ -99,6 +100,7 @@ class SQLAlchemyUoW(SQLAlchemyBaseUoW, AbstractServerUoW, AbstractKarmaUoW, Abst
     def create(cls, session: AsyncSession) -> "SQLAlchemyUoW":
         return SQLAlchemyUoW(
             session=session,
+            file_repo=FileRepo,
             server_repo=ServerRepositoryImpl,
             player_repo=PlayerRepositoryImpl,
             user_repo=UserRepoImpl,

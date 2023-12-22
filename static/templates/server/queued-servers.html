@@ -1,79 +1,136 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', path='css/queued-servers.css') }}" />
-{% endblock %}
+  <title>Сервера игр</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    body {
+      padding-top: 56px; /* Для учета высоты навбара */
+    }
 
+    .server-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .server-icon {
+      width: 100%;
+      max-width: 50px;
+      height: auto;
+      margin-right: 15px;
+      border-radius: 50%;
+      /* Добавьте стили иконки по вашему желанию */
+    }
+
+    .server-details {
+      flex-grow: 1;
+    }
+
+    .container-fluid { 
+      margin: 0 auto;
+      min-height: 90%;
+    }
+
+    .filter-sidebar {
+      position: fixed;
+      top: 56px; /* Высота навбара */
+      right: 140px;
+      width: 200px;
+      padding: 20px;
+      background-color: #f8f9fa; /* Цвет фона сайдбара */
+      border: 1px solid #dee2e6;
+      min-height: 90%;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      margin-right: 5px;
+      margin-bottom: 5px;
+      padding: 2px 10px;
+      background-color: #a1a1a1;
+      color: #fff;
+      border-radius: 4px;
+    }
+
+    /* Дополнительные стили по желанию */
+  </style>
+{% endblock %}
 {% block content %}
-<div class="queuedservers">
-      <div class="queuedservers-child"></div>
-      <div class="div32">
-        <div class="child8"></div>
-        <div class="child9"></div>
-        <div class="div33">Не отказывай пж</div>
-        <div class="dota-2-online">ПЖПЖЖПЖП</div>
-        <div class="wrapper7">
-          <div class="div35">ТЭГ</div>
-        </div>
-        <div class="wrapper8">
-          <div class="div35">ТЭГ</div>
-        </div>
-      </div>
-      <div class="div37">
-        <div class="div38">Поиск по метке:</div>
-        <div class="div39">Тип игры</div>
-        <div class="child10"></div>
-        <div class="garrys-mod">Garry's mod</div>
-        <div class="child11"></div>
-        <div class="minecraft">Minecraft</div>
-        <div class="acceptbutton">
-          <div class="wrapper9">
-            <div class="div35">Подвердить</div>
+  <div class="container-fluid">
+    <!-- Фильтрация в виде вертикального сайдбара справа -->
+    <div class="row">
+      <!-- Список серверов -->
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        {% if not servers %}
+        <div class="row">
+          <div class="col-9">
+            {% for server in servers %}
+            <div class="server-card">
+              <img src="path/to/server-icon.png" alt="Server Icon" class="server-icon">
+              <div class="server-details">
+                <div>{{ server.name }}</div>
+                <div>{{ server.description }}</div>
+                <div class="tags">
+                  {% for tag in server.tags %}
+                    <span class="tag">{{ tag.name }}</span>
+                  {% endfor %}
+                </div>
+              </div>
+              <div>{{ server.karma }}</div>
+            </div>
+            {% endfor %}
           </div>
         </div>
-      </div>
-      <div class="div41">
-        <div class="child8"></div>
-        <div class="child9"></div>
-        <div class="div33">ДАУРЕН</div>
-        <div class="dota-2-online">DOTA 2 ONLINE 24/7</div>
-        <div class="wrapper7">
-          <div class="div35">ТЭГ</div>
+        {% else %}
+        <div>
+            <h1>Серверов с такими свойствами нету</h1>
         </div>
-        <div class="wrapper8">
-          <div class="div35">ТЭГ</div>
-        </div>
-      </div>
-      <div class="div45">
-        <div class="child8"></div>
-        <div class="child9"></div>
-        <div class="div33">Не давай отказ</div>
-        <div class="dota-2-online">Ок?</div>
-        <div class="wrapper7">
-          <div class="div35">ТЭГ</div>
-        </div>
-        <div class="wrapper8">
-          <div class="div35">ТЭГ</div>
-        </div>
-      </div>
-      <img
-        class="queuedservers-item"
-        alt=""
-        src="{{ url_for('static', path='/images/rectangle-11@2x.png') }}"
-      />
+      </main>
 
-      <img
-        class="queuedservers-inner"
-        alt=""
-        src="{{ url_for('static', path='/images/rectangle-11@2x.png') }}"
-      />
-
-      <img
-        class="queuedservers-child1"
-        alt=""
-        src="{{ url_for('static', path='/images/rectangle-11@2x.png') }}"
-      />
-
-      <a class="a9" href="https://www.youtube.com/watch?v=umoRarxG-vE">👁‍</a>
+      <nav class="col-md-2 d-none d-md-block filter-sidebar">
+        <!-- Форма фильтрации с использованием чекбоксов -->
+        <form action="post">
+          <div class="form-group">
+            <label>Игра:</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="game1">
+              <label class="form-check-label" for="game1">Игра 1</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="game2">
+              <label class="form-check-label" for="game2">Игра 2</label>
+            </div>
+            <!-- Добавьте другие чекбоксы для игр при необходимости -->
+          </div>
+          <div class="form-group">
+            <label>Жанр игр:</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="genre1">
+              <label class="form-check-label" for="genre1">Жанр 1</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="genre2">
+              <label class="form-check-label" for="genre2">Жанр 2</label>
+            </div>
+            <!-- Добавьте другие чекбоксы для жанров при необходимости -->
+          </div>
+          <!-- Добавьте другие критерии фильтрации при необходимости -->
+          <button type="submit" class="btn btn-primary">Применить фильтр</button>
+        </form>
+      </nav>
     </div>
-{% endblock %}
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+{% block content %}

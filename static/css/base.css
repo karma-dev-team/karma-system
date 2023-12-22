@@ -1,6 +1,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  min-height: 1200px;
 }
 
 .navbar {
@@ -125,6 +126,15 @@ button, input[type="submit"], input[type="reset"] {
 .footer-center img {
     max-width: 100px;
     margin: 10px 10px;
+}
+
+.footer-center h4 {
+    align-self: center;
+}
+
+.main-nav {
+    align-self: center;
+    margin-bottom: 0px;
 }
 
 /* Опциональные стили для адаптивности (можно изменить по своему усмотрению) */

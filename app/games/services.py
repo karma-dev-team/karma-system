@@ -161,5 +161,21 @@ class CategoryService(AbstractCategoryService):
 					raise exc
 
 	async def delete_category(self, category_id: CategoryID) -> CategoryDTO:
-		pass
+		if self.access_policy.check_role(UserRoles.admin):
+			raise AccessDenied
+		category = await self.uow.category.by_filter(
+			GetCategoryFilter(
+				category_id=category_id,
+			)
+		)
+
+		if not category:
+			raise CategoryNotExists()
+
+		async with self.uow.transaction():
+			# no need to validate result.
+			# we already know that game exists
+			await self.uow.category.delete_category(category)
+			return CategoryDTO.model_validate(category)
+
 

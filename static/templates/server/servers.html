@@ -1,60 +1,139 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', path='css/servers.css') }}" />
-{% endblock %}
+  <title>Сервера игр</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    .server-container {
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      grid-gap: 20px;
+      margin: 50px 120px; /* Отступы от краев страницы */
+      padding: 0px;
+    }
 
+    .server-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #ccc;
+    }
+
+    .server-icon {
+      width: 100%;
+      max-width: 50px;
+      height: auto;
+      margin-right: 15px;
+      border-radius: 50%;
+      /* Добавьте стили иконки по вашему желанию */
+    }
+
+    .server-details {
+      grid-column: 0;
+      grid-row: 0;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .tag {
+      margin-right: 10px;
+      margin-bottom: 2px;
+      padding: 2px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 4px;
+    }
+
+    .number {
+      grid-column: 3;
+      align-self: center;
+    }
+
+    .filter-sidebar {
+      background-color: #d0d0d0;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #888888be;
+    }
+
+    /* Дополнительные стили по желанию */
+  </style>
+{% endblock %}
 {% block content %}
-    <div class="servers">
-      <div class="servers-child"></div>
-      <div class="div57">
-        <div class="child19"></div>
-        <div class="child20"></div>
-        <div class="fastrp">FastRP (Быстрая загрузка)</div>
-        <div class="nonrp">NonRP</div>
-        <div class="wrapper14">
-          <div class="div58">ТЭГ</div>
+  <div class="server-container">
+    <!-- Фильтрация в виде вертикального сайдбара справа -->
+    <div class="row">
+      <!-- Список серверов -->
+      <main role="main" class="col-md-10 ml-sm-auto col-lg-10 px-4">
+        {% if servers %}
+            {% for server in servers %}
+            <div class="server-card">
+              <img src="path/to/server-icon.png" alt="Server Icon" class="server-icon">
+              <div class="server-details">
+                <div>Название сервера</div>
+                <div>Краткое описание сервера (максимум 50 знаков)</div>
+                <!-- Место для тегов -->
+                <div class="tags">
+                  <span class="tag">Тег1</span>
+                  <span class="tag">Тег2</span>
+                  <!-- Добавьте другие теги при необходимости -->
+                </div>
+              </div>
+              <div class="number">Число</div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div>
+            <h1>Серверов с такими свойствами нету</h1>
         </div>
-        <div class="wrapper15">
-          <div class="div58">ТЭГ</div>
-        </div>
-        <div class="div60">КАРМА</div>
-      </div>
-      <div class="div61">
-        <div class="div62">Поиск по метке:</div>
-        <div class="div63">Тип игры</div>
-        <div class="child21"></div>
-        <div class="garrys-mod1">Garry's mod</div>
-        <div class="child22"></div>
-        <div class="minecraft1">Minecraft</div>
-      </div>
-      <div class="div64">
-        <div class="child19"></div>
-        <div class="child20"></div>
-        <div class="fastrp">Продажа почек бесплатно</div>
-        <div class="nonrp">Дада бесплатно</div>
-        <div class="wrapper14">
-          <div class="div58">ТЭГ</div>
-        </div>
-        <div class="wrapper15">
-          <div class="div58">ТЭГ</div>
-        </div>
-        <div class="div60">КАРМА</div>
-      </div>
-      <div class="div70">отчима</div>
-      <div class="div71">
-        <div class="child19"></div>
-        <div class="child20"></div>
-        <div class="fastrp">ДАУРЕН</div>
-        <div class="nonrp">DOTA ONLINE 24/7</div>
-        <div class="wrapper14">
-          <div class="div58">ТЭГ</div>
-        </div>
-        <div class="wrapper15">
-          <div class="div58">ТЭГ</div>
-        </div>
-        <div class="div60">КАРМА</div>
-      </div>
-      <a class="a13" href="https://www.youtube.com/watch?v=umoRarxG-vE">👁‍</a>
+        {% endif %}
+      </main>
+
+      <nav class="col-md-2 d-none d-md-block filter-sidebar">
+        <!-- Форма фильтрации с использованием чекбоксов -->
+        <form action="post">
+          <div class="form-group">
+            <label>Игра:</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="game1">
+              <label class="form-check-label" for="game1">Игра 1</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="game2">
+              <label class="form-check-label" for="game2">Игра 2</label>
+            </div>
+            <!-- Добавьте другие чекбоксы для игр при необходимости -->
+          </div>
+          <div class="form-group">
+            <label>Жанр игр:</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="genre1">
+              <label class="form-check-label" for="genre1">Жанр 1</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="genre2">
+              <label class="form-check-label" for="genre2">Жанр 2</label>
+            </div>
+            <!-- Добавьте другие чекбоксы для жанров при необходимости -->
+          </div>
+          <!-- Добавьте другие критерии фильтрации при необходимости -->
+          <button type="submit" class="btn btn-primary">Применить фильтр</button>
+        </form>
+      </nav>
     </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 {% endblock %}

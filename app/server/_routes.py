@@ -75,7 +75,7 @@ async def get_api_token(
 	)
 
 
-@server_router.get('/server', name="server:get-servers-page", response_class=HTMLResponse)
+@server_router.get('/servers', name="server:get-servers-page", response_class=HTMLResponse)
 async def get_servers(
 	request: Request,
 	filter: Annotated[GetServersDTO, Depends()],
