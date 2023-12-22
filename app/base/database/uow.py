@@ -5,6 +5,8 @@ from typing import Type, AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.base.uow import AbstractUoW
+from app.files.interfaces.persistance import AbstractFileRepo
+from app.files.interfaces.uow import AbstractFileUoW
 from app.games.interfaces.persistance import AbstractGamesRepository, AbstractCategoryRepository
 from app.games.interfaces.uow import AbstractGameUoW
 from app.games.storage.category import CategoryRepository
@@ -62,19 +64,20 @@ class SQLAlchemyBaseUoW(AbstractUoW):
             self._in_transaction = False
 
 
-class SQLAlchemyUoW(SQLAlchemyBaseUoW, AbstractServerUoW, AbstractKarmaUoW, AbstractUserUoW, AbstractGameUoW):
+class SQLAlchemyUoW(SQLAlchemyBaseUoW, AbstractServerUoW, AbstractKarmaUoW, AbstractUserUoW, AbstractGameUoW, AbstractFileUoW):
     server: AbstractServerRepo
     player: AbstractPlayerRepo
     user: AbstractUserRepo
     karma: AbstractKarmaRepository
     game: AbstractGamesRepository
     category: AbstractCategoryRepository
-
+    file: AbstractFileRepo
 
     def __init__(
         self,
         session: AsyncSession,
         *,
+        file_repo: Type[AbstractFileRepo],
         server_repo: Type[AbstractServerRepo],
         player_repo: Type[AbstractPlayerRepo],
         user_repo: Type[AbstractUserRepo],
@@ -82,6 +85,7 @@ class SQLAlchemyUoW(SQLAlchemyBaseUoW, AbstractServerUoW, AbstractKarmaUoW, Abst
         game_repo: Type[AbstractGamesRepository],
         category: Type[AbstractCategoryRepository],
     ) -> None:
+        self.file = file_repo(session)
         self.server = server_repo(session)
         self.player = player_repo(session)
         self.user = user_repo(session)

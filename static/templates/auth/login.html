@@ -1,39 +1,122 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', path='css/login.css') }}">
-{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Страница входа</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-{% block navbar %}
+        .login-container {
+            margin-top: 100px;
+        }
 
-{% endblock %}
+        .form-signin {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
 
-{% block content %}
-  <div class="authorizationpage">
-    <div class="div">
-      <div class="child"></div>
-      <div class="item"></div>
-      <div class="email">Email</div>
-      <div class="inner"></div>
-      <div class="div1">Пароль</div>
-      <img class="image-7-icon" alt="" src="{{ url_for('static', path='images/image-7@2x.png') }}" />
+        .form-signin button {
+            margin-top: 15px;
+        }
 
-      <div class="wrapper">
-        <div class="div2">Войти</div>
-      </div>
-      <a class="a" href="./registration.html"
-        >Хотите зарегеистрировать свой аккаунт?</a
-      >
-      <div class="rectangle-div"></div>
-      <a class="image-6" href="https://www.youtube.com/watch?v=wAlprT_gZPw">
-      </a>
-      <div class="div3">
-        <p class="p">Авторизация</p>
-      </div>
+		button, input[type="submit"], input[type="reset"] {
+			background: none;
+			color: inherit;
+			border: none;
+			padding: 0;
+			font: inherit;
+			cursor: pointer;
+			outline: inherit;
+		}
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            max-width: 150px;
+            max-height: 150px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 0px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            background-color: transparent; /* Set background color to transparent */
+            border: none; /* Remove border */
+        }
+
+        .register-link,
+        .forgot-password-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-md-center login-container">
+            <div class="col-md-6 col-lg-4">
+
+                <form class="form-signin">
+					<div class="logo-container">
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley">
+						<!-- Replace the src attribute with the path to your logo image -->
+						<img src="{{ url_for('static', path='images/image-6@2x.png') }}" alt="Logo">
+                        </a>
+                	</div>
+                    <h2 class="text-center">Войти</h2>
+                    <div class="form-group">
+                        <label for="inputEmail">Email</label>
+                        <input type="email" id="inputEmail" class="form-control" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">Пароль</label>
+                        <div class="input-group">
+                            <input type="password" id="inputPassword" class="form-control" required>
+                            <div class="input-group-append password-toggle" onclick="togglePassword()">
+                                <span class="input-group-text" id="eyeIcon">&#128065;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block" type="submit">Войти</button>
+					<div class="register-link"><a href="{{ url_for('auth:register-get') }}">Нету аккаунта? Регистрация</a></div>
+                	<div class="forgot-password-link"><a href="#">Забыли пароль?</a></div>
+				</form>
+            </div>
+        </div>
     </div>
-  </div>
-{% endblock %}
 
-{% block footer %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-{% endblock %}
+    <script>
+        function togglePassword() {
+            var passwordInput = document.getElementById("inputPassword");
+            var eyeIcon = document.getElementById("eyeIcon");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.innerHTML = "&#128064;"; // Change to an open eye
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.innerHTML = "&#128065;"; // Change to a closed eye
+            }
+        }
+    </script>
+</body>
+
+</html>

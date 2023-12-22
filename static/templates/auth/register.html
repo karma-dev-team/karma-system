@@ -1,53 +1,79 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-{% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', path='css/register.css') }}" />
-{% endblock %}
+        .container {
+            margin-top: 50px;
+        }
 
-{% block navbar %}
+        .form-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-{% endblock %}
+        .have-account {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-{% block content %}
-    <div class="registration">
-      <div class="div50">
-        <div class="child16"></div>
-        <a class="image-64" href="https://www.youtube.com/watch?v=wAlprT_gZPw">
-        </a>
-        <div class="div51">Регистрация</div>
-        <div class="group-parent">
-          <div class="rectangle-parent">
-            <div class="group-child"></div>
-            <div class="div52">Имя</div>
-          </div>
-          <div class="rectangle-group">
-            <div class="group-child"></div>
-            <div class="div52">Email</div>
-          </div>
-          <div class="rectangle-group">
-            <div class="group-child"></div>
-            <div class="div52">Пароль</div>
-          </div>
-          <div class="rectangle-group">
-            <div class="group-child"></div>
-            <div class="div54">Регестрацонный код</div>
-          </div>
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+    </style>
+    <title>Registration Page</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="col-md-6 offset-md-3 form-container">
+        <div class="logo-container">
+            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley">
+            <img src="{{ url_for('static', path='images/image-6@2x.png') }}" alt="Logo">
+            </a>
         </div>
-        <img class="image-7-icon1" alt="" src="./public/image-7@2x.png" />
+        <h2 class="text-center">Register</h2>
+        <form>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Имя:</label>
+                <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            <div class="form-group">
+                <label for="register-code">Регистрационный код:</label>
+                <input type="text" class="form-control" id="register-code" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
 
-        <div class="child17"></div>
-        <div class="div55">Далее</div>
-        <a class="a10">
-          <span>Хотите </span>
-          <b>зайти</b>
-          <span> в аккаунт?</span>
-        </a>
-        <div class="child18"></div>
-      </div>
-      <div class="div56">Условия пользования</div>
+        <p class="have-account">Есть аккаунт? <a href="{{ url_for('auth:login') }}">Зайди</a></p>
     </div>
-{% endblock %}
+</div>
 
-{% block footer %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-{% endblock %}
+</body>
+</html>

@@ -10,6 +10,7 @@ from app.base.database.dependecies import uow_dependency
 from app.base.events.main import configure_event_dispatcher
 from app.base.logging.logger import configure_logging
 from app.base.api.ioc_impl import load_ioc
+from app.files.file_storage.local_storage import LocalStorage, configure_file_storage
 from app.module.module import configure_module_loader
 from app.templating.main import load_templating
 from app.base.api.router import router as base_router
@@ -22,6 +23,7 @@ def get_app() -> FastAPI:
 	app, router = create_app(config.api, config.debug, lifespan=lifespan(session))
 	configure_logging(config.logging)
 	event_dispatcher = configure_event_dispatcher()
+	file_storage = configure_file_storage()
 
 	# exclude
 	app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -41,6 +43,7 @@ def get_app() -> FastAPI:
 		'session': session,
 		'router': router,
 		'config': config,
+		'file_storage': file_storage,
 	})
 	modules.load()
 

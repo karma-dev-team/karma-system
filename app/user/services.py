@@ -77,6 +77,7 @@ class UserService(AbstractUserService):
 		if not self.config.debug:
 			if self.access_policy.as_int() >= self.access_policy.role_as_int(UserRoles.moderator):
 				raise AccessDenied
+
 		key = os.urandom(32).hex()
 		reg_code = RegistrationCodeEntity.create(key)
 

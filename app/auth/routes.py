@@ -64,7 +64,7 @@ async def register_user(
         return response
 
 
-@router.get("/register", name="auth:register-get", response_class=HTMLResponse)
+@router.get("/auth/register", name="auth:register-get", response_class=HTMLResponse)
 async def register_user(
     request: Request,
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
@@ -124,7 +124,7 @@ async def login_user(
     return response
 
 
-@router.get("/login", name='auth:login', response_class=HTMLResponse)
+@router.get("/auth/login", name='auth:login', response_class=HTMLResponse)
 async def login_user(
     request: Request,
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],

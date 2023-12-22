@@ -11,6 +11,10 @@ from app.base.config import GlobalConfig
 from app.base.database.uow import SQLAlchemyUoW
 from app.base.events.dispatcher import EventDispatcher
 from app.base.ioc import AbstractIoContainer
+from app.files.file_storage.base import AbstractFileStorage
+from app.files.interfaces.services import FileService
+from app.files.providers import file_storage_provider
+from app.files.services import FileServiceImpl
 from app.games.interfaces.service import AbstractCategoryService, AbstractGameService
 from app.games.services import GameService, CategoryService
 
@@ -31,12 +35,14 @@ class IoContainerImpl(AbstractIoContainer):
         uow: SQLAlchemyUoW,
         event_dispatcher: EventDispatcher,
         config: GlobalConfig,
+        file_storage: AbstractFileStorage,
         user: UserEntity | None,
     ):
         self.uow = uow
         self.config = config
         self.event_dispatcher = event_dispatcher
         self.user = user
+        self.file_storage = file_storage
 
     def user_service(self) -> AbstractUserService:
         return UserService(
@@ -80,11 +86,18 @@ class IoContainerImpl(AbstractIoContainer):
             event_dispatcher=self.event_dispatcher,
         )
 
+    def file_service(self) -> FileService:
+        return FileServiceImpl(
+            uow=self.uow,
+            file_storage=self.file_storage,
+        )
+
 
 async def get_ioc(
     event_dispatcher: Annotated[EventDispatcher, Depends(event_dispatcher_provider)],
     uow: Annotated[SQLAlchemyUoW, Depends(uow_provider)],
     config: Annotated[GlobalConfig, Depends(config_provider)],
+    file_storage: Annotated[AbstractFileStorage, Depends(file_storage_provider)],
     user: Annotated[UserEntity | None, Depends(optional_user)]
 ) -> IoContainerImpl:
     return IoContainerImpl(
@@ -92,6 +105,7 @@ async def get_ioc(
         uow=uow,
         config=config,
         user=user,
+        file_storage=file_storage,
     )
 
 
