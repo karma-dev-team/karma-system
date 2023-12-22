@@ -9,6 +9,14 @@ from app.games.interfaces.persistance import GetGameFilter, AbstractGamesReposit
 
 
 class GameRepository(AbstractGamesRepository, SQLAlchemyRepo):
+    def _parse_exception(self, exc: IntegrityError) -> GameNameAlreadyTaken:
+        """Parse exception responsible for parsing sqlalchemy integrity errors"""
+        if not hasattr(exc.__cause__.__cause__, "constraint_name"):
+            raise exc
+        match exc.__cause__.__cause__.constraint_name:  # type: ignore
+            case "ix_categories_name":
+                return GameNameAlreadyTaken()
+
     async def by_filter(self, filter: GetGameFilter) -> GameEntity | None:
         stmt = select(GameEntity)
 

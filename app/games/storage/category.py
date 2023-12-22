@@ -9,11 +9,12 @@ from app.games.interfaces.persistance import GetCategoryFilter, AbstractCategory
 
 
 class CategoryRepository(AbstractCategoryRepository, SQLAlchemyRepo):
-    def _parse_exception(self, exc: IntegrityError) -> Exception:
+    def _parse_exception(self, exc: IntegrityError) -> CategoryNameAlreadyTaken:
         if not hasattr(exc.__cause__.__cause__, "constraint_name"):
             raise exc
         match exc.__cause__.__cause__.constraint_name:  # type: ignore
-            case ""
+            case "ix_categories_name":
+                return CategoryNameAlreadyTaken()
 
     async def by_filter(self, filter: GetCategoryFilter) -> CategoryEntity | None:
         stmt = select(CategoryEntity)

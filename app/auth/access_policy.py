@@ -21,13 +21,18 @@ class BasicAccessPolicy:
             return
         return USER_ROLES_AS_INTEGER[self.user.role.value]
 
-    def check_role(self, role: UserRoles):
+    def check_role(self, *roles: UserRoles):
         if self.user.superuser:
             return True
 
         if self.anonymous():
-            return
-        role = USER_ROLES_AS_INTEGER[role.value]
-        user_role = USER_ROLES_AS_INTEGER[self.user.role]
+            return False
 
-        return role == user_role
+        for role in roles:
+            role_int = USER_ROLES_AS_INTEGER[role.value]
+            user_role = USER_ROLES_AS_INTEGER[self.user.role]
+
+            if role_int > user_role:
+                return False
+
+        return True
