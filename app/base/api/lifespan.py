@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 
+from aiohttp import ClientSession
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import async_sessionmaker
 

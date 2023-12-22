@@ -1,12 +1,13 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Annotated
 
+from aiohttp import ClientSession
 from fastapi import FastAPI, Depends
 
 from app.auth.access_policy import BasicAccessPolicy
 from app.auth.providers import optional_user
 from app.base.api.ioc import ioc_provider
-from app.base.api.providers import uow_provider, config_provider, event_dispatcher_provider
+from app.base.api.providers import uow_provider, config_provider, event_dispatcher_provider, http_client_provider
 from app.base.config import GlobalConfig
 from app.base.database.uow import SQLAlchemyUoW
 from app.base.events.dispatcher import EventDispatcher
@@ -36,9 +37,11 @@ class IoContainerImpl(AbstractIoContainer):
         event_dispatcher: EventDispatcher,
         config: GlobalConfig,
         file_storage: AbstractFileStorage,
+        session: ClientSession,
         user: UserEntity | None,
     ):
         self.uow = uow
+        self.session = session
         self.config = config
         self.event_dispatcher = event_dispatcher
         self.user = user
@@ -79,18 +82,21 @@ class IoContainerImpl(AbstractIoContainer):
         return CategoryService(
             uow=self.uow,
             event_dispatcher=self.event_dispatcher,
+            access_policy=BasicAccessPolicy(self.user)
         )
 
     def game_service(self) -> AbstractGameService:
         return GameService(
             uow=self.uow,
             event_dispatcher=self.event_dispatcher,
+            access_policy=BasicAccessPolicy(self.user)
         )
 
     def file_service(self) -> FileService:
         return FileServiceImpl(
             uow=self.uow,
             file_storage=self.file_storage,
+            session=self.session,
         )
 
 
@@ -99,7 +105,8 @@ async def get_ioc(
     uow: Annotated[SQLAlchemyUoW, Depends(uow_provider)],
     config: Annotated[GlobalConfig, Depends(config_provider)],
     file_storage: Annotated[AbstractFileStorage, Depends(file_storage_provider)],
-    user: Annotated[UserEntity | None, Depends(optional_user)]
+    user: Annotated[UserEntity | None, Depends(optional_user)],
+    client_session: Annotated[ClientSession, Depends(http_client_provider)]
 ) -> IoContainerImpl:
     return IoContainerImpl(
         event_dispatcher=event_dispatcher,
@@ -107,6 +114,7 @@ async def get_ioc(
         config=config,
         user=user,
         file_storage=file_storage,
+        session=client_session,
     )
 
 

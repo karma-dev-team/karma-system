@@ -3,7 +3,7 @@ import inspect
 
 import loguru
 
-from app import user, server, games, karma, auth
+from app import user, server, games, karma, auth, files
 
 
 def filter_workflow(params: list[str], workflow: dict[str, Any]) -> dict[str, Any]:
@@ -41,6 +41,7 @@ def configure_module_loader(workflow_data: dict[str, Any]) -> ModuleLoader:
         server.load_module,
         games.load_module,
         karma.load_module,
+        files.load_module,
     ], workflow_data=workflow_data)
 
     return module

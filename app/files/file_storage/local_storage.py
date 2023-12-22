@@ -27,6 +27,8 @@ class LocalStorage(AbstractFileStorage):
         return f"{base_url}/{key}"
 
     async def upload(self, body: FileT, key: str, mime_type: str) -> str:
+        if not os.path.exists(self.base_path):
+            os.mkdir(self.base_path)
         file = File(
             path=str(self._build_path(key)),
             mime_type=mime_type,

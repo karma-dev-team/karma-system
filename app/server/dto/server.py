@@ -29,7 +29,7 @@ class ServerDTO(DTO, TimedDTO):
 	owner: UserDTO | None
 	karma: KarmaAmount
 	game_id: GameID
-	icon: PhotoDTO
+	icon: PhotoDTO | None = Field(default=None)
 
 
 class GetPlayersKarmaDTO(DTO):
