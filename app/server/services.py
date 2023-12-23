@@ -163,7 +163,7 @@ class ServerService(AbstractServerService):
 		return generate_jwt(
 			data={
 				"name": server.name,
-				"id": server.id,
+				"id": str(server.id),
 			},
 			secret=self.config.secret_key
 		)
