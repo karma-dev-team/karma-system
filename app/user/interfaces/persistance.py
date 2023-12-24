@@ -37,3 +37,7 @@ class AbstractUserRepo(Protocol):
 	) -> Result[RegistrationCodeEntity, None]:
 		"""Registration code has only one method, that's why it belongs to UserRepo"""
 		pass
+
+	@abc.abstractmethod
+	async def update_user(self, user: UserEntity) -> Result[UserEntity, EmailAlreadyTaken]:
+		pass

@@ -9,8 +9,9 @@ from app.base.api.providers import config_provider, uow_provider, session_provid
 from app.base.config import load_config
 from app.base.database import load_database
 from app.base.database.dependecies import uow_dependency
+from app.base.database.main import init_pgtrgm, shutdown_session, init_session
 from app.base.events.main import configure_event_dispatcher
-from app.base.logging.logger import configure_logging
+from app.base.logging.logger import configure_logging, get_logger
 from app.base.api.ioc_impl import load_ioc
 from app.files.file_storage.local_storage import LocalStorage, configure_file_storage
 from app.module.module import configure_module_loader
@@ -20,10 +21,26 @@ from app.base.api.router import router as base_router
 
 def get_app() -> FastAPI:
 	config = load_config('./deploy/config.toml')
+	configure_logging(config.logging)
+	logger = get_logger(__name__)
 	session, registry = load_database(config.db)
 
-	app, router = create_app(config.api, config.debug, lifespan=lifespan(session))
-	configure_logging(config.logging)
+	lifespan_func = lifespan(
+		startup_callbacks=[
+			init_session,
+			init_pgtrgm,
+		],
+		shutdown_callbacks=[
+			shutdown_session,
+		],
+		workflow_data={
+			'session': session,
+			'registry': registry,
+			'config': config,
+			'logger': logger,
+		}
+	)
+	app, router = create_app(config.api, config.debug, lifespan=lifespan_func)
 	event_dispatcher = configure_event_dispatcher()
 	file_storage = configure_file_storage()
 	client_session = ClientSession()

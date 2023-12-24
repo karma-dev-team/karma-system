@@ -9,7 +9,7 @@ from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity, entity
 from app.user.dto.user import UserDTO
 from app.user.enums import UserRoles
-from app.user.events.user import UserCreated, GivenSuperUser, UserBlocked
+from app.user.events.user import UserCreated, GivenSuperUser, UserBlocked, UserPasswordChanged
 from app.user.exceptions import RegistrationCodeAlreadyUsed
 from app.user.security import get_password_hash, verify_password
 from app.user.value_objects import UserID, RegCodeID
@@ -74,6 +74,14 @@ class UserEntity(TimedEntity, Aggregate):
 		self.add_event(
 			UserBlocked(
 				UserDTO.model_validate(self)
+			)
+		)
+
+	def change_password(self, password: str) -> None:
+		self.hashed_password = self.create_password(password)
+		self.add_event(
+			UserPasswordChanged(
+				user=UserDTO.model_validate(self),
 			)
 		)
 

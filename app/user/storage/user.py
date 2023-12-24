@@ -84,3 +84,11 @@ class UserRepoImpl(AbstractUserRepo, SQLAlchemyRepo):
 			return Result.fail(err)
 
 		return Result.ok(reg_code)
+
+	async def update_user(self, user: UserEntity) -> Result[UserEntity, EmailAlreadyTaken]:
+		try:
+			await self.session.merge(user)
+		except IntegrityError:
+			return Result.fail(EmailAlreadyTaken())
+
+		return Result.ok(user)

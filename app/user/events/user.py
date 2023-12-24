@@ -16,3 +16,8 @@ class GivenSuperUser(Event):
 @event
 class UserBlocked(Event):
     user: UserDTO
+
+
+@event
+class UserPasswordChanged(Event):
+    user: UserDTO
