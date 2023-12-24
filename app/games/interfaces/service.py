@@ -1,4 +1,5 @@
 import abc
+from typing import Sequence
 
 from app.games.dto.category import GetCategoryDTO, AddCategoryDTO, CategoryDTO, UpdateCategoryDTO
 from app.games.dto.game import GetGameDTO, GameDTO, AddGameDTO, UpdateGameDTO
@@ -22,6 +23,10 @@ class AbstractGameService:
 	async def delete_game(self, game_id: GameID) -> GameDTO:
 		pass
 
+	@abc.abstractmethod
+	async def get_games(self) -> Sequence[GameDTO]:
+		pass
+
 
 class AbstractCategoryService:
 	@abc.abstractmethod
@@ -40,3 +45,6 @@ class AbstractCategoryService:
 	async def delete_category(self, category_id: CategoryID) -> CategoryDTO:
 		pass
 
+	@abc.abstractmethod
+	async def get_categories(self) -> Sequence[CategoryDTO]:
+		pass

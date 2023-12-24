@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
@@ -52,3 +54,9 @@ class CategoryRepository(AbstractCategoryRepository, SQLAlchemyRepo):
             return Result.fail(CategoryNotExists())
 
         return Result.ok(category)
+
+    async def get_categories(self) -> Sequence[CategoryEntity]:
+        stmt = select(CategoryEntity)
+        result = await self.session.scalars(stmt)
+
+        return result.all()

@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
@@ -53,3 +55,9 @@ class GameRepository(AbstractGamesRepository, SQLAlchemyRepo):
             return Result.fail(GameNotExists())
 
         return Result.ok(game)
+
+    async def get_games(self) -> Sequence[GameEntity]:
+        stmt = select(GameEntity)
+        result = await self.session.scalars(stmt)
+
+        return result.all()

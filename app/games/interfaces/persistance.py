@@ -1,6 +1,6 @@
 import abc
 from dataclasses import field
-from typing import Protocol
+from typing import Protocol, Sequence
 
 from app.base.database.filters import filter_wrapper
 from app.base.database.result import Result
@@ -40,6 +40,10 @@ class AbstractCategoryRepository(Protocol):
     async def delete_category(self, category: CategoryEntity) -> Result[CategoryEntity, CategoryNotExists]:
         pass
 
+    @abc.abstractmethod
+    async def get_categories(self) -> Sequence[CategoryEntity]:
+        pass
+
 
 class AbstractGamesRepository(Protocol):
     @abc.abstractmethod
@@ -56,4 +60,8 @@ class AbstractGamesRepository(Protocol):
 
     @abc.abstractmethod
     async def delete_game(self, game: GameEntity) -> Result[GameEntity, GameNotExists]:
+        pass
+
+    @abc.abstractmethod
+    async def get_games(self) -> Sequence[GameEntity]:
         pass

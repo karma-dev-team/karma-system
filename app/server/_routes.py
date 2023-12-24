@@ -83,8 +83,24 @@ async def get_servers(
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 	user: Annotated[UserEntity, Depends(optional_user)],
 ):
+	filter = GetServersDTO(
+		unregistered=False,
+		**filter.model_dump(),
+	)
 	servers = await ioc.server_service().get_servers(filter)
-	return templates.TemplateResponse("server/servers.html", {"request": request, 'servers': servers, 'user': user})
+	games = await ioc.game_service().get_games()
+	categories = await ioc.category_service().get_categories()
+
+	return templates.TemplateResponse(
+		"server/servers.html",
+		{
+			"request": request,
+			'servers': servers,
+			'user': user,
+			'games': games,
+			'categories': categories,
+		}
+	)
 
 
 @server_router.get("/server/{server_id}/get", name="server:server-card", response_class=HTMLResponse)
@@ -160,5 +176,9 @@ async def show_queued_servers(
 	)
 	return templates.TemplateResponse(
 		"server/queued-servers.html",
-		{'request': request, 'user': user, 'servers': servers}
+		{
+			'request': request,
+			'user': user,
+			'servers': servers,
+		}
 	)

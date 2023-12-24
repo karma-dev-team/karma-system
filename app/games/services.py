@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from app.auth.access_policy import BasicAccessPolicy
 from app.auth.exceptions import AccessDenied
 from app.base.database.result import Result
@@ -95,6 +97,10 @@ class GameService(AbstractGameService):
 			await self.uow.game.delete_game(game)
 			return GameDTO.model_validate(game)
 
+	async def get_games(self) -> Sequence[GameDTO]:
+		games = await self.uow.game.get_games()
+		return [GameDTO.model_validate(game) for game in games]
+
 
 class CategoryService(AbstractCategoryService):
 	def __init__(
@@ -178,4 +184,6 @@ class CategoryService(AbstractCategoryService):
 			await self.uow.category.delete_category(category)
 			return CategoryDTO.model_validate(category)
 
-
+	async def get_categories(self) -> Sequence[CategoryDTO]:
+		categories = await self.uow.game.get_games()
+		return [CategoryDTO.model_validate(category) for category in categories]
