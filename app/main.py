@@ -39,6 +39,7 @@ def get_app() -> FastAPI:
 	# preload ioc
 	load_ioc(app)
 	load_templating(app, template_directory="./static/templates")
+	lifespan_callbacks = []
 
 	modules = configure_module_loader(workflow_data={
 		'registry': registry,
@@ -48,6 +49,7 @@ def get_app() -> FastAPI:
 		'router': router,
 		'config': config,
 		'file_storage': file_storage,
+		'lifespan_callbacks': lifespan_callbacks,
 	})
 	modules.load()
 

@@ -17,7 +17,7 @@ class RegistrationCodeIsNotCorrect(ApplicationError):
 
 
 class UserDoesNotExists(ApplicationError):
-	user_id: UserID
+	user_id: UserID | None
 
 	def message(self) -> str:
 		return f"user does not exists, id: {self.user_id}"

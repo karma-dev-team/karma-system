@@ -4,6 +4,7 @@ import toml
 from pydantic import BaseModel
 
 from app.auth.config import SecurityConfig, RedisConfig
+from app.auth.mailing.config import MailingConfig
 from app.base.api.config import APIConfig
 from app.base.database.config import DatabaseConfig
 from app.base.logging.config import LoggingConfig
@@ -15,6 +16,7 @@ class GlobalConfig(BaseModel):
 	api: APIConfig | None
 	security: SecurityConfig
 	redis: RedisConfig | None
+	mailing: MailingConfig
 
 	debug: bool = True
 

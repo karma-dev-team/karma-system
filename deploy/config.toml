@@ -12,3 +12,7 @@ secret_key = "blabla"
 
 [redis]
 dsn = "redis://password@localhost:6379"
+
+[mailing]
+sender_password = "password"
+sender_email = "gmail@gmail.com"
