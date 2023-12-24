@@ -19,7 +19,7 @@
 <body>
     <nav>
         {% block navbar %}
-          <div class="navbar">
+          <div class="navbar-custom">
               <ul class="main-nav">
                   <li><a class="logo" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                   <img alt="123" src="{{ url_for('static', path='images/image-6@2x.png') }}" width="40" height="40"/></a>
@@ -47,9 +47,11 @@
         {% endblock %}
     </nav>
 
+    <div class="main-content">
     {% block content %}
 
     {% endblock %}
+    </div>
 
     <footer>
         {% block footer %}

@@ -48,8 +48,7 @@ class ServerEntity(TimedEntity, Aggregate):
 		tags: Optional[Union[list[ServerTagEntity], str, list]] = None,
 		icon: Optional[PhotoEntity] = None,
 	) -> "ServerEntity":
-		if not tags:
-			tags = []
+
 		entity = ServerEntity(
 			name=name,
 			ipv4=str(ipv4),
@@ -58,10 +57,11 @@ class ServerEntity(TimedEntity, Aggregate):
 			owner_id=owner.id,
 			owner=owner,
 			game_id=game_id,
-			tags=tags,
 			icon=icon,
 		)
+
 		if isinstance(tags, (str, list)):
+			# обработка всех тегов включая уже созданных
 			if isinstance(tags, str):
 				names = tags.split(";")
 			else:

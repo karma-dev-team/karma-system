@@ -1,10 +1,13 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  min-height: 1200px;
 }
 
-.navbar {
+.main-content {
+    min-height: 90vh;
+}
+
+.navbar-custom {
   background-color: #D9D9D9; /* Серый фон */
   display: flex;
   flex-direction: row;
@@ -39,7 +42,7 @@ ul {
   margin-left: 20px;
 }
 
-.navbar a {
+.navbar-custom a {
   text-decoration: none;
   color: black;
   margin: 0 10px; /* Расстояние м ссылками */
@@ -47,7 +50,7 @@ ul {
   text-transform: uppercase;
 }
 
-.navbar a:hover {
+.navbar-custom a:hover {
   color: white; /* Серый цвет при наведении */
 }
 

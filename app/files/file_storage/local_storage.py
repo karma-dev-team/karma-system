@@ -55,4 +55,4 @@ class LocalStorage(AbstractFileStorage):
 
 
 def configure_file_storage() -> AbstractFileStorage:
-    return LocalStorage("./static/data", "/static")
+    return LocalStorage("./static/data", "/static/data")
