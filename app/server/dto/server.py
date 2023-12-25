@@ -2,6 +2,7 @@ from ipaddress import IPv4Address, IPv6Address
 from typing import Sequence
 
 from pydantic import Field
+from pydantic_core import Url
 
 from app.base.dto import DTO, TimedDTO
 from app.files.dtos.files import PhotoDTO
@@ -48,7 +49,9 @@ class QueueServerDTO(DTO):
 	port: int
 	game_id: GameID
 	ip: IPv4Address
-	tags: list[str]
+	tags: list[str] = []
+	website_link: Url | None = Field(default=None)
+	discord_link: Url | None = Field(default=None)
 
 
 class GetServersDTO(DTO):

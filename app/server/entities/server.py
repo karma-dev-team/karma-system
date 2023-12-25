@@ -35,6 +35,8 @@ class ServerEntity(TimedEntity, Aggregate):
 	registered: bool = field(default=False)
 	country_code: str = field(default="RU")
 	icon: PhotoEntity = field(default=None, validator=optional(instance_of(PhotoEntity)))
+	discord_link: str | None = field(default=None, validator=optional(instance_of(str)))
+	website_link: str | None = field(default=None, validator=optional(instance_of(str)))
 
 	@classmethod
 	def create(
@@ -47,8 +49,9 @@ class ServerEntity(TimedEntity, Aggregate):
 		ipv6: IPv6Address | None = None,
 		tags: Optional[Union[list[ServerTagEntity], str, list]] = None,
 		icon: Optional[PhotoEntity] = None,
+		discord_link: str | None = None,
+		website_link: str | None = None,
 	) -> "ServerEntity":
-
 		entity = ServerEntity(
 			name=name,
 			ipv4=str(ipv4),
@@ -58,6 +61,8 @@ class ServerEntity(TimedEntity, Aggregate):
 			owner=owner,
 			game_id=game_id,
 			icon=icon,
+			discord_link=discord_link,
+			website_link=website_link,
 		)
 
 		if isinstance(tags, (str, list)):

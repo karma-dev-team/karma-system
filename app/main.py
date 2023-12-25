@@ -2,6 +2,8 @@ from aiohttp import ClientSession
 from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
+from app.auth.lifespan import init_mailing, shutdown_mailing
+from app.auth.mailing.yandex import load_yandex_mailing
 from app.base.api.app import create_app
 from app.base.api.lifespan import lifespan
 from app.base.api.providers import config_provider, uow_provider, session_provider, event_dispatcher_provider, \
@@ -25,19 +27,26 @@ def get_app() -> FastAPI:
 	logger = get_logger(__name__)
 	session, registry = load_database(config.db)
 
+	# the reason why we don't pass callbacks to modules
+	# is because lifespan property in routing.Router
+	# needs complex initialization
+	yandex_mailing = load_yandex_mailing(config.mailing)
 	lifespan_func = lifespan(
 		startup_callbacks=[
 			init_session,
 			init_pgtrgm,
+			init_mailing,
 		],
 		shutdown_callbacks=[
 			shutdown_session,
+			shutdown_mailing,
 		],
 		workflow_data={
 			'session': session,
 			'registry': registry,
 			'config': config,
 			'logger': logger,
+			'email_adapter': yandex_mailing,
 		}
 	)
 	app, router = create_app(config.api, config.debug, lifespan=lifespan_func)
@@ -56,7 +65,6 @@ def get_app() -> FastAPI:
 	# preload ioc
 	load_ioc(app)
 	load_templating(app, template_directory="./static/templates")
-	lifespan_callbacks = []
 
 	modules = configure_module_loader(workflow_data={
 		'registry': registry,
@@ -66,7 +74,7 @@ def get_app() -> FastAPI:
 		'router': router,
 		'config': config,
 		'file_storage': file_storage,
-		'lifespan_callbacks': lifespan_callbacks,
+		'email_adapter': yandex_mailing,
 	})
 	modules.load()
 

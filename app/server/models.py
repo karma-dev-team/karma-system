@@ -1,7 +1,7 @@
 from sqlalchemy import Table, Column, String, Integer, ForeignKey, Numeric, DECIMAL, Boolean
 from sqlalchemy.orm import registry as registry_class, relationship
 
-from app.base.database.consts import STRING_MID_LENGTH, STRING_MIN_LENGTH, STRING_MAX_LENGTH
+from app.base.database.consts import STRING_MID_LENGTH, STRING_MIN_LENGTH, STRING_MAX_LENGTH, TEXT_MAX_LENGTH
 from app.base.database.models import id_columns, timed_columns
 from app.server.entities.player import PlayerEntity
 from app.server.entities.server import ServerEntity
@@ -21,6 +21,8 @@ def load_models(registry: registry_class):
         Column("owner_id", ForeignKey("users.id"), nullable=False),
         Column("karma", DECIMAL, default=.0),
         Column("game_id", ForeignKey("games.id"), nullable=False),
+        Column("discord_link", String(TEXT_MAX_LENGTH)),
+        Column("website_link", String(TEXT_MAX_LENGTH)),
         Column("country_code", String(STRING_MIN_LENGTH), nullable=False),
         Column("registered", Boolean, default=False),
     )

@@ -118,6 +118,8 @@ class ServerService(AbstractServerService):
 			game_id=dto.game_id,
 			tags=dto.tags,
 			icon=icon,
+			website_link=str(dto.website_link),
+			discord_link=str(dto.discord_link)
 		)
 		# if self.access_policy.user.blocked:
 		# 	raise AccessDenied(self.access_policy.user.id)
