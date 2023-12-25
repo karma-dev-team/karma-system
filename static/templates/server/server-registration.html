@@ -1,55 +1,82 @@
 {% extends 'base.html' %}
 
-{% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', path='css/server-registration.css') }}" />
+{% content head %}
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/server-registration.css') }}">
+  <title>Регистрация сервера</title>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block navbar %}
 {% endblock %}
 
 {% block content %}
-    <div class="serverregistration">
-      <img class="vector-icon" alt="" src="{{ url_for('static', path='images/vector@2x.png') }}" />
-
-      <div class="div8">
-        <div class="container">
-          <div class="div9">Отправить</div>
-        </div>
-        <a class="image-61" href="https://www.youtube.com/watch?v=wAlprT_gZPw">
-        </a>
-        <div class="div10">Регистрация сервера</div>
-        <div class="div11">Имя сервера</div>
-        <div class="child1"></div>
-        <div class="div12">Описание</div>
-        <div class="child2"></div>
-        <div class="ip">IP</div>
-        <div class="child3"></div>
-        <div class="div13">Выбор игры</div>
-        <div class="child4"></div>
-        <img class="image-10-icon" alt="" src="{{ url_for('static', path='images/image-10@2x.png') }}" />
-
-        <div class="child5"></div>
-        <div class="div14">место для ошибок при отправке формы</div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6 left-panel">
+        <a href="#" class="back-arrow"><img src="https://cdn-icons-png.flaticon.com/512/61/61022.png" alt="Назад" width="30" height="30"></a>
       </div>
-      <div class="frame-parent">
-        <div class="frame">
-          <div class="div9">ТЭГ</div>
-        </div>
-        <div class="frame">
-          <div class="div9">ТЭГ</div>
-        </div>
-        <div class="frame">
-          <div class="div9">ТЭГ</div>
-        </div>
-        <div class="frame">
-          <div class="div9">ТЭГ</div>
-        </div>
-      </div>
-      <div class="div19">
-        <img class="image-11-icon" alt="" src="{{ url_for('static', path='images/image-10@2x.png') }}" />
+      <div class="col-md-6 right-panel text-center">
+        <img src="your_logo.png" alt="Логотип" class="d-flex justify-content-center">
+        <p class="d-flex justify-content-center">Регистрация сервера</p>
 
-        <div class="russia">Russia</div>
-        <div class="child6"></div>
+        <form id="serverRegistrationForm">
+            <div class="form-group">
+            <label for="serverName">Имя сервера</label>
+            <input type="text" class="form-control" id="serverName" name="serverName" required>
+            </div>
+
+            <div class="form-group">
+            <label for="shortDescription">Краткое описание</label>
+            <textarea class="form-control" id="shortDescription" name="shortDescription" required></textarea>
+            </div>
+
+            <div class="form-group">
+            <label for="ipPort">IP с портом</label>
+            <input type="text" class="form-control" id="ipPort" name="ipPort" required>
+            </div>
+
+            <div class="form-group">
+            <label for="gameSelection">Выбор игр</label>
+            <select class="form-control" id="gameSelection" name="gameSelection" multiple>
+                <!-- Варианты игр -->
+            </select>
+            </div>
+
+            <div class="form-group">
+            <label for="countrySelection">Выбор страны</label>
+            <select class="form-control" id="countrySelection" name="countrySelection">
+                <!-- Список стран -->
+            </select>
+            </div>
+
+            <div class="form-group">
+            <label for="tags">Тэги</label>
+            <div class="input-group" id="tagsContainer">
+                <input type="text" class="form-control" id="tagInput" placeholder="Добавить тег">
+                <div class="input-group-append">
+                <button type="button" class="btn btn-outline-secondary" onclick="addTag()">Добавить тег</button>
+                </div>
+            </div>
+            </div>
+
+            <div id="tagsList" class="form-group">
+            <!-- Список добавленных тегов -->
+            </div>
+
+            <div class="form-group">
+            <div class="error-message" id="errorMessage"></div>
+            </div>
+
+            <div class="form-group">
+            <button type="submit" class="btn btn-primary">Отправить форму</button>
+            </div>
+        </form>
+
       </div>
-      <div class="div20">Тэги</div>
-      <div class="serverregistration-child"></div>
-      <img class="image-13-icon" alt="" src="{{ url_for('static', path='images/image-13@2x.png') }}" />
     </div>
-{% endblock %} 
+  </div>
+  <script src="{{ url_for('static', path='js/server-registration.js') }}" defer></script>
+{% endblock %}

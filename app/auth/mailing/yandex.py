@@ -14,7 +14,7 @@ from app.auth.mailing.config import MailingConfig
 class YandexMailing(AbstractMailing):
     def __init__(self, sender_email: str, sender_password: str, timeout: int = 10):
         self.client = aiosmtplib.SMTP(
-            hostname="smtp.gmail.com",
+            hostname="smtp.yandex.ru",
             username=sender_email,
             password=sender_password,
             port=465,
