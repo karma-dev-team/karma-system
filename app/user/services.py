@@ -10,7 +10,7 @@ from app.base.events.dispatcher import EventDispatcher
 from app.user.dto.user import CreateUserDTO, UserDTO, GetUserDTO, CreateRegCode, RegCodeDTO
 from app.user.entities import UserEntity, RegistrationCodeEntity
 from app.user.enums import USER_ROLES_AS_INTEGER, UserRoles
-from app.user.exceptions import UserAlreadyExists
+from app.user.exceptions import UserAlreadyExists, UserDoesNotExists
 from app.user.interfaces import AbstractUserService
 from app.user.interfaces.persistance import GetUserFilter
 from app.user.interfaces.uow import AbstractUserUoW
@@ -40,6 +40,8 @@ class UserService(AbstractUserService):
 				email=dto.email,
 			)
 		)
+		if not user:
+			raise UserDoesNotExists(dto.name or dto.email or dto.user_id)
 		return UserDTO.model_validate(user)
 
 	async def create_user(self, dto: CreateUserDTO) -> UserDTO:

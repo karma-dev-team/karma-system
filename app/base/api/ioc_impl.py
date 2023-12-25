@@ -5,7 +5,10 @@ from aiohttp import ClientSession
 from fastapi import FastAPI, Depends
 
 from app.auth.access_policy import BasicAccessPolicy
-from app.auth.providers import optional_user
+from app.auth.interfaces import AbstractAuthService
+from app.auth.mailing.base import AbstractMailing
+from app.auth.providers import optional_user, mailing_provider
+from app.auth.service import AuthService
 from app.base.api.ioc import ioc_provider
 from app.base.api.providers import uow_provider, config_provider, event_dispatcher_provider, http_client_provider
 from app.base.config import GlobalConfig
@@ -39,6 +42,7 @@ class IoContainerImpl(AbstractIoContainer):
         file_storage: AbstractFileStorage,
         session: ClientSession,
         user: UserEntity | None,
+        mailing_adapter: AbstractMailing,
     ):
         self.uow = uow
         self.session = session
@@ -46,6 +50,7 @@ class IoContainerImpl(AbstractIoContainer):
         self.event_dispatcher = event_dispatcher
         self.user = user
         self.file_storage = file_storage
+        self.mailing_adapter = mailing_adapter
 
     def user_service(self) -> AbstractUserService:
         return UserService(
@@ -99,6 +104,14 @@ class IoContainerImpl(AbstractIoContainer):
             session=self.session,
         )
 
+    def auth_service(self) -> AbstractAuthService:
+        return AuthService(
+            uow=self.uow,
+            event_dispatcher=self.event_dispatcher,
+            email_adapter=self.mailing_adapter,
+            config=self.config,
+        )
+
 
 async def get_ioc(
     event_dispatcher: Annotated[EventDispatcher, Depends(event_dispatcher_provider)],
@@ -106,7 +119,8 @@ async def get_ioc(
     config: Annotated[GlobalConfig, Depends(config_provider)],
     file_storage: Annotated[AbstractFileStorage, Depends(file_storage_provider)],
     user: Annotated[UserEntity | None, Depends(optional_user)],
-    client_session: Annotated[ClientSession, Depends(http_client_provider)]
+    client_session: Annotated[ClientSession, Depends(http_client_provider)],
+    mailing_adapter: Annotated[AbstractMailing, Depends(mailing_provider)]
 ) -> IoContainerImpl:
     return IoContainerImpl(
         event_dispatcher=event_dispatcher,
@@ -115,6 +129,7 @@ async def get_ioc(
         user=user,
         file_storage=file_storage,
         session=client_session,
+        mailing_adapter=mailing_adapter,
     )
 
 

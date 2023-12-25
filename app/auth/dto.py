@@ -7,5 +7,4 @@ class AskResetPasswordDTO(DTO):
 
 class ResetPasswordDTO(DTO):
     new_password: str
-    old_password: str
-    reset_id: str
+    reset_token: str

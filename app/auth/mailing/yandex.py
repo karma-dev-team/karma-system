@@ -31,11 +31,14 @@ class YandexMailing(AbstractMailing):
         self._configured = True
 
     async def send_message(self, payload: PayloadT, recipients: Optional[str | Sequence[str]] = None) -> None:
-        if isinstance(payload, (EmailMessage, MIMEText)):
+        if isinstance(payload, MIMEText):
+            payload["From"] = self.sender + "@yandex.ru"
+            await self.client.send_message(payload)
+        elif isinstance(payload, EmailMessage):
             await self.client.send_message(payload, sender=self.sender)
         elif isinstance(payload, str):
             await self.client.sendmail(
-                sender=self.sender, recipients=recipients, message=payload)  # noqa
+                self.sender, recipients, payload)
         else:
             raise TypeError("Not supported message type")
 
