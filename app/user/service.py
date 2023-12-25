@@ -7,10 +7,11 @@ from app.auth.access_policy import BasicAccessPolicy
 from app.auth.exceptions import AccessDenied
 from app.base.database.result import Result
 from app.base.events.dispatcher import EventDispatcher
-from app.user.dto.user import CreateUserDTO, UserDTO, GetUserDTO, CreateRegCode, RegCodeDTO
+from app.files.interfaces.services import FileService
+from app.user.dto.user import CreateUserDTO, UserDTO, GetUserDTO, CreateRegCode, RegCodeDTO, UpdateUserDTO
 from app.user.entities import UserEntity, RegistrationCodeEntity
 from app.user.enums import USER_ROLES_AS_INTEGER, UserRoles
-from app.user.exceptions import UserAlreadyExists, UserDoesNotExists
+from app.user.exceptions import UserAlreadyExists, UserDoesNotExists, EmailAlreadyTaken
 from app.user.interfaces import AbstractUserService
 from app.user.interfaces.persistance import GetUserFilter
 from app.user.interfaces.uow import AbstractUserUoW
@@ -26,7 +27,9 @@ class UserService(AbstractUserService):
 			event_dispatcher: EventDispatcher,
 			access_policy: BasicAccessPolicy,
 			config: GlobalConfig,
+			file_service: FileService,
 	) -> None:
+		self.file_service = file_service
 		self.uow = uow
 		self.event_dispatcher = event_dispatcher
 		self.access_policy = access_policy
@@ -87,3 +90,31 @@ class UserService(AbstractUserService):
 			result = await self.uow.user.add_reg_code(reg_code)
 
 			return RegCodeDTO.model_validate(result.value)
+
+	async def update_user(self, dto: UpdateUserDTO) -> UserDTO:
+		if (
+			self.access_policy.anonymous()
+			or self.access_policy.user.id != dto.user_id
+			or not self.access_policy.check_role(UserRoles.admin)
+		):
+			raise AccessDenied
+
+		user = await self.uow.user.get_user_by_id(dto.user_id)
+
+		if dto.data.email:
+			user.email = dto.data.email
+		if dto.data.role:
+			user.role = dto.data.role
+		if dto.data.name:
+			user.name = dto.data.name
+		if dto.data.image:
+			photo = await self.file_service.upload_file(dto.data.image)
+			user.photo = photo
+
+		async with self.uow.transaction():
+			result = await self.uow.user.update_user(user)
+			match result:
+				case Result(value, None):
+					return UserDTO.model_validate(value)
+				case Result(None, EmailAlreadyTaken() as exc):
+					raise exc

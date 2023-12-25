@@ -25,7 +25,7 @@ from app.games.services import GameService, CategoryService
 from app.karma.services import KarmaService
 from app.server.services import ServerService, PlayerService
 from app.user.entities import UserEntity
-from app.user.services import UserService
+from app.user.service import UserService
 
 if TYPE_CHECKING:
     from app.server.interfaces.service import AbstractServerService, AbstractPlayerService
@@ -58,6 +58,7 @@ class IoContainerImpl(AbstractIoContainer):
             event_dispatcher=self.event_dispatcher,
             access_policy=BasicAccessPolicy(self.user),
             config=self.config,
+            file_service=self.file_service()
         )
 
     def karma_service(self) -> AbstractKarmaService:

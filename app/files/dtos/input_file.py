@@ -15,6 +15,7 @@ class InputFile(DTO):
     file_id: TypeID | None = Field(default=None)
     mime_type: str | None = Field(default=None)
     download_url: Url | None = Field(default=None)
+    file: bytes | None = Field(default=None)
 
 
 InputFileType = InputFile | str
