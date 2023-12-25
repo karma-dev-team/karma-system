@@ -59,6 +59,16 @@ async def handle_players_list(
 	return await ioc.player_service().player_karmas(data)
 
 
+@player_router.post(
+	"/get",
+	name='player:fetch-player',
+)
+async def fetch_player(
+	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+	data: GetPlayerDTO,
+) -> PlayerDTO:
+	return await ioc.player_service().get_player(data)
+
 @server_router.get("/api-token/{server_id}", name="server:get-api-token")
 async def get_api_token(
 	server_id: UUID,
