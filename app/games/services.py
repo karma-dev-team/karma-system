@@ -185,5 +185,5 @@ class CategoryService(AbstractCategoryService):
 			return CategoryDTO.model_validate(category)
 
 	async def get_categories(self) -> Sequence[CategoryDTO]:
-		categories = await self.uow.game.get_games()
+		categories = await self.uow.category.get_categories()
 		return [CategoryDTO.model_validate(category) for category in categories]

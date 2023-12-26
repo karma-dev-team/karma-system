@@ -100,13 +100,13 @@
       </main>
     <nav class="filter-sidebar">
         <!-- Форма фильтрации с использованием чекбоксов -->
-        <form>
+        <form method="get">
           <div class="form-group">
             <label>Игра:</label>
             {% for game in games %}
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="game1">
-              <label class="form-check-label" for="game1">{{ game.name }}</label>
+              <input class="form-check-input" type="checkbox" id="game" name="game" value="{{ game.name }}">
+              <label class="form-check-label" for="game">{{ game.name }}</label>
             </div>
             {% endfor %}
             <!-- Добавьте другие чекбоксы для игр при необходимости -->
@@ -115,8 +115,8 @@
             <label>Жанр игр:</label>
             {% for category in categories %}
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="genre1">
-              <label class="form-check-label" for="genre1">{{ category.name }}</label>
+              <input class="form-check-input" type="checkbox" id="category" name="category" value="{{ category.name }}">
+              <label class="form-check-label" for="category">{{ category.name }}</label>
             </div>
             {% endfor %}
             <!-- Добавьте другие чекбоксы для жанров при необходимости -->

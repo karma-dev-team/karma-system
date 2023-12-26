@@ -23,7 +23,7 @@ from app.games.interfaces.service import AbstractCategoryService, AbstractGameSe
 from app.games.services import GameService, CategoryService
 
 from app.karma.services import KarmaService
-from app.server.services import ServerService, PlayerService
+from app.server.service import ServerService, PlayerService
 from app.user.entities import UserEntity
 from app.user.service import UserService
 

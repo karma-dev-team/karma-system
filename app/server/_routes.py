@@ -10,6 +10,7 @@ from app.auth.dependencies import user_dependency, user, role_required
 from app.auth.providers import optional_user
 from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
+from app.games.exceptions import GameNotExists, CategoryNotExists
 from app.server.dto.player import GetPlayerDTO, PlayerDTO
 from app.server.dto.server import GetPlayersKarmaDTO, GetServerDTO, GetServersDTO, ApproveServerDTO, ServerDTO, \
 	QueueServerDTO
@@ -95,9 +96,12 @@ async def get_servers(
 ):
 	filter = GetServersDTO(
 		unregistered=False,
-		**filter.model_dump(),
+		**filter.model_dump(exclude={'unregistered'}),
 	)
-	servers = await ioc.server_service().get_servers(filter)
+	try:
+		servers = await ioc.server_service().get_servers(filter)
+	except (GameNotExists, CategoryNotExists) as exc:
+		servers = None
 	games = await ioc.game_service().get_games()
 	categories = await ioc.category_service().get_categories()
 

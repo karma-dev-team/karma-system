@@ -65,7 +65,7 @@ class DBAuthSession(AbstractAuthSession):
             # will try to use scalar, and overlaping each other
             # so we need to wait until commit is done
             # TODO: use more reliable way to wait until commit is done!
-            await asyncio.sleep(0.3)
+            # await asyncio.sleep(0.3)
         except IntegrityError:
             return
 

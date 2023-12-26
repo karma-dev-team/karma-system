@@ -4,7 +4,7 @@ from typing import Protocol, Sequence
 
 from app.base.database.filters import filter_wrapper
 from app.base.database.result import Result
-from app.games.value_objects.ids import GameID
+from app.games.value_objects.ids import GameID, CategoryID
 from app.server.dto.player import GetPlayerDTO
 from app.server.entities.player import PlayerEntity
 from app.server.entities.server import ServerEntity
@@ -39,6 +39,7 @@ class GetServersFilter:
 	unregistered: bool | None = field(default=None)
 	server_ids: Sequence[ServerID] | None = field(default=None)
 	name: str | None = field(default=None)
+	category_id: CategoryID | None = field(default=None)
 
 
 @filter_wrapper

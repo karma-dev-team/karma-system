@@ -7,11 +7,19 @@
 {% block content %}
   <div class="accountinfo">
 
+    {% if user.photo %}
+    <img
+      class="accountinfo-child"
+      alt=""
+      src="{{ url_for('static', path='data/' + user.photo.file_id) }}"
+    />
+    {% else %}
     <img
       class="accountinfo-child"
       alt=""
       src="{{ url_for('static', path='images/rectangle-19@2x.png') }}"
     />
+    {% endif %}
 
     <div class="accountinfo-item"></div>
     <img class="image-14-icon" alt="" src="{{ url_for('static', path='images/image-13@2x.png') }}" style="opacity: 1"/>

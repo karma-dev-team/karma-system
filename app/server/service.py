@@ -7,8 +7,8 @@ from app.auth.exceptions import AccessDenied
 from app.base.database.result import Result
 from app.base.events.dispatcher import EventDispatcher
 from app.files.interfaces.services import FileService
-from app.games.exceptions import GameNotExists
-from app.games.interfaces.persistance import GetGameFilter
+from app.games.exceptions import GameNotExists, CategoryNotExists
+from app.games.interfaces.persistance import GetGameFilter, GetCategoryFilter
 from app.games.interfaces.uow import AbstractGameUoW
 from app.server.dto.player import GetPlayerDTO, PlayerDTO
 from app.server.dto.server import GetPlayersKarmaDTO, ApproveServerDTO, ServerDTO, GetServerDTO, GetServersDTO, \
@@ -189,12 +189,20 @@ class ServerService(AbstractServerService):
 		)
 		if not game and dto.game is not None:
 			raise GameNotExists
+		category = await self.game_uow.category.by_filter(
+			GetCategoryFilter(
+				name=dto.name,
+			)
+		)
+		if not category and dto.category is not None:
+			raise CategoryNotExists
 
 		servers = await self.uow.server.filter(
 			GetServersFilter(
 				# tags=tags,  # TODO
 				game_id=game.id if game else None,
 				unregistered=dto.unregistered,
+				category_id=category.id if category else None,
 			)
 		)
 

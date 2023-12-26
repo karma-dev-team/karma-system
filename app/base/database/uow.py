@@ -56,7 +56,7 @@ class SQLAlchemyBaseUoW(AbstractUoW):
                 # сделает rollback, то текущая операция прервется и вылетит ошибка
                 # и что избежать этого надо немного подождать. если будут появлятся ошибки с
                 # rollback, то просто увеличьте время сна. ЛЮТЫЙ КОСТЫЛЬ
-                await asyncio.sleep(0.2)
+                # await asyncio.sleep(0.2)
                 await self._session.rollback()
             raise exc
         else:

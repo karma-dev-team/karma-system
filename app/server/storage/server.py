@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.base.database.repo import SQLAlchemyRepo
 from app.base.database.result import Result
+from app.games.entities.category import CategoryEntity
 from app.server.entities.server import ServerEntity
 from app.server.exceptions import ServerAlreadyExists, IPPortAlreadyTaken
 from app.server.interfaces.persistance import AbstractServerRepo, GetServersFilter, GetServerFilter
@@ -46,6 +47,10 @@ class ServerRepositoryImpl(AbstractServerRepo, SQLAlchemyRepo):
             ).order_by(
                 func.similarity(ServerEntity.name, filter.name).desc(),
             )
+        if filter.category_id:
+            stmt = stmt.where(
+                CategoryEntity.game_id == ServerEntity.game_id
+            ).join(CategoryEntity)
 
         result = await self.session.execute(stmt)
 

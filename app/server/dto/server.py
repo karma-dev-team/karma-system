@@ -59,3 +59,4 @@ class GetServersDTO(DTO):
 	game: str | None = Field(default=None)
 	unregistered: bool | None = Field(default=None)
 	name: str | None = Field(default=None)
+	category: str | None = Field(default=None)
