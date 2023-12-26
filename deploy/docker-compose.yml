@@ -1,47 +1,110 @@
 version: '3.8'
 services:
     db:
-        image: postgres:14-alpine
+        profiles: [ "api", "migration" ]
+        image: postgres:15-alpine
         restart: "unless-stopped"
+        container_name: karma_system.db
+        hostname: karma_system.postgres
         environment:
-            POSTGRES_USER: ${DB__USER}
-            PG_PASSWORD: ${DB__PASSWORD}
-            POSTGRES_DB: ${DB__NAME}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
             VOLUMES_DIR: ${VOLUMES_DIR}
+        networks:
+            - karma_system.db.network
         volumes:
             - "${VOLUMES_DIR}/pg-data:/var/lib/postgresql/data"
         ports:
             - "15432:5432"
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+            interval: 10s
+            timeout: 60s
+            retries: 5
+            start_period: 10s
+
     db_migration:
+        profiles: [ "migration" ]
+        container_name: karma_system.db_migration
         build:
             context: ..
             dockerfile: ./Dockerfile
         restart: "on-failure"
         depends_on:
-            - db
+          db:
+            condition: service_healthy
         env_file: .env
-        command: ["/wait-for-it/wait-for-it.sh", "db:5432", "-t", "2", "--", "python", "-m", "alembic", "upgrade", "head"]
+        command: ["python", "-m", "alembic", "upgrade", "head"]
+        networks:
+            - karma_system.db.network
     api:
+        profiles: [ "api" ]
+        container_name: karma_system.api
         build:
             context: ..
         stop_signal: SIGINT
         restart: "unless-stopped"
         env_file: .env
+        networks:
+            - karma_system.redis.network
+            - karma_system.db.network
         depends_on:
-            - db
-            - db_migration
-            - redis
+            db:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+        expose:
+            - "8000"
         ports:
             - "8000:80"
+        healthcheck:
+            test: [ "CMD-SHELL", "curl -fsSL http://localhost:80/healthcheck/" ]
+            interval: 10s
+            timeout: 60s
+            retries: 5
+            start_period: 10s
     redis:
         image: redis:latest
+        container_name: karma_system.redis
         restart: always
+        hostname: karma_system.redis
         ports:
             - "6379:6379"
         volumes:
             - "${VOLUMES_DIR}/redis-data:/data/"
             - "./redis.conf:/usr/local/etc/redis/redis.conf"
         environment:
-            - REDIS_PASSWORD=${REDIS__PASSWORD}
+            - REDIS_PASSWORD=${REDIS_PASSWORD}
             - REDIS_PORT=6379
             - REDIS_DATABASES=16
+        healthcheck:
+            test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+            interval: 5s
+            timeout: 60s
+            retries: 5
+            start_period: 5s
+
+    postgres_backup:
+        profiles: [ "api" ]
+        container_name: karma_system.postgres_backup
+        env_file:
+            - .env
+        image: prodrigestivill/postgres-backup-local:15-alpine
+        networks:
+            - karma_system.db.network
+        environment:
+            - POSTGRES_HOST=postgres
+            - POSTGRES_DB=${POSTGRES_DB:-$USER}
+            - POSTGRES_USER=${POSTGRES_USER:-$USER}
+            - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+            - BACKUP_DIR=/backups
+            - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+            - SCHEDULE=${POSTGRES_BACKUP_SCHEDULE:-@daily}
+            - HEALTHCHECK_PORT=8080
+        volumes:
+            - ${POSTGRES_BACKUP_DIR:-./.backups/postgres}:/backups
+
+networks:
+    karma_system.db.network: {}
+    karma_system.redis.network: {}

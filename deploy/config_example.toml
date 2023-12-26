@@ -11,7 +11,7 @@ title = "qwerty123"
 secret_key = "blabla"
 
 [redis]
-dsn = "redis://secret@redis/1"
+dsn = "redis://password@redis/1"
 
 [mailing]
 sender_password = "password"
