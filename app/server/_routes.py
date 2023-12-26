@@ -12,7 +12,7 @@ from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
 from app.games.exceptions import GameNotExists, CategoryNotExists
 from app.server.dto.player import GetPlayerDTO, PlayerDTO
-from app.server.dto.server import GetPlayersKarmaDTO, GetServerDTO, GetServersDTO, ApproveServerDTO, ServerDTO, \
+from app.server.dto.server import GetPlayersKarmaDTO, GetServerDTO, GetServersDTO, ApproveServersDTO, ServerDTO, \
 	QueueServerDTO
 from app.server.responses import APITokenData
 from app.server.value_objects.ids import ServerID
@@ -134,8 +134,8 @@ async def server_card_by_id(
 
 
 @server_router.post("/server/approve", name="server:approve-server")
-async def approve_server(
-	dto: ApproveServerDTO,
+async def approve_servers(
+	dto: ApproveServersDTO,
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 ) -> dict:
 	await ioc.server_service().approve_servers(dto)
@@ -148,7 +148,6 @@ async def queue_server(
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 	user: Annotated[UserEntity, Depends(user)],
 ) -> ServerDTO:
-
 	return await ioc.server_service().queue_server(dto)
 
 
@@ -156,7 +155,7 @@ async def queue_server(
 async def queue_server_page(
 	request: Request,
 	templates: Annotated[Jinja2Templates, Depends(templating_provider)],
-	user: Annotated[UserEntity, Depends(optional_user)]
+	user: Annotated[UserEntity, Depends(optional_user)],
 ):
 	if not user:
 		raise HTTPException(
@@ -167,7 +166,7 @@ async def queue_server_page(
 
 
 @server_router.get(
-	'server/queued',
+	'/server/queued',
 	name='server:queued-servers-page',
 	response_class=HTMLResponse,
 	dependencies=[Depends(role_required(UserRoles.moderator))]

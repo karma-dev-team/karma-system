@@ -11,7 +11,7 @@ from app.games.exceptions import GameNotExists, CategoryNotExists
 from app.games.interfaces.persistance import GetGameFilter, GetCategoryFilter
 from app.games.interfaces.uow import AbstractGameUoW
 from app.server.dto.player import GetPlayerDTO, PlayerDTO
-from app.server.dto.server import GetPlayersKarmaDTO, ApproveServerDTO, ServerDTO, GetServerDTO, GetServersDTO, \
+from app.server.dto.server import GetPlayersKarmaDTO, ApproveServersDTO, ServerDTO, GetServerDTO, GetServersDTO, \
 	QueueServerDTO
 from app.server.entities.player import PlayerEntity, PlayerSelector
 from app.server.entities.server import ServerEntity
@@ -133,7 +133,7 @@ class ServerService(AbstractServerService):
 				case Result(None, err):
 					raise err
 
-	async def approve_servers(self, dto: ApproveServerDTO) -> None:
+	async def approve_servers(self, dto: ApproveServersDTO) -> None:
 		servers = await self.uow.server.filter(
 			GetServersFilter(
 				server_ids=dto.server_ids,

@@ -2,7 +2,7 @@ import abc
 from typing import Sequence
 
 from app.server.dto.player import GetPlayerDTO, PlayerDTO
-from app.server.dto.server import GetServerDTO, ServerDTO, GetPlayersKarmaDTO, ApproveServerDTO, GetServersDTO, \
+from app.server.dto.server import GetServerDTO, ServerDTO, GetPlayersKarmaDTO, ApproveServersDTO, GetServersDTO, \
 	QueueServerDTO
 
 
@@ -12,7 +12,7 @@ class AbstractServerService:
 		pass
 
 	@abc.abstractmethod
-	async def approve_servers(self, dto: ApproveServerDTO) -> None:
+	async def approve_servers(self, dto: ApproveServersDTO) -> None:
 		"""adds server to queue of registration to be able see in admin panel"""
 		pass
 

@@ -11,7 +11,7 @@ from app.files.interfaces.services import FileService
 from app.user.dto.user import CreateUserDTO, UserDTO, GetUserDTO, CreateRegCode, RegCodeDTO, UpdateUserDTO
 from app.user.entities import UserEntity, RegistrationCodeEntity
 from app.user.enums import USER_ROLES_AS_INTEGER, UserRoles
-from app.user.exceptions import UserAlreadyExists, UserDoesNotExists, EmailAlreadyTaken
+from app.user.exceptions import UserAlreadyExists, UserDoesNotExists, EmailAlreadyTaken, UsernameAlreadyTaken
 from app.user.interfaces import AbstractUserService
 from app.user.interfaces.persistance import GetUserFilter
 from app.user.interfaces.uow import AbstractUserUoW
@@ -72,8 +72,19 @@ class UserService(AbstractUserService):
 					await self.event_dispatcher.publish_events(user.events)
 
 					return UserDTO.model_validate(result_user)
-				case Result(_, UserAlreadyExists() as err):
-					user = await self.uow.user.get_user_by_id(user.id)
+				case Result(_, UsernameAlreadyTaken() as err):
+					user = await self.uow.user.get_user_by_filters(
+						GetUserFilter(
+							name=user.name,
+						)
+					)
+					return UserDTO.model_validate(user)
+				case Result(_, EmailAlreadyTaken() as err):
+					user = await self.uow.user.get_user_by_filters(
+						GetUserFilter(
+							email=user.email,
+						)
+					)
 					return UserDTO.model_validate(user)
 				case Result(_, err):
 					raise err
@@ -104,7 +115,10 @@ class UserService(AbstractUserService):
 		if dto.data.email:
 			user.email = dto.data.email
 		if dto.data.role:
-			user.role = dto.data.role
+			if self.access_policy.check_role(UserRoles.admin):
+				user.role = dto.data.role
+			else:
+				raise AccessDenied
 		if dto.data.name:
 			user.name = dto.data.name
 		if dto.data.image:

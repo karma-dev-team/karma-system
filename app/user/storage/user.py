@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from app.base.database.repo import SQLAlchemyRepo
 from app.base.database.result import Result
 from app.user.entities import UserEntity, RegistrationCodeEntity
-from app.user.exceptions import EmailAlreadyTaken, UserAlreadyExists, RegistrationCodeIsNotCorrect
+from app.user.exceptions import EmailAlreadyTaken, UserAlreadyExists, RegistrationCodeIsNotCorrect, UsernameAlreadyTaken
 from app.user.interfaces import AbstractUserRepo
 from app.user.interfaces.persistance import GetUserFilter
 from app.user.value_objects import UserID
@@ -19,10 +19,10 @@ class UserRepoImpl(AbstractUserRepo, SQLAlchemyRepo):
 		match err.__cause__.__cause__.constraint_name:  # type: ignore
 			case "pk_users":
 				return UserAlreadyExists(user.id)
-			case "ix_users_username":
-				return UserAlreadyExists(str(user.name))
+			case "ix_users_name":
+				return UsernameAlreadyTaken(str(user.name))
 			case 'ix_users_email':
-				return UserAlreadyExists(str(user.email))
+				return EmailAlreadyTaken(str(user.email))
 			case _:
 				raise err
 
@@ -42,7 +42,7 @@ class UserRepoImpl(AbstractUserRepo, SQLAlchemyRepo):
 		if filter.name is not None:
 			stmt = stmt.where(UserEntity.name == filter.name)
 		if filter.user_id is not None:
-			stmt = stmt.where(UserEntity.id == str(filter.id))
+			stmt = stmt.where(UserEntity.id == str(filter.user_id))
 
 		result = await self.session.execute(stmt)
 		return result.unique().scalar_one_or_none()
@@ -59,8 +59,10 @@ class UserRepoImpl(AbstractUserRepo, SQLAlchemyRepo):
 		self.session.add(user)
 
 		try:
-			await self.session.flush((user,))
+			await self.session.commit()
+			await self.session.refresh(user)
 		except IntegrityError as err:
+			await self.session.rollback()
 			return Result.fail(self._parse_error(err, user))
 
 		return Result.ok((user, code))
@@ -80,6 +82,7 @@ class UserRepoImpl(AbstractUserRepo, SQLAlchemyRepo):
 		try:
 			await self.session.flush((reg_code,))
 		except IntegrityError as err:
+			await self.session.rollback()
 			# fck u
 			return Result.fail(err)
 
@@ -89,6 +92,7 @@ class UserRepoImpl(AbstractUserRepo, SQLAlchemyRepo):
 		try:
 			await self.session.merge(user)
 		except IntegrityError:
+			await self.session.rollback()
 			return Result.fail(EmailAlreadyTaken())
 
 		return Result.ok(user)

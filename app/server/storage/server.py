@@ -23,6 +23,7 @@ class ServerRepositoryImpl(AbstractServerRepo, SQLAlchemyRepo):
             await self.session.commit()
             await self.session.refresh(server)
         except IntegrityError as exc:
+            await self.session.rollback()
             return Result.fail(ServerAlreadyExists())
         except Exception as exc:
             raise exc

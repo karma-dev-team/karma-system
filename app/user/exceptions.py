@@ -6,6 +6,10 @@ class EmailAlreadyTaken(RepositoryError):
 	pass
 
 
+class UsernameAlreadyTaken(RepositoryError):
+	pass
+
+
 @exception_wrapper
 class UserAlreadyExists(ApplicationError):
 	def message(self) -> str:

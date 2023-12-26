@@ -45,6 +45,7 @@ class GameRepository(AbstractGamesRepository, SQLAlchemyRepo):
         try:
             await self.session.merge(game)
         except IntegrityError as exc:
+            await self.session.rollback()
             return Result.fail(self._parse_exception(exc))
         return Result.ok(game)
 
@@ -52,6 +53,7 @@ class GameRepository(AbstractGamesRepository, SQLAlchemyRepo):
         try:
             await self.session.delete(game)
         except Exception:
+            await self.session.rollback()
             return Result.fail(GameNotExists())
 
         return Result.ok(game)

@@ -44,6 +44,7 @@ class CategoryRepository(AbstractCategoryRepository, SQLAlchemyRepo):
         try:
             await self.session.merge(category)
         except IntegrityError as exc:
+            await self.session.rollback()
             return Result.fail(self._parse_exception(exc))
         return Result.ok(category)
 
@@ -51,6 +52,7 @@ class CategoryRepository(AbstractCategoryRepository, SQLAlchemyRepo):
         try:
             await self.session.delete(category)
         except Exception:
+            await self.session.rollback()
             return Result.fail(CategoryNotExists())
 
         return Result.ok(category)

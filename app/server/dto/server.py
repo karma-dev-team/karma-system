@@ -37,7 +37,7 @@ class GetPlayersKarmaDTO(DTO):
 	players: Sequence[GetPlayerDTO]
 
 
-class ApproveServerDTO(DTO):
+class ApproveServersDTO(DTO):
 	server_ids: Sequence[ServerID]
 
 

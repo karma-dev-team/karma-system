@@ -18,8 +18,7 @@ from app.base.ioc import AbstractIoContainer
 from app.templating.provider import templating_provider
 from app.user.dto.user import CreateUserDTO, GetUserDTO
 from app.user.entities import UserEntity
-from app.user.exceptions import UserAlreadyExists, UserDoesNotExists
-
+from app.user.exceptions import UserAlreadyExists, UserDoesNotExists, RegistrationCodeIsNotCorrect
 
 if TYPE_CHECKING:
     from app.base.config import GlobalConfig
@@ -49,7 +48,7 @@ async def register_user(
                 registration_code=registration_code,
             )
         )
-    except UserAlreadyExists as exc:
+    except (UserAlreadyExists, RegistrationCodeIsNotCorrect) as exc:
         return templates.TemplateResponse("auth/register.html", {'request': request, 'error_msg': exc.message()})
     else:
         session_id = generate_session_id(
@@ -85,8 +84,8 @@ async def login_user(
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
     ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
     auth_session: Annotated[AbstractAuthSession, Depends(auth_session_provider)],
-    username: str = Form(...),
-    password: str = Form(...),
+    username: str = Form(None),
+    password: str = Form(None),
 ):
     try:
         user = await ioc.user_service().get_user(
@@ -106,7 +105,7 @@ async def login_user(
 
     if not UserEntity.verify_password(password, user.hashed_password):
         return templates.TemplateResponse(
-            "user/login.html",
+            "auth/login.html",
             {
                 'request': request,
                 'error_msg': 'Password or username is not correct'
