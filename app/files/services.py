@@ -1,5 +1,6 @@
 import asyncio
 import uuid
+from asyncio import StreamReader
 from typing import Type
 
 from aiohttp import ClientSession
@@ -96,6 +97,24 @@ class FileServiceImpl(FileService):
                 file_metadata = await self.uow.file.add_file(file)
                 return file_metadata.value
 
+    async def download_file(self, file: bytes) -> FileEntityTypes:
+        file_ent = PhotoEntity(
+            width=1000,  # stub
+            height=1000,  # stub
+        )
+
+        local_file = StreamReader()
+        local_file.feed_data(file)
+        async with self.uow.transaction():
+            path_url = await self.file_storage.upload(
+                local_file,
+                key=str(file_ent.file_id),
+                mime_type="images",
+            )
+            file_ent.file_url = path_url
+            file_metadata = await self.uow.file.add_file(file)
+            return file_metadata.value
+
     async def upload_file(
             self,
             file_dto: InputFile | str,
@@ -110,6 +129,8 @@ class FileServiceImpl(FileService):
             file = await self.uow.file.file_by_url(url, FileEntity)
             if not file:
                 file = await self.download_file_by_url(file_dto.download_url)
+        elif file_dto.file:
+            file = await self.download_file(file_dto.file)
         elif file_dto.file_id:
             file = await self.uow.file.file_by_unique_id(file_dto.file_id, FileEntity)
         else:

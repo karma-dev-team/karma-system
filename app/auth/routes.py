@@ -6,6 +6,8 @@ from starlette.responses import RedirectResponse, HTMLResponse
 from starlette.templating import Jinja2Templates
 
 from app.auth.consts import AUTH_KEY
+from app.auth.dto import ResetPasswordDTO, AskResetPasswordDTO
+from app.auth.exceptions import AccessDenied
 from app.auth.providers import auth_session_provider
 from app.auth.secuirty import generate_session_id
 from app.auth.session import AbstractAuthSession
@@ -57,7 +59,7 @@ async def register_user(
         )
 
         response = RedirectResponse("/", status_code=302)
-        response.set_cookie(key=AUTH_KEY, value=session_id)
+        response.set_cookie(key=AUTH_KEY, value=session_id, secure=True)
 
         await auth_session.set(session_id, str(user.id))
 
@@ -69,7 +71,7 @@ async def register_user(
     request: Request,
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
 ):
-    if request.cookies.get(AUTH_KEY):
+    if request.cookies.get(AUTH_KEY, None):
         response = RedirectResponse("/", status_code=302)
 
         return response
@@ -110,14 +112,16 @@ async def login_user(
                 'error_msg': 'Password or username is not correct'
             }
         )
+    response = RedirectResponse("/", status_code=302)
+    if request.cookies.get(AUTH_KEY, None):
+        return response
     session_id = generate_session_id(
         username=user.name,
         email=user.email,
         secret_key=config.security.secret_key
     )
 
-    response = RedirectResponse("/", status_code=302)
-    response.set_cookie(key=AUTH_KEY, value=session_id)
+    response.set_cookie(key=AUTH_KEY, value=session_id, secure=True)
 
     await auth_session.set(session_id, str(user.id))
 
@@ -135,3 +139,66 @@ async def login_user(
         return response
 
     return templates.TemplateResponse("auth/login.html", {'request': request})
+
+
+@router.get("/auth/reset-password", name="auth:reset-password-page", response_class=HTMLResponse)
+async def reset_password_page(
+    request: Request,
+    templates: Annotated[Jinja2Templates, Depends(templating_provider)],
+):
+    if request.cookies.get(AUTH_KEY, None):
+        response = RedirectResponse("/", status_code=302)
+
+        return response
+
+    return templates.TemplateResponse("auth/reset-password.html", {'request': request})
+
+
+@router.post("/auth/reset-password", name="auth:reset-password", response_class=HTMLResponse)
+async def ask_reset_password(
+    request: Request,
+    email: Annotated[str, Form()],
+    ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+):
+    await ioc.auth_service().ask_reset_password(AskResetPasswordDTO(email=email), str(request.base_url))
+
+
+@router.get(
+    "/auth/password-reset/{reset_token}",
+    name="auth:handle-reset-password-page",
+    response_class=HTMLResponse,
+)
+async def handle_reset_password_page(
+    request: Request,
+    reset_token: str,
+    templates: Annotated[Jinja2Templates, Depends(templating_provider)],
+    ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+):
+    response = RedirectResponse("/", status_code=302)
+    if request.cookies.get(AUTH_KEY, None):
+        return response
+
+    try:
+        await ioc.auth_service().verify_reset_password(reset_token)
+    except AccessDenied:
+        return response
+    return templates.TemplateResponse("auth/handle_reset_password_page.html", {'request': request})
+
+
+@router.post(
+    "/auth/password-reset/{reset_token}",
+    name="auth:handle-reset-password",
+)
+async def handle_reset_password(
+    reset_token: str,
+    new_password: Annotated[str, Form()],
+    ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+):
+    await ioc.auth_service().reset_password(
+        ResetPasswordDTO(
+            reset_token=reset_token,
+            new_password=new_password,
+        )
+    )
+    response = RedirectResponse("/", status_code=302)
+    return response

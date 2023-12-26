@@ -6,13 +6,15 @@ from email.mime.text import MIMEText
 from typing import Optional, Sequence
 
 import aiosmtplib
+from aiosmtplib import SMTPServerDisconnected
 
 from app.auth.mailing.base import AbstractMailing, PayloadT
 from app.auth.mailing.config import MailingConfig
+from app.base.logging.logger import get_logger
 
 
 class YandexMailing(AbstractMailing):
-    def __init__(self, sender_email: str, sender_password: str, timeout: int = 10):
+    def __init__(self, sender_email: str, sender_password: str, timeout: int = 10, logger=None):
         self.client = aiosmtplib.SMTP(
             hostname="smtp.yandex.ru",
             username=sender_email,
@@ -21,6 +23,7 @@ class YandexMailing(AbstractMailing):
             use_tls=True,
             timeout=timeout,
         )
+        self.logger = logger or get_logger(__name__)
         self.sender = sender_email
         self._configured = False
 
@@ -31,11 +34,14 @@ class YandexMailing(AbstractMailing):
         self._configured = True
 
     async def send_message(self, payload: PayloadT, recipients: Optional[str | Sequence[str]] = None) -> None:
-        if isinstance(payload, (EmailMessage, MIMEText)):
+        if isinstance(payload, MIMEText):
+            payload["From"] = self.sender + "@yandex.ru"
+            await self.client.send_message(payload)
+        elif isinstance(payload, EmailMessage):
             await self.client.send_message(payload, sender=self.sender)
         elif isinstance(payload, str):
             await self.client.sendmail(
-                sender=self.sender, recipients=recipients, message=payload)  # noqa
+                self.sender, recipients, payload)
         else:
             raise TypeError("Not supported message type")
 
@@ -43,7 +49,10 @@ class YandexMailing(AbstractMailing):
         await self.client.send_message(file, sender=self.sender)
 
     async def close(self):
-        await self.client.quit()
+        try:
+            await self.client.quit()
+        except SMTPServerDisconnected:
+            self.logger.warning("SMTP lib failed to close connection to yandex mailing")
 
 
 def load_yandex_mailing(config: MailingConfig) -> YandexMailing:

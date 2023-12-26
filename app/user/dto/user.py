@@ -3,6 +3,7 @@ from datetime import datetime
 from pydantic import Field, EmailStr
 
 from app.base.dto import DTO
+from app.files.dtos.input_file import InputFileType
 from app.user.enums import UserRoles
 from app.user.value_objects import UserID
 
@@ -36,3 +37,15 @@ class RegCodeDTO(DTO):
 
 class CreateRegCode(DTO):
 	key: str
+
+
+class UpdateUserDataDTO(DTO):
+	name: str | None
+	email: EmailStr | None
+	role: UserRoles | None
+	image: InputFileType | None
+
+
+class UpdateUserDTO(DTO):
+	user_id: UserID
+	data: UpdateUserDataDTO

@@ -48,8 +48,7 @@ class DBAuthSession(AbstractAuthSession):
 
     async def get(self, session_id: str) -> str | None:
         stmt = select(UserSession).where(UserSession.session_id == session_id)
-        ent = await self.session.execute(stmt)
-        ent = ent.unique().scalar_one_or_none()
+        ent = await self.session.scalar(stmt)
         if not ent:
             return
         return ent.id
@@ -60,6 +59,13 @@ class DBAuthSession(AbstractAuthSession):
 
         try:
             await self.session.commit()
+            # waiting until commit has been done
+            # because when it'll go to main page
+            # it will load user using get, and at the same time
+            # will try to use scalar, and overlaping each other
+            # so we need to wait until commit is done
+            # TODO: use more reliable way to wait until commit is done!
+            await asyncio.sleep(0.3)
         except IntegrityError:
             return
 

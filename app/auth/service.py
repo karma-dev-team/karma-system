@@ -1,3 +1,5 @@
+
+from email.mime.text import MIMEText
 from typing import Mapping, Any
 
 from app.auth.dto import AskResetPasswordDTO, ResetPasswordDTO
@@ -39,16 +41,19 @@ class AuthService(AbstractAuthService):
         reset_id = generate_jwt(
             data={
                 'email': user.email,
-                "id": user.id,
+                "id": str(user.id),
             },
             secret=self.config.security.secret_key,
         )
-        await self.email_adapter.send_message(payload=f"""
-            press this link to reset your password: {base_url}/password_reset/{reset_id}
-        """)
+        payload = MIMEText(f"""press this link to reset your password: {base_url}/auth/password_reset/{reset_id}""")
 
-    async def verify_reset_password(self, reset_id: str) -> Mapping[str, Any]:
-        data = decode_jwt(reset_id, self.config.security.secret_key)
+        payload['Subject'] = 'Test mail'
+        payload['To'] = user.email
+
+        await self.email_adapter.send_message(payload=payload)
+
+    async def verify_reset_password(self, reset_token: str) -> Mapping[str, Any]:
+        data = decode_jwt(reset_token, self.config.security.secret_key)
         if not data:
             raise AccessDenied()
 
@@ -61,7 +66,7 @@ class AuthService(AbstractAuthService):
         return data
 
     async def reset_password(self, dto: ResetPasswordDTO):
-        data = await self.verify_reset_password(dto.reset_id)
+        data = await self.verify_reset_password(dto.reset_token)
 
         user = await self.uow.user.get_user_by_id(data['id'])
         async with self.uow.transaction():

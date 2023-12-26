@@ -7,6 +7,7 @@ from attrs.validators import instance_of, max_len, optional
 
 from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity, entity
+from app.files.entities import PhotoEntity
 from app.user.dto.user import UserDTO
 from app.user.enums import UserRoles
 from app.user.events.user import UserCreated, GivenSuperUser, UserBlocked, UserPasswordChanged
@@ -24,6 +25,10 @@ class UserEntity(TimedEntity, Aggregate):
 	hashed_password: str = field(validator=instance_of(str))
 	blocked: bool = field(default=False)
 	superuser: bool = field(default=False)
+	photo: PhotoEntity | None = field(
+		validator=optional(instance_of(PhotoEntity)),
+		default=None,
+	)
 
 	@classmethod
 	def create(

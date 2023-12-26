@@ -62,6 +62,11 @@
             text-align: center;
             margin-top: 15px;
         }
+
+        .error-message {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 
@@ -70,7 +75,7 @@
         <div class="row justify-content-md-center login-container">
             <div class="col-md-6 col-lg-4">
 
-                <form class="form-signin">
+                <form class="form-signin" method="post">
 					<div class="logo-container">
                         <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley">
 						<!-- Replace the src attribute with the path to your logo image -->
@@ -79,21 +84,26 @@
                 	</div>
                     <h2 class="text-center">Войти</h2>
                     <div class="form-group">
-                        <label for="inputEmail">Email</label>
-                        <input type="email" id="inputEmail" class="form-control" required autofocus>
+                        <label for="username">Имя</label>
+                        <input type="text" id="username" class="form-control" required autofocus>
                     </div>
                     <div class="form-group">
-                        <label for="inputPassword">Пароль</label>
+                        <label for="password">Пароль</label>
                         <div class="input-group">
-                            <input type="password" id="inputPassword" class="form-control" required>
+                            <input type="password" id="password" class="form-control" name="password" required>
                             <div class="input-group-append password-toggle" onclick="togglePassword()">
                                 <span class="input-group-text" id="eyeIcon">&#128065;</span>
                             </div>
                         </div>
                     </div>
+                    {% if error_msg %}
+                    <div class="error-message">
+                        <p>{{ error_msg }}</p>
+                    </div>
+                    {% endif %}
                     <button class="btn btn-primary btn-block" type="submit">Войти</button>
 					<div class="register-link"><a href="{{ url_for('auth:register-get') }}">Нету аккаунта? Регистрация</a></div>
-                	<div class="forgot-password-link"><a href="#">Забыли пароль?</a></div>
+                	<div class="forgot-password-link"><a href="{{ url_for('auth:reset-password-page') }}">Забыли пароль?</a></div>
 				</form>
             </div>
         </div>
