@@ -115,4 +115,6 @@ class RegistrationCodeEntity(TimedEntity):
 	def register_user(self, user_id: UserID):
 		if self.user_id:
 			raise RegistrationCodeAlreadyUsed(self.id)
+		if isinstance(user_id, uuid.UUID):
+			user_id = UserID(suffix=user_id)
 		self.user_id = user_id
