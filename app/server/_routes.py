@@ -98,7 +98,7 @@ async def get_servers(
 	user: Annotated[UserEntity, Depends(optional_user)],
 ):
 	filter = GetServersDTO(
-		unregistered=False,
+		unregistered=True,
 		**filter.model_dump(exclude={'unregistered'}),
 	)
 	try:
