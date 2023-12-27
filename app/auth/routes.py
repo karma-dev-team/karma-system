@@ -2,6 +2,7 @@ import json
 from typing import Annotated, TYPE_CHECKING
 
 from fastapi import Body, Depends, APIRouter, Form, status, Response
+from fastapi_csrf_protect import CsrfProtect
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, HTMLResponse
 from starlette.templating import Jinja2Templates
@@ -40,7 +41,9 @@ async def register_user(
     email: str = Form(...),
     password: str = Form(...),
     registration_code: str = Form(...),
+    csrf_protect: CsrfProtect = Depends()
 ):
+    await csrf_protect.validate_csrf(request, cookie_key="csrftoken")
     try:
         user = await ioc.user_service().create_user(
             CreateUserDTO(
@@ -51,7 +54,10 @@ async def register_user(
             )
         )
     except (UserAlreadyExists, RegistrationCodeIsNotCorrect) as exc:
-        return templates.TemplateResponse("auth/register.html", {'request': request, 'error_msg': exc.message()})
+        response = templates.TemplateResponse(
+            "auth/register.html",
+            {'request': request, 'error_msg': exc.message()}
+        )
     else:
         session_id = generate_session_id(
             username=user.name,
@@ -63,20 +69,25 @@ async def register_user(
         response.set_cookie(key=AUTH_KEY, value=session_id, secure=True)
 
         await auth_session.set(session_id, str(user.id))
-
-        return response
+    csrf_protect.unset_csrf_cookie(response)  # prevent token reuse
+    return response
 
 
 @router.get("/auth/register", name="auth:register-get", response_class=HTMLResponse)
 async def register_user(
     request: Request,
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
+    csrf_protect: CsrfProtect = Depends(),
 ):
     if request.cookies.get(AUTH_KEY, None):
         response = RedirectResponse("/", status_code=302)
 
         return response
-    return templates.TemplateResponse("auth/register.html", {'request': request})
+    csrf_token, signed_token = csrf_protect.generate_csrf_tokens()
+    response = templates.TemplateResponse("auth/register.html", {'request': request, "csrf_token": csrf_token})
+
+    csrf_protect.set_csrf_cookie(signed_token, response)
+    return response
 
 
 @router.post("/auth/login", name='auth:login-post')
@@ -88,7 +99,9 @@ async def login_user(
     auth_session: Annotated[AbstractAuthSession, Depends(auth_session_provider)],
     username: str = Form(None),
     password: str = Form(None),
+    csrf_protect: CsrfProtect = Depends()
 ):
+    await csrf_protect.validate_csrf(request)
     try:
         user = await ioc.user_service().get_user(
             GetUserDTO(
@@ -103,16 +116,26 @@ async def login_user(
                 )
             )
         except UserDoesNotExists as exc:
-            return templates.TemplateResponse("auth/login.html", {'request': request, 'error_msg': exc.message()})
+            return templates.TemplateResponse(
+                "auth/login.html",
+                {
+                    'request': request,
+                    'error_msg': exc.message(),
+                    'csrf_token': csrf_protect.get_csrf_from_body(await request.body())
+                }
+            )
 
     if not UserEntity.verify_password(password, user.hashed_password):
-        return templates.TemplateResponse(
+        response = templates.TemplateResponse(
             "auth/login.html",
             {
                 'request': request,
-                'error_msg': 'Password or username is not correct'
+                'error_msg': 'Password or username is not correct',
+                'csrf_token': csrf_protect.get_csrf_from_body(await request.body())
             }
         )
+        csrf_protect.unset_csrf_cookie(response)  # prevent token reuse
+        return response
     response = RedirectResponse("/", status_code=302)
     if request.cookies.get(AUTH_KEY, None):
         return response
@@ -125,6 +148,7 @@ async def login_user(
     response.set_cookie(key=AUTH_KEY, value=session_id, secure=True)
 
     await auth_session.set(session_id, str(user.id))
+    csrf_protect.unset_csrf_cookie(response)  # prevent token reuse
 
     return response
 
@@ -133,13 +157,19 @@ async def login_user(
 async def login_user(
     request: Request,
     templates: Annotated[Jinja2Templates, Depends(templating_provider)],
+    csrf_protect: CsrfProtect = Depends(),
 ):
+
     if request.cookies.get(AUTH_KEY):
         response = RedirectResponse("/", status_code=302)
 
         return response
 
-    return templates.TemplateResponse("auth/login.html", {'request': request})
+    csrf_token, signed_token = csrf_protect.generate_csrf_tokens()
+    response = templates.TemplateResponse("auth/login.html", {'request': request, 'csrf_token': csrf_token})
+    csrf_protect.set_csrf_cookie(signed_token, response)
+
+    return response
 
 
 @router.get("/auth/reset-password", name="auth:reset-password-page", response_class=HTMLResponse)

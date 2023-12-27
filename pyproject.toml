@@ -30,6 +30,7 @@ aiohttp = "^3.9.1"
 aiofiles = "^23.2.1"
 aioboto3 = "^12.1.0"
 aiosmtplib = "^3.0.1"
+fastapi-csrf-protect = "^0.3.3"
 
 
 [build-system]
