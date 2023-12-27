@@ -32,7 +32,7 @@ class ServerEntity(TimedEntity, Aggregate):
 	karma: KarmaAmount = field(validator=instance_of(KarmaAmount), default=KarmaAmount(0))
 	game_id: GameID
 	game: GameEntity = field(validator=instance_of(GameEntity))
-	players: List[PlayerEntity] = field(factory=list)
+	# players: List[PlayerEntity] = field(factory=list)
 	tags: List[ServerTagEntity] = field(factory=list)
 	registered: bool = field(default=False)
 	country_code: str = field(default="RU")
