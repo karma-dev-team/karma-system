@@ -11,12 +11,10 @@ class GameEntity(TimedEntity):
 	id: GameID = field(factory=GameID.generate)
 	name: str
 	description: str
-	image: PhotoEntity | None = field(validator=optional(instance_of(PhotoEntity)))
 
 	@classmethod
 	def create(cls, name: str, description: str, image: PhotoEntity | None) -> "GameEntity":
 		return GameEntity(
 			name=name,
 			description=description,
-			image=image,
 		)

@@ -1,5 +1,6 @@
 from sqlalchemy import Table, Column, String, ForeignKey
 from sqlalchemy.orm import registry as registry_class
+from sqlalchemy.orm import relationship
 
 from app.base.database.consts import STRING_MID_LENGTH, STRING_MAX_LENGTH
 from app.base.database.models import id_columns, timed_columns

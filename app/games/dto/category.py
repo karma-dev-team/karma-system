@@ -10,7 +10,6 @@ class CategoryDTO(DTO, TimedDTO):
 	id: CategoryID
 	name: str
 	game_id: GameID
-	image: PhotoDTO | None
 
 
 class GetCategoryDTO(DTO):
@@ -26,7 +25,6 @@ class AddCategoryDTO(DTO):
 class UpdateCategoryDataDTO(DTO):
 	name: str
 	game_id: GameID
-	image: InputFileType | None = Field(default=None)
 
 
 class UpdateCategoryDTO(DTO):
