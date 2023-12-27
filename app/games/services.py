@@ -28,8 +28,8 @@ class GameService(AbstractGameService):
 		self.access_policy = access_policy
 
 	async def get_game(self, dto: GetGameDTO) -> GameDTO:
-		game = await self.uow.category.by_filter(
-			GetCategoryFilter(
+		game = await self.uow.game.by_filter(
+			GetGameFilter(
 				name=dto.name,
 				game_id=dto.game_id,
 			)

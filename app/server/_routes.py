@@ -1,8 +1,9 @@
+from ipaddress import IPv4Address, AddressValueError
 from typing import Annotated, Sequence
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Request, HTTPException
-from starlette.responses import HTMLResponse
+from fastapi import APIRouter, Depends, Request, HTTPException, Form
+from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.status import HTTP_403_FORBIDDEN
 from starlette.templating import Jinja2Templates
 
@@ -10,10 +11,12 @@ from app.auth.dependencies import user, role_required
 from app.auth.providers import optional_user
 from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
+from app.games.dto.game import GetGameDTO
 from app.games.exceptions import GameNotExists, CategoryNotExists
 from app.server.dto.player import GetPlayerDTO, PlayerDTO
 from app.server.dto.server import GetPlayersKarmaDTO, GetServerDTO, GetServersDTO, ApproveServersDTO, ServerDTO, \
 	QueueServerDTO
+from app.server.exceptions import ServerAlreadyExists, IPPortAlreadyTaken
 from app.server.responses import APITokenData
 from app.server.value_objects.ids import ServerID
 from app.templating.provider import templating_provider
@@ -144,11 +147,59 @@ async def approve_servers(
 
 @server_router.post("/server/queue", name="server:queue-server")
 async def queue_server(
-	dto: QueueServerDTO,
+	request: Request,
+	name: Annotated[str, Form()],
+	description: Annotated[str, Form()],
+	country: Annotated[str, Form()],
+	port: Annotated[int, Form()],
+	ip: Annotated[str, Form()],
+	game: Annotated[str, Form()],
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 	user: Annotated[UserEntity, Depends(user)],
-) -> ServerDTO:
-	return await ioc.server_service().queue_server(dto)
+	templates: Annotated[Jinja2Templates, Depends(templating_provider)],
+):
+	games = await ioc.game_service().get_games()
+	try:
+		ip = IPv4Address(ip)
+	except AddressValueError:
+		return templates.TemplateResponse(
+			"server/server-registration.html",
+			{
+				'request': request,
+				'user': user,
+				'games': games,
+				'error_msg': "Не правильный IPv4 адрес"
+			}
+		)
+	game = await ioc.game_service().get_game(
+		GetGameDTO(
+			name=game,
+		)
+	)
+	try:
+		await ioc.server_service().queue_server(
+			QueueServerDTO(
+				name=name,
+				description=description,
+				country_code=country,
+				ip=ip,
+				game_id=game.id,
+				port=port,
+			)
+		)
+	except (ServerAlreadyExists, IPPortAlreadyTaken):
+		return templates.TemplateResponse(
+			"server/server-registration.html",
+			{
+				'request': request,
+				'user': user,
+				'games': games,
+				'error_msg': "Сервер с таким именем или ip уже существует"
+			}
+		)
+	response = RedirectResponse("/", status_code=302)
+
+	return response
 
 
 @server_router.get('/server/queue', name="server:queue-server-page", response_class=HTMLResponse)
@@ -156,13 +207,23 @@ async def queue_server_page(
 	request: Request,
 	templates: Annotated[Jinja2Templates, Depends(templating_provider)],
 	user: Annotated[UserEntity, Depends(optional_user)],
+	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 ):
 	if not user:
 		raise HTTPException(
 			detail="Access denied",
 			status_code=HTTP_403_FORBIDDEN,
 		)
-	return templates.TemplateResponse("server/server-registration.html", {"request": request, 'user': user})
+	games = await ioc.game_service().get_games()
+
+	return templates.TemplateResponse(
+		"server/server-registration.html",
+		{
+			"request": request,
+			'user': user,
+			'games': games,
+		}
+	)
 
 
 @server_router.get(

@@ -44,7 +44,7 @@ class ApproveServersDTO(DTO):
 class QueueServerDTO(DTO):
 	name: str
 	description: str
-	icon: InputFileType | None
+	icon: InputFileType | None = Field(default=None)
 	country_code: str = "RU"
 	port: int
 	game_id: GameID

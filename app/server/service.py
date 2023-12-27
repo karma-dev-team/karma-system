@@ -108,7 +108,10 @@ class ServerService(AbstractServerService):
 	async def queue_server(self, dto: QueueServerDTO) -> ServerDTO:
 		if self.access_policy.anonymous():
 			raise AccessDenied
-		icon = await self.file_service.upload_file(dto.icon)
+		if dto.icon:
+			icon = await self.file_service.upload_file(dto.icon)
+		else:
+			icon = None
 
 		server = ServerEntity.create(
 			name=dto.name,

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% content head %}
+{% block head %}
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{ url_for('static', path='css/server-registration.css') }}">
   <title>Регистрация сервера</title>
@@ -19,28 +19,33 @@
         <a href="#" class="back-arrow"><img src="https://cdn-icons-png.flaticon.com/512/61/61022.png" alt="Назад" width="30" height="30"></a>
       </div>
       <div class="col-md-6 right-panel text-center">
-        <img src="your_logo.png" alt="Логотип" class="d-flex justify-content-center">
-        <p class="d-flex justify-content-center">Регистрация сервера</p>
+        <img src="{{ url_for('static', path='images/image-6@2x.png') }}" alt="Логотип" class="justify-content-center">
+        <h5 class="d-flex justify-content-center">Регистрация сервера</h5>
 
-        <form id="serverRegistrationForm">
+        <form id="serverRegistrationForm" method="post">
             <div class="form-group">
-            <label for="serverName">Имя сервера</label>
-            <input type="text" class="form-control" id="serverName" name="serverName" required>
+            <label for="name">Имя сервера</label>
+            <input type="text" class="form-control" id="name" name="name" required>
             </div>
 
             <div class="form-group">
-            <label for="shortDescription">Краткое описание</label>
-            <textarea class="form-control" id="shortDescription" name="shortDescription" required></textarea>
+            <label for="description">Краткое описание</label>
+            <textarea class="form-control" id="description" name="description" required></textarea>
             </div>
 
             <div class="form-group">
-            <label for="ipPort">IP с портом</label>
-            <input type="text" class="form-control" id="ipPort" name="ipPort" required>
+            <label for="ip">IP</label>
+            <input type="text" class="form-control" id="ip" name="ip" required>
             </div>
 
             <div class="form-group">
-            <label for="gameSelection">Выбор игр</label>
-            <select class="form-control" id="gameSelection" name="gameSelection" multiple>
+            <label for="port">Порт</label>
+            <input type="text" class="form-control" id="port" name="port" required>
+            </div>
+
+            <div class="form-group">
+            <label for="game">Выбор игр</label>
+            <select class="form-control" id="game" name="game" multiple>
                 {% for game in games %}
                     <option value="{{ game.name }}">{{ game.name }}</option>
                 {% endfor %}
@@ -48,9 +53,9 @@
             </div>
 
             <div class="form-group">
-            <label for="countrySelection">Выбор страны</label>
+            <label for="country">Выбор страны</label>
             <span style="color: red !important; display: inline; float: none;">*</span>
-            <select class="form-control" id="countrySelection" name="countrySelection">
+            <select class="form-control" id="country" name="country">
                 <option value="Afghanistan">Afghanistan</option>
                 <option value="Åland Islands">Åland Islands</option>
                 <option value="Albania">Albania</option>
@@ -301,9 +306,9 @@
             <div class="form-group">
             <label for="tags">Тэги</label>
             <div class="input-group" id="tagsContainer">
-                <input type="text" class="form-control" id="tagInput" placeholder="Добавить тег">
+                <input type="text" class="form-control" id="tags" placeholder="Добавить тег">
                 <div class="input-group-append">
-                <button type="button" class="btn btn-outline-secondary" onclick="addTag()">Добавить тег</button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="addTag()">Добавить тег</button>
                 </div>
             </div>
             </div>
@@ -311,15 +316,16 @@
             <div id="tagsList" class="form-group">
             </div>
 
+            {% if error_msg %}
             <div class="form-group">
-            <div class="error-message" id="errorMessage"></div>
+            <div class="error-message" id="errorMessage">{{ error_msg }}</div>
             </div>
+            {% endif %}
 
             <div class="form-group">
             <button type="submit" class="btn btn-primary">Отправить</button>
             </div>
         </form>
-
       </div>
     </div>
   </div>

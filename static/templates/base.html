@@ -31,6 +31,7 @@
                       {% if user.role.value == 'moderator' or user.role.value == 'admin' %}
                       <li class="text-elem"><a href="{{ url_for('server:queued-servers-page') }}">Ожидающие сервера</a></li>
                       {% endif %}
+                      <li class="text-elem"><a href="{{ url_for('server:queue-server-page') }}">Создать сервер</a></li>
                   {% endif %}
               </ul>
               <div class="right-nav">
