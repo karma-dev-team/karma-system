@@ -66,7 +66,8 @@ async def register_user(
         )
 
         response = RedirectResponse("/", status_code=302)
-        response.set_cookie(key=AUTH_KEY, value=session_id, secure=True)
+
+        response.set_cookie(key=AUTH_KEY, value=session_id, secure=True, domain=config.host)
 
         await auth_session.set(session_id, str(user.id))
     csrf_protect.unset_csrf_cookie(response)  # prevent token reuse
@@ -145,7 +146,7 @@ async def login_user(
         secret_key=config.security.secret_key
     )
 
-    response.set_cookie(key=AUTH_KEY, value=session_id, secure=True)
+    response.set_cookie(key=AUTH_KEY, value=session_id, secure=True, domain=config.host)
 
     await auth_session.set(session_id, str(user.id))
     csrf_protect.unset_csrf_cookie(response)  # prevent token reuse

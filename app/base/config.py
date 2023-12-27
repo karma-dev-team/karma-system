@@ -19,6 +19,7 @@ class GlobalConfig(BaseModel):
 	mailing: MailingConfig
 
 	debug: bool = True
+	host: str = "localhost"
 
 	class Config:
 		validate_assignment = True
