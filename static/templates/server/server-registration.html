@@ -44,6 +44,11 @@
             </div>
 
             <div class="form-group">
+            <label for="image">Ссылка на изображение</label>
+            <input type="url" class="form-control" id="image" name="image" required>
+            </div>
+
+            <div class="form-group">
             <label for="game">Выбор игр</label>
             <select class="form-control" id="game" name="game" multiple>
                 {% for game in games %}

@@ -66,7 +66,7 @@ class ServerEntity(TimedEntity, Aggregate):
 			game_id=game.id,
 			game=game,
 			icon=icon,
-			icon_id=None if not icon else icon.file_id,
+			icon_id=None if not icon else PhotoID(suffix=icon.file_id),
 			discord_link=discord_link,
 			website_link=website_link,
 		)

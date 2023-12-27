@@ -73,6 +73,7 @@ async def fetch_player(
 ) -> PlayerDTO:
 	return await ioc.player_service().get_player(data)
 
+
 @server_router.get("/api-token/{server_id}", name="server:get-api-token")
 async def get_api_token(
 	server_id: UUID,
@@ -159,6 +160,7 @@ async def queue_server(
 	port: Annotated[int, Form()],
 	ip: Annotated[str, Form()],
 	game: Annotated[str, Form()],
+	image: Annotated[str, Form()],
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 	user: Annotated[UserEntity, Depends(user)],
 	templates: Annotated[Jinja2Templates, Depends(templating_provider)],
@@ -190,6 +192,7 @@ async def queue_server(
 				ip=ip,
 				game_id=game.id,
 				port=port,
+				icon=image,
 			)
 		)
 	except (ServerAlreadyExists, IPPortAlreadyTaken):

@@ -120,15 +120,14 @@ class FileServiceImpl(FileService):
             file_dto: InputFile | str,
             type_: FileEntityTypes = None
     ) -> FileEntityTypes:  # не менять на дто сломается все
-        url = None
-        if file_dto.download_url:
+        if isinstance(file_dto, str):
+            url = file_dto
+        else:
             url = file_dto.download_url
-            if isinstance(file_dto, str):
-                url = file_dto
         if url:
             file = await self.uow.file.file_by_url(url, FileEntity)
             if not file:
-                file = await self.download_file_by_url(file_dto.download_url)
+                file = await self.download_file_by_url(url)
         elif file_dto.file:
             file = await self.download_file(file_dto.file)
         elif file_dto.file_id:
