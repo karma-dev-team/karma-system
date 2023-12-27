@@ -75,5 +75,32 @@
         <div class="owner1">Owner</div>
         <div class="line-for-1"></div>
       </div>
+      <div class="div39">
+          <button id="copyButton">Copy Content</button>
+      </div>
     </div>
+
+    <script>
+      document.getElementById('copyButton').addEventListener('click', function() {
+          // Контент, который вы хотите скопировать
+          var contentToCopy = '{{ api_token }}';
+
+          // Создаем временный элемент textarea для копирования текста
+          var textarea = document.createElement('textarea');
+          textarea.value = contentToCopy;
+
+          // Добавляем элемент в DOM
+          document.body.appendChild(textarea);
+
+          // Выделяем текст в textarea
+          textarea.select();
+          textarea.setSelectionRange(0, textarea.value.length);
+
+          // Копируем текст в буфер обмена
+          document.execCommand('copy');
+
+          // Удаляем временный элемент textarea
+          document.body.removeChild(textarea);
+      });
+    </script>
 {% endblock %}

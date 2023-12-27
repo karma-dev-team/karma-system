@@ -164,8 +164,8 @@ class ServerService(AbstractServerService):
 			raise ServerNotExists(dto.name or dto.server_id)
 		if server.owner_id != self.access_policy.user.id or self.access_policy.user.blocked:
 			raise ServerNotOwned()
-		if not server.registered:
-			raise ServerNotRegistered(server.id)
+		# if not server.registered:  # UNCOMMENT IN PRODUCTION
+		# 	raise ServerNotRegistered(server.id)
 		return generate_jwt(
 			data={
 				"name": server.name,

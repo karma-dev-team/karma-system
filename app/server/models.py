@@ -25,6 +25,7 @@ def load_models(registry: registry_class):
         Column("website_link", String(TEXT_MAX_LENGTH)),
         Column("country_code", String(STRING_MIN_LENGTH), nullable=False),
         Column("registered", Boolean, default=False),
+        Column("icon_id", ForeignKey('photos.file_id'), nullable=True),
     )
 
     server_tags = Table(
@@ -68,6 +69,12 @@ def load_models(registry: registry_class):
                 lazy="joined",
                 join_depth=4,
                 foreign_keys=server.c.game_id,
+            ),
+            'icon': relationship(
+                "PhotoEntity",
+                lazy="joined",
+                join_depth=4,
+                foreign_keys=server.c.icon_id
             )
         }
     )

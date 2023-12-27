@@ -8,6 +8,7 @@ from attrs import field
 from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity, entity
 from app.files.entities import PhotoEntity
+from app.files.value_objects import PhotoID
 from app.games.entities.game import GameEntity
 from app.games.value_objects.ids import GameID
 from app.server.dto.server import ServerDTO
@@ -37,6 +38,7 @@ class ServerEntity(TimedEntity, Aggregate):
 	registered: bool = field(default=False)
 	country_code: str = field(default="RU")
 	icon: PhotoEntity = field(default=None, validator=optional(instance_of(PhotoEntity)))
+	icon_id: PhotoID = field(default=None, validator=optional(instance_of(PhotoID)))
 	discord_link: str | None = field(default=None, validator=optional(instance_of(str)))
 	website_link: str | None = field(default=None, validator=optional(instance_of(str)))
 
@@ -64,6 +66,7 @@ class ServerEntity(TimedEntity, Aggregate):
 			game_id=game.id,
 			game=game,
 			icon=icon,
+			icon_id=None if not icon else icon.file_id,
 			discord_link=discord_link,
 			website_link=website_link,
 		)
