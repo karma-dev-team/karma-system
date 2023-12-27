@@ -210,6 +210,30 @@ async def queue_server(
 	return response
 
 
+@server_router.delete(
+	"/server/{server_id}",
+	name="server:delete-server",
+)
+async def delete_server(
+	server_id: UUID,
+	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+) -> ServerDTO:
+	return await ioc.server_service().delete_server(
+		GetServerDTO(server_id=ServerID(suffix=server_id))
+	)
+
+
+@server_router.get(
+	"/server/",
+	name='server:get-all-servers-api',
+)
+async def get_all_servers(
+	dto: Annotated[GetServersDTO, Depends()],
+	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+) -> Sequence[ServerDTO]:
+	return await ioc.server_service().get_servers(dto)
+
+
 @server_router.get('/server/queue', name="server:queue-server-page", response_class=HTMLResponse)
 async def queue_server_page(
 	request: Request,

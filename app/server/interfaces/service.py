@@ -29,6 +29,10 @@ class AbstractServerService:
 	async def get_servers(self, dto: GetServersDTO) -> list[ServerDTO]:
 		pass
 
+	@abc.abstractmethod
+	async def delete_server(self, dto: GetServerDTO) -> ServerDTO:
+		pass
+
 
 class AbstractPlayerService:
 	@abc.abstractmethod

@@ -11,10 +11,10 @@
         <img class="rectangle-icon" alt="" src="{{ url_for('static', path='images/rectangle-19@2x.png') }}" />
 
         <div class="minecraft-horse-container1">
-          {% if server.description %}
-          <p class="minecraft-horse1">{{ server.description }}</p>
-          {% else %}
+          {% if server.name %}
           <p class="minecraft-horse1">{{ server.name }}</p>
+          {% else %}
+          <p class="minecraft-horse1">{{ server.description }}</p>
           {% endif %}
         </div>
         <div class="div28">Описание</div>

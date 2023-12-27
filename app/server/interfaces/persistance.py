@@ -9,7 +9,7 @@ from app.server.dto.player import GetPlayerDTO
 from app.server.entities.player import PlayerEntity
 from app.server.entities.server import ServerEntity
 from app.server.entities.tag import ServerTagEntity
-from app.server.exceptions import ServerAlreadyExists, IPPortAlreadyTaken
+from app.server.exceptions import ServerAlreadyExists, IPPortAlreadyTaken, ServerNotExists
 from app.server.value_objects.ids import ServerID, PlayerID
 from app.server.value_objects.steam_id import SteamID
 
@@ -70,4 +70,7 @@ class AbstractServerRepo(Protocol):
 		pass
 
 	async def update_server(self, server: ServerEntity) -> ServerEntity:
+		pass
+
+	async def delete_server(self, server: ServerEntity) -> Result[ServerEntity, ServerNotExists]:
 		pass

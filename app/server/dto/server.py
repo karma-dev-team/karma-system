@@ -67,7 +67,7 @@ class QueueServerDTO(DTO):
 
 
 class GetServersDTO(DTO):
-	tags: list[str] | None = Field(default=None)
+	tags: str | None = Field(default=None)
 	game: str | None = Field(default=None)
 	unregistered: bool | None = Field(default=None)
 	name: str | None = Field(default=None)

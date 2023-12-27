@@ -211,3 +211,16 @@ class ServerService(AbstractServerService):
 		)
 
 		return [ServerDTO.model_validate(server) for server in servers]
+
+	async def delete_server(self, dto: GetServerDTO) -> ServerDTO:
+		server = await self.uow.server.find_by_filters(
+			GetServerFilter(
+				server_id=dto.server_id,
+			)
+		)
+		if not server:
+			raise ServerNotExists(dto.server_id)
+		async with self.uow.transaction():
+			await self.uow.server.delete_server(server)
+
+			return ServerDTO.model_validate(server)

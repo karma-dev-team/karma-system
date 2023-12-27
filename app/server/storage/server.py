@@ -6,8 +6,9 @@ from sqlalchemy.exc import IntegrityError
 from app.base.database.repo import SQLAlchemyRepo
 from app.base.database.result import Result
 from app.games.entities.category import CategoryEntity
+from app.games.exceptions import CategoryNotExists
 from app.server.entities.server import ServerEntity
-from app.server.exceptions import ServerAlreadyExists, IPPortAlreadyTaken
+from app.server.exceptions import ServerAlreadyExists, IPPortAlreadyTaken, ServerNotExists
 from app.server.interfaces.persistance import AbstractServerRepo, GetServersFilter, GetServerFilter
 from app.server.value_objects.ids import ServerID
 
@@ -74,3 +75,12 @@ class ServerRepositoryImpl(AbstractServerRepo, SQLAlchemyRepo):
 
         result = await self.session.execute(stmt)
         return result.unique().scalar_one_or_none()
+
+    async def delete_server(self, server: ServerEntity) -> Result[ServerEntity, ServerNotExists]:
+        try:
+            await self.session.delete(server)
+        except Exception:
+            await self.session.rollback()
+            return Result.fail(ServerNotExists(server.id))
+
+        return Result.ok(server)
