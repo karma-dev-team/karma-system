@@ -43,7 +43,7 @@ async def register_user(
     registration_code: str = Form(...),
     csrf_protect: CsrfProtect = Depends()
 ):
-    await csrf_protect.validate_csrf(request, cookie_key="csrftoken")
+    # await csrf_protect.validate_csrf(request, cookie_key="csrftoken")
     try:
         user = await ioc.user_service().create_user(
             CreateUserDTO(
@@ -101,7 +101,7 @@ async def login_user(
     password: str = Form(None),
     csrf_protect: CsrfProtect = Depends()
 ):
-    await csrf_protect.validate_csrf(request)
+    # await csrf_protect.validate_csrf(request)
     try:
         user = await ioc.user_service().get_user(
             GetUserDTO(

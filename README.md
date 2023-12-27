@@ -27,9 +27,10 @@ config.toml, .env для настройки приложения.
 
 Дефолтные настройки .env и config.toml сделаны для запуска через docker. 
 
-Запуск через докер требует ввода двух этих комманд. 
+Запуск через докер требует ввода трех этих комманд. 
 ```shell
 $ docker-compose -f deploy/docker-compose.yml build api 
+$ docker-compsoe -f deploy/docker-compose.yml --profile migration up 
 $ docker-compose -f deploy/docker-compose.yml up api 
 ```
 После этого проверьте в браузере адрес http://localhost:8000/ все должно работать 
