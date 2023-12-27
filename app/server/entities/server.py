@@ -8,6 +8,7 @@ from attrs import field
 from app.base.aggregate import Aggregate
 from app.base.entity import TimedEntity, entity
 from app.files.entities import PhotoEntity
+from app.games.entities.game import GameEntity
 from app.games.value_objects.ids import GameID
 from app.server.dto.server import ServerDTO
 from app.server.entities.player import PlayerEntity
@@ -30,6 +31,7 @@ class ServerEntity(TimedEntity, Aggregate):
 	owner_id: UserID
 	karma: KarmaAmount = field(validator=instance_of(KarmaAmount), default=KarmaAmount(0))
 	game_id: GameID
+	game: GameEntity = field(validator=instance_of(GameEntity))
 	players: List[PlayerEntity] = field(factory=list)
 	tags: List[ServerTagEntity] = field(factory=list)
 	registered: bool = field(default=False)
@@ -45,7 +47,7 @@ class ServerEntity(TimedEntity, Aggregate):
 		ipv4: IPv4Address,
 		port: int,
 		owner: UserEntity,
-		game_id: GameID,
+		game: GameEntity,
 		ipv6: IPv6Address | None = None,
 		tags: Optional[Union[list[ServerTagEntity], str, list]] = None,
 		icon: Optional[PhotoEntity] = None,
@@ -59,7 +61,8 @@ class ServerEntity(TimedEntity, Aggregate):
 			port=port,
 			owner_id=owner.id,
 			owner=owner,
-			game_id=game_id,
+			game_id=game.id,
+			game=game,
 			icon=icon,
 			discord_link=discord_link,
 			website_link=website_link,

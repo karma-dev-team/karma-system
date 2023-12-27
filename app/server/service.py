@@ -112,13 +112,14 @@ class ServerService(AbstractServerService):
 			icon = await self.file_service.upload_file(dto.icon)
 		else:
 			icon = None
+		game = await self.game_uow.game.by_filter(GetGameFilter(game_id=dto.game_id))
 
 		server = ServerEntity.create(
 			name=dto.name,
 			ipv4=dto.ip,
 			port=dto.port,
 			owner=self.access_policy.user,
-			game_id=dto.game_id,
+			game=game,
 			tags=dto.tags,
 			icon=icon,
 			website_link=str(dto.website_link),

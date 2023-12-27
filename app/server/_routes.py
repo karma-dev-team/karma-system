@@ -128,12 +128,17 @@ async def server_card_by_id(
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 	user: Annotated[UserEntity, Depends(optional_user)]
 ):
-	server = await ioc.server_service().get_server(
-		GetServerDTO(
-			server_id=ServerID.from_uuid(server_id)
-		)
+	dto = GetServerDTO(
+		server_id=ServerID.from_uuid(server_id)
 	)
-	return templates.TemplateResponse('server/server-card.html', {'request': request, 'server': server, 'user': user})
+	server = await ioc.server_service().get_server(dto)
+	api_token = await ioc.server_service().get_api_token(dto)
+	return templates.TemplateResponse('server/server-card.html', {
+		'request': request,
+		'server': server,
+		'user': user,
+		'api_token': api_token,
+	})
 
 
 @server_router.post("/server/approve", name="server:approve-server")
