@@ -1,11 +1,13 @@
+import json
 from typing import Annotated, TYPE_CHECKING
 
-from fastapi import Body, Depends, APIRouter, Form
+from fastapi import Body, Depends, APIRouter, Form, status, Response
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, HTMLResponse
 from starlette.templating import Jinja2Templates
 
 from app.auth.consts import AUTH_KEY
+from app.auth.dependencies import user_dependency
 from app.auth.dto import ResetPasswordDTO, AskResetPasswordDTO
 from app.auth.exceptions import AccessDenied
 from app.auth.providers import auth_session_provider
@@ -153,13 +155,19 @@ async def reset_password_page(
     return templates.TemplateResponse("auth/reset-password.html", {'request': request})
 
 
-@router.post("/auth/reset-password", name="auth:reset-password", response_class=HTMLResponse)
+@router.post("/auth/reset-password", name="auth:reset-password")
 async def ask_reset_password(
     request: Request,
-    email: Annotated[str, Form()],
+    dto: AskResetPasswordDTO,
     ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
-):
-    await ioc.auth_service().ask_reset_password(AskResetPasswordDTO(email=email), str(request.base_url))
+) -> Response:
+    try:
+        await ioc.auth_service().ask_reset_password(dto, str(request.base_url))
+    except UserDoesNotExists as exc:
+        return Response(
+            content=json.dumps({'message': exc.message(), "ok": False}),
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 @router.get(
@@ -200,4 +208,16 @@ async def handle_reset_password(
         )
     )
     response = RedirectResponse("/", status_code=302)
+    return response
+
+
+@router.get(
+    '/auth/logout',
+    name="auth:logout",
+    response_class=HTMLResponse,
+)
+async def logout():
+    response = RedirectResponse('/', status_code=status.HTTP_302_FOUND)
+    response.delete_cookie(AUTH_KEY, secure=True)
+
     return response

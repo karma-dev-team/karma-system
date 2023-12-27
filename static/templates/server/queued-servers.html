@@ -69,6 +69,14 @@
       grid-row: 1 / 2;
     }
 
+    .filter-form {
+        margin-bottom: 20px;
+    }
+
+    .wide-button {
+        width: 100%;
+    }
+
     /* Дополнительные стили по желанию */
   </style>
 {% endblock %}
@@ -100,13 +108,13 @@
       </main>
     <nav class="filter-sidebar">
         <!-- Форма фильтрации с использованием чекбоксов -->
-        <form>
+        <form class="filter-form">
           <div class="form-group">
             <label>Игра:</label>
             {% for game in games %}
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="{{ game.name }}">
-              <label class="form-check-label" for="{{ game.name }}">{{ game.name }}</label>
+              <input class="form-check-input" type="checkbox" id="game" name="game" value="{{ game.name }}">
+              <label class="form-check-label" for="game">{{ game.name }}</label>
             </div>
             {% endfor %}
             <!-- Добавьте другие чекбоксы для игр при необходимости -->
@@ -115,15 +123,15 @@
             <label>Жанр игр:</label>
             {% for category in categories %}
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="{{ category.name }}">
-              <label class="form-check-label" for="{{ category.name }}">{{ category.name }}</label>
+              <input class="form-check-input" type="checkbox" id="category" name="category" value="{{ category.name }}">
+              <label class="form-check-label" for="category">{{ category.name }}</label>
             </div>
             {% endfor %}
           </div>
           <!-- Добавьте другие критерии фильтрации при необходимости -->
-          <button type="submit" class="btn btn-primary">Применить фильтр</button>
+          <button type="submit" class="btn btn-primary wide-button">Применить фильтр</button>
         </form>
-        <button onclick="sendSelectedServers()" type="button" class="btn btn-primary">Одобрить выбранные сервера</button>
+        <button onclick="sendSelectedServers()" type="button" class="btn btn-primary wide-button">Одобрить сервера</button>
       </nav>
   </div>
 

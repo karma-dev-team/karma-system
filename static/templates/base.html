@@ -27,6 +27,11 @@
                   <li class="text-elem"><a href="{{ url_for('home') }}">Главная</a></li>
                   <li class="text-elem"><a href="{{ url_for('about') }}">О нас</a></li>
                   <li class="text-elem"><a href="{{ url_for('server:get-servers-page') }}">Сервера</a></li>
+                  {% if user %}
+                      {% if user.role.value == 'moderator' or user.role.value == 'admin' %}
+                      <li class="text-elem"><a href="{{ url_for('server:queued-servers-page') }}">Ожидающие сервера</a></li>
+                      {% endif %}
+                  {% endif %}
               </ul>
               <div class="right-nav">
                   <div class="search-container">
@@ -38,9 +43,13 @@
                     </form>
                   </div>
                 {% if user %}
-                <a class="account-icon" href="{{ url_for('user:get-account') }}"></a>
+                <a class="account-icon" href="{{ url_for('user:get-account') }}">
+                    <img src="{{ url_for('static', path='images/account-icon.png') }}" width="30" height="30">
+                </a>
                 {% else %}
-                <a class="sign-in-icon" href="{{ url_for('auth:login') }}"><img src="{{ url_for('static', path='images/sign-in.png') }}" alt="damn" width="30" height="30"></a>
+                <a class="sign-in-icon" href="{{ url_for('auth:login') }}">
+                    <img src="{{ url_for('static', path='images/sign-in.png') }}" alt="damn" width="30" height="30">
+                </a>
                 {% endif %}
               </div>
           </div>

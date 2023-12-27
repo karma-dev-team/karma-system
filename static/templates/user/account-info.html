@@ -17,7 +17,7 @@
     <img
       class="accountinfo-child"
       alt=""
-      src="{{ url_for('static', path='images/rectangle-19@2x.png') }}"
+      src="{{ url_for('static', path='images/account-icon.png') }}"
     />
     {% endif %}
 
@@ -33,5 +33,6 @@
     <div class="gmailcom">{{ user.email }}</div>
     <div class="div7">{{ user.created_at }}</div>
     <div class="tvoijopanasha">{{ user.name }}</div>
+    <div class="div8"><a href="{{ url_for('auth:logout') }}">Выйти с аккаунта</a></div>
   </div>
 {% endblock %}

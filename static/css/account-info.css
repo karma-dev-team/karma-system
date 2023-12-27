@@ -213,3 +213,18 @@
   color: var(--color-black);
   font-family: var(--font-inter);
 }
+
+.div8 {
+    position: absolute;
+    top: 450px;
+    left: 440px;
+    padding: 20px;
+    background-color: var(--color-grey);
+    border: 1px solid;
+    border-radius: 10px;
+}
+
+.div8 a {
+    text-decoration: none;
+    color: black;
+}

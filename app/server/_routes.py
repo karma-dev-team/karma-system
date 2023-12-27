@@ -6,7 +6,7 @@ from starlette.responses import HTMLResponse
 from starlette.status import HTTP_403_FORBIDDEN
 from starlette.templating import Jinja2Templates
 
-from app.auth.dependencies import user_dependency, user, role_required
+from app.auth.dependencies import user, role_required
 from app.auth.providers import optional_user
 from app.base.api.ioc import ioc_provider
 from app.base.ioc import AbstractIoContainer
@@ -79,7 +79,7 @@ async def get_api_token(
 	return APITokenData(token=(
 		await ioc.server_service().get_api_token(
 				GetServerDTO(
-					server_id=server_id,
+					server_id=ServerID.from_uuid(server_id),
 				)
 			)
 		)
@@ -100,7 +100,7 @@ async def get_servers(
 	)
 	try:
 		servers = await ioc.server_service().get_servers(filter)
-	except (GameNotExists, CategoryNotExists) as exc:
+	except (GameNotExists, CategoryNotExists):
 		servers = None
 	games = await ioc.game_service().get_games()
 	categories = await ioc.category_service().get_categories()
@@ -169,29 +169,31 @@ async def queue_server_page(
 	'/server/queued',
 	name='server:queued-servers-page',
 	response_class=HTMLResponse,
-	dependencies=[Depends(role_required(UserRoles.moderator))]
+	# dependencies=[Depends(role_required(UserRoles.moderator, UserRoles.admin))]
 )
 async def show_queued_servers(
 	request: Request,
+	filter: Annotated[GetServersDTO, Depends()],
 	templates: Annotated[Jinja2Templates, Depends(templating_provider)],
 	user: Annotated[UserEntity, Depends(user)],
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 ):
-	if not user:
-		raise HTTPException(
-			detail="Access denied",
-			status_code=HTTP_403_FORBIDDEN,
-		)
-	servers = ioc.server_service().get_servers(
+	servers = await ioc.server_service().get_servers(
 		GetServersDTO(
 			unregistered=True,
+			**filter.model_dump(exclude={'unregistered'})
 		)
 	)
+	games = await ioc.game_service().get_games()
+	categories = await ioc.category_service().get_categories()
+
 	return templates.TemplateResponse(
 		"server/queued-servers.html",
 		{
 			'request': request,
 			'user': user,
 			'servers': servers,
+			'games': games,
+			'categories': categories,
 		}
 	)

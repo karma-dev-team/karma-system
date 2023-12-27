@@ -67,6 +67,7 @@ class DBAuthSession(AbstractAuthSession):
             # TODO: use more reliable way to wait until commit is done!
             # await asyncio.sleep(0.3)
         except IntegrityError:
+            await self.session.rollback()
             return
 
 
