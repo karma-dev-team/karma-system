@@ -11,22 +11,34 @@
         <img class="rectangle-icon" alt="" src="{{ url_for('static', path='images/rectangle-19@2x.png') }}" />
 
         <div class="minecraft-horse-container1">
-          <p class="minecraft-horse1">MINECRAFT HORSE █████ ONLINE 24/7</p>
+          {% if server.description %}
+          <p class="minecraft-horse1">{{ server.description }}</p>
+          {% else %}
+          <p class="minecraft-horse1">{{ server.name }}</p>
+          {% endif %}
         </div>
         <div class="div28">Описание</div>
       </div>
       <div class="border-for-info-server1"></div>
       <div class="div29">
-        <div class="owner-text1">Taburetka3000</div>
+        <div class="owner-text1">{{ server.owner.name }}</div>
         <div class="status-text1">Online</div>
-        <div class="ip-text1">191.32.52.32:25041</div>
-        <div class="website-text1">Click to link</div>
-        <div class="discord-text1">Click to join</div>
-        <div class="players-column1">1000/2000</div>
+        <div class="ip-text1">{{ server.full_ip() }}</div>
+        {% if server.website_link %}
+        <div class="website-text1"><a href="{{ server.website_link }}" class="join-link">Click to link</a></div>
+        {% else %}
+        <div class="website-text1">No link</div>
+        {% endif %}
+        {% if server.discord %}
+        <div class="discord-text1"><a href="{{ server.discord_link }}" class="join-link">Click to join</a></div>
+        {% else %}
+        <div class="discord-text1">No link</div>
+        {% endif %}
+        <div class="players-column1">90/128</div>
         <div class="game-name1">{{ server.game.name }}</div>
         <div class="uptime-text1">99.9%</div>
         <div class="country-name1">{{ server.country_code}}</div>
-        <div class="last-pings-time2">2 сек. назад</div>
+        <div class="last-pings-time2">1 минуту. назад</div>
         <div class="horizontal-separator-parent">
           <div class="horizontal-separator11"></div>
           <div class="horizontal-separator12"></div>
@@ -58,7 +70,7 @@
           </div>
         </div>
         <div class="donatecraft-container">
-          <div class="div30">DonateCraft</div>
+          <div class="div30">{{ server.name }}</div>
         </div>
         <div class="owner1">Owner</div>
         <div class="line-for-1"></div>

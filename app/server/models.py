@@ -63,6 +63,12 @@ def load_models(registry: registry_class):
                 lazy="joined",
                 join_depth=4,
             ),
+            'game': relationship(
+                "GameEntity",
+                lazy="joined",
+                join_depth=4,
+                foreign_keys=server.c.game_id,
+            )
         }
     )
 

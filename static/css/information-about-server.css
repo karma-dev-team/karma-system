@@ -97,6 +97,10 @@
 .minecraft-horse1 {
   margin: 0;
 }
+.join-link {
+    text-decoration: none;
+    color: black;
+}
 .div28,
 .minecraft-horse-container1 {
   position: absolute;

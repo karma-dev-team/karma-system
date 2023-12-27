@@ -53,6 +53,13 @@ class TypeID:
     def uuid(self) -> UUID:
         return self.suffix
 
+    def as_str(self) -> str:
+        """
+        Used for jinja2 templating
+        because str function not available in jinja2
+        """
+        return str(self)
+
     def __str__(self):
         return str(self.suffix)
 

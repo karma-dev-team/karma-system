@@ -80,7 +80,7 @@
             <div class="server-card">
               <img src="{{ server.icon.file_url }}" alt="Server Icon" class="server-icon" width="50" height="50">
               <div class="server-details">
-                <div>{{ server.name }}</div>
+                <div><a href="{{ url_for('server:server-card', server_id=server.id.as_str()) }}">{{ server.name }}</a></div>
                 <div>{{ server.description }}</div>
                 <!-- Место для тегов -->
                 <div class="tags">

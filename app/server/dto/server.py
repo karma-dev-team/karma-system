@@ -7,6 +7,7 @@ from pydantic_core import Url
 from app.base.dto import DTO, TimedDTO
 from app.files.dtos.files import PhotoDTO
 from app.files.dtos.input_file import InputFileType
+from app.games.dto.game import GameDTO
 from app.games.value_objects.ids import GameID
 from app.server.dto.player import GetPlayerDTO
 from app.karma.value_objects.karma import KarmaAmount
@@ -25,12 +26,23 @@ class ServerDTO(DTO, TimedDTO):
 	name: str
 	port: int
 	ipv4: str
-	ipv6: str | None = None
+	ipv6: str | None = Field(default=None)
 	owner_id: UserID
 	owner: UserDTO | None
 	karma: KarmaAmount
 	game_id: GameID
+	game: GameDTO
 	icon: PhotoDTO | None = Field(default=None)
+
+	def full_ip(self) -> str:
+		ip = self.ipv4
+		# bug when checking for ipv6
+		# python and pydantic counts it as real value
+		# and ignores that ipv6 is None!!
+		# and continues with ipv6 empty one
+		# if str(self.ipv6) is not None:
+		# 	ip = self.ipv6
+		return ip + ":" + str(self.port)
 
 
 class GetPlayersKarmaDTO(DTO):
