@@ -15,7 +15,7 @@ from app.games.dto.game import GetGameDTO
 from app.games.exceptions import GameNotExists, CategoryNotExists
 from app.server.dto.player import GetPlayerDTO, PlayerDTO
 from app.server.dto.server import GetPlayersKarmaDTO, GetServerDTO, GetServersDTO, ApproveServersDTO, ServerDTO, \
-	QueueServerDTO
+	QueueServerDTO, UpdateServerDataDTO, UpdateServerDTO
 from app.server.exceptions import ServerAlreadyExists, IPPortAlreadyTaken
 from app.server.responses import APITokenData
 from app.server.value_objects.ids import ServerID
@@ -232,6 +232,23 @@ async def get_all_servers(
 	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
 ) -> Sequence[ServerDTO]:
 	return await ioc.server_service().get_servers(dto)
+
+
+@server_router.patch(
+	"/server/{server_id}",
+	name="server:update-server",
+)
+async def update_server(
+	server_id: UUID,
+	dto: UpdateServerDataDTO,
+	ioc: Annotated[AbstractIoContainer, Depends(ioc_provider)],
+) -> ServerDTO:
+	return await ioc.server_service().update_server(
+		UpdateServerDTO(
+			server_id=ServerID(suffix=server_id),
+			data=dto,
+		)
+	)
 
 
 @server_router.get('/server/queue', name="server:queue-server-page", response_class=HTMLResponse)

@@ -23,6 +23,7 @@ def load_models(registry: registry_class):
         Column("game_id", ForeignKey("games.id"), nullable=False),
         Column("discord_link", String(TEXT_MAX_LENGTH)),
         Column("website_link", String(TEXT_MAX_LENGTH)),
+        Column('description', String(TEXT_MAX_LENGTH), nullable=False),
         Column("country_code", String(STRING_MIN_LENGTH), nullable=False),
         Column("registered", Boolean, default=False),
         Column("icon_id", ForeignKey('photos.file_id'), nullable=True),

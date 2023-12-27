@@ -31,6 +31,7 @@ class ServerEntity(TimedEntity, Aggregate):
 	owner: UserEntity = field(validator=optional(instance_of(UserEntity)), default=None)
 	owner_id: UserID
 	karma: KarmaAmount = field(validator=instance_of(KarmaAmount), default=KarmaAmount(0))
+	description: str = field(validator=instance_of(str))
 	game_id: GameID
 	game: GameEntity = field(validator=instance_of(GameEntity))
 	# players: List[PlayerEntity] = field(factory=list)
@@ -49,6 +50,7 @@ class ServerEntity(TimedEntity, Aggregate):
 		ipv4: IPv4Address,
 		port: int,
 		owner: UserEntity,
+		description: str,
 		game: GameEntity,
 		ipv6: IPv6Address | None = None,
 		tags: Optional[Union[list[ServerTagEntity], str, list]] = None,
@@ -64,9 +66,10 @@ class ServerEntity(TimedEntity, Aggregate):
 			owner_id=owner.id,
 			owner=owner,
 			game_id=game.id,
+			description=description,
 			game=game,
 			icon=icon,
-			icon_id=None if not icon else PhotoID(suffix=icon.file_id),
+			icon_id=None if not icon else PhotoID(suffix=icon.file_id),  # bug
 			discord_link=discord_link,
 			website_link=website_link,
 		)

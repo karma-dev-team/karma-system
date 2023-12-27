@@ -3,7 +3,7 @@ from typing import Sequence
 
 from app.server.dto.player import GetPlayerDTO, PlayerDTO
 from app.server.dto.server import GetServerDTO, ServerDTO, GetPlayersKarmaDTO, ApproveServersDTO, GetServersDTO, \
-	QueueServerDTO
+	QueueServerDTO, UpdateServerDTO
 
 
 class AbstractServerService:
@@ -31,6 +31,10 @@ class AbstractServerService:
 
 	@abc.abstractmethod
 	async def delete_server(self, dto: GetServerDTO) -> ServerDTO:
+		pass
+
+	@abc.abstractmethod
+	async def update_server(self, dto: UpdateServerDTO) -> ServerDTO:
 		pass
 
 

@@ -12,7 +12,7 @@ from app.games.interfaces.persistance import GetGameFilter, GetCategoryFilter
 from app.games.interfaces.uow import AbstractGameUoW
 from app.server.dto.player import GetPlayerDTO, PlayerDTO
 from app.server.dto.server import GetPlayersKarmaDTO, ApproveServersDTO, ServerDTO, GetServerDTO, GetServersDTO, \
-	QueueServerDTO
+	QueueServerDTO, UpdateServerDTO
 from app.server.entities.player import PlayerEntity, PlayerSelector
 from app.server.entities.server import ServerEntity
 from app.server.exceptions import ServerNotExists, ServerNotOwned, PlayerDoesNotExists, ServerNotRegistered
@@ -119,6 +119,7 @@ class ServerService(AbstractServerService):
 			ipv4=dto.ip,
 			port=dto.port,
 			owner=self.access_policy.user,
+			description=dto.description,
 			game=game,
 			tags=dto.tags,
 			icon=icon,
@@ -224,3 +225,27 @@ class ServerService(AbstractServerService):
 			await self.uow.server.delete_server(server)
 
 			return ServerDTO.model_validate(server)
+
+	async def update_server(self, dto: UpdateServerDTO) -> ServerDTO:
+		server = await self.uow.server.find_by_filters(
+			GetServerFilter(
+				server_id=dto.server_id,
+			)
+		)
+		if not server:
+			raise ServerNotExists(dto.server_id)
+		if dto.data.icon:
+			icon = await self.file_service.upload_file(dto.data.icon)
+			server.icon = icon
+			server.icon_id = icon.file_id
+		if dto.data.name:
+			server.name = dto.data.name
+		if dto.data.description:
+			server.description = dto.data.description
+		if dto.data.ip:
+			server.ipv4 = dto.data.ip
+
+		async with self.uow.transaction():
+			result = await self.uow.server.update_server(server)
+
+			return ServerDTO.model_validate(result)

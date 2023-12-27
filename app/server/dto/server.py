@@ -72,3 +72,15 @@ class GetServersDTO(DTO):
 	unregistered: bool | None = Field(default=None)
 	name: str | None = Field(default=None)
 	category: str | None = Field(default=None)
+
+
+class UpdateServerDataDTO(DTO):
+	name: str | None = Field(default=None)
+	description: str | None = Field(default=None)
+	ip: IPv4Address | None = Field(default=None)
+	icon: InputFileType = Field(default=None)
+
+
+class UpdateServerDTO(DTO):
+	server_id: ServerID
+	data: UpdateServerDataDTO

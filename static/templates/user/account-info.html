@@ -2,6 +2,21 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', path='css/account-info.css') }}" />
+<style>
+.accountinfo-item {
+    position: absolute;
+    top: 147px;
+    left: 120px;
+    border-radius: 200px;
+    {% if user.photo %}
+    background-image: {{ url_for('static', path=user.photo.file_url) }};
+    {% else %}
+    background-color: var(--color-gainsboro);
+    {% endif %}
+    width: 263px;
+    height: 263px;
+}
+</style>
 {% endblock %}
 
 {% block content %}
@@ -22,7 +37,10 @@
     {% endif %}
 
     <div class="accountinfo-item"></div>
-    <img class="image-14-icon" alt="" src="{{ url_for('static', path='images/image-13@2x.png') }}" style="opacity: 1"/>
+    <input type="file" id="fileInput" style="display:none;" class="image-14-icon">
+    <button class="image-14-icon" onclick="openFileInput()">
+      <img alt="" src="{{ url_for('static', path='images/image-13@2x.png') }}" style="opacity: 1; width: 42px; height: 42px;"/>
+    </button>
 
     <div class="accountinfo-inner"></div>
     <div class="div4">Имя</div>
@@ -35,4 +53,38 @@
     <div class="tvoijopanasha">{{ user.name }}</div>
     <div class="div8"><a href="{{ url_for('auth:logout') }}">Выйти с аккаунта</a></div>
   </div>
+<script>
+    function openFileInput() {
+        document.getElementById('fileInput').click();
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function() {
+        var fileInput = document.getElementById('fileInput');
+        var file = fileInput.files[0];
+
+        if (file) {
+            var formData = new FormData();
+            formData.append('file', file);
+
+            fetch('{{ url_for('file:upload-file-form') }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // или response.text() в зависимости от ожидаемого формата ответа
+                } else {
+                    throw new Error('Произошла ошибка при загрузке фото.');
+                }
+            })
+            .then(data => {
+                alert('Фото успешно загружено!');
+                // обработка данных, если необходимо
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+        }
+    });
+  </script>
 {% endblock %}
