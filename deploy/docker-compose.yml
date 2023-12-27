@@ -54,7 +54,8 @@ services:
                 condition: service_healthy
             redis:
                 condition: service_healthy
-            - db_migration
+            db_migration:
+                condition: service_started
         expose:
             - "8000"
         ports:
