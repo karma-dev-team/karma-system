@@ -205,7 +205,7 @@ class ServerService(AbstractServerService):
 		servers = await self.uow.server.filter(
 			GetServersFilter(
 				# tags=tags,  # TODO
-				game_id=game.id if game else None,
+				game_id=None if not game else game.id,
 				unregistered=dto.unregistered,
 				category_id=category.id if category else None,
 			)

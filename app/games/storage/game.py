@@ -29,7 +29,7 @@ class GameRepository(AbstractGamesRepository, SQLAlchemyRepo):
 
         result = await self.session.execute(stmt)
 
-        return result.unique().scalar_one_or_none()
+        return result.unique().first()[0]
 
     async def add_game(self, game: GameEntity) -> Result[GameEntity, GameAlreadyExists]:
         self.session.add(game)
