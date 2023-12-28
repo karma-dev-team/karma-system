@@ -41,9 +41,7 @@ class KarmaService(AbstractKarmaService):
 
 	async def handle_ban(self, dto: HandleBanDTO) -> PlayerDTO:
 		ply = await self.server_uow.player.find_by_filters(
-			PlayerFilter(
-				**dto.ply_id.model_dump()
-			)
+			PlayerFilter.from_dto(dto.ply_id)
 		)
 		if not ply:
 			raise PlayerDoesNotExists(ply_data=dto.ply_id)

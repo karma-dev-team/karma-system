@@ -69,7 +69,8 @@ class PlayerEntity(TimedEntity, Aggregate):
 
 		self.add_event(
 			PlayerKarmaChanged(
-				ply=PlayerDTO.model_validate(self)
+				ply=PlayerDTO.model_validate(self),
+				delta_karma=delta_karma,
 			)
 		)
 

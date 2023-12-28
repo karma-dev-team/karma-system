@@ -1,4 +1,5 @@
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import Header, Depends
 
@@ -17,17 +18,15 @@ async def get_server(
 	config: Annotated[GlobalConfig, Depends(config_provider)],
 	server_token: str = Header(..., convert_underscores=False, alias='X-Api-Token'),
 ) -> ServerEntity:
-	if not server_token or not server_token.startswith('Bearer'):
-		raise IncorrectAPIServerToken("Incorrect token")
 	data = decode_jwt(server_token, config.security.secret_key)
-	if ("id", "name") not in data:
+	if "id" not in data.keys():
 		raise IncorrectAPIServerToken("Incorrect token")
 	id = data["id"]
 	name = data["name"]
 	server = await uow.server.find_by_filters(
 		GetServerFilter(
 			name=name,
-			server_id=ServerID.from_string(id)
+			server_id=ServerID(suffix=UUID(id))
 		)
 	)
 	if not server:

@@ -17,9 +17,9 @@ def sigmoid_function(x: Number, threshold: Number, scale_factor=SCALE_FACTOR) ->
 
 def calc_karma_koef(server_karma: Number, player_karma: Number) -> Number:
 	if server_karma > player_karma:
-		k = player_karma / server_karma
+		k = (player_karma + 1) / (server_karma + 1)
 	else:
-		k = server_karma / player_karma
+		k = (server_karma + 1) / (player_karma + 1)
 
 	return k
 
@@ -28,23 +28,22 @@ def calc_ban_karma(
 	time: Number,
 	server_karma: Number,
 	player_karma: Number,
-	threshold: Number = MAX_BAN_THRESHOLD,
 ) -> Number:
-	return timed_sigmoid_function(time, threshold) * calc_karma_koef(server_karma, player_karma)
+	return time * calc_karma_koef(server_karma, player_karma)
 
 
 def calc_like_karma(
 	server_karma: Number,
 	player_karma: Number
 ) -> Number:
-	return sigmoid_function(calc_karma_koef(server_karma, player_karma), LIKE_BASE_DELTA)
+	return calc_karma_koef(server_karma, player_karma) * LIKE_BASE_DELTA
 
 
 def calc_warn_karma(
 	server_karma: Number,
 	player_karma: Number,
 ) -> Number:
-	return sigmoid_function(calc_karma_koef(server_karma, player_karma), WARN_BASE_DELTA)
+	return calc_karma_koef(server_karma, player_karma) * WARN_BASE_DELTA
 
 
 def calc_perma_ban_karma(
