@@ -53,6 +53,24 @@ def get_dto_type_by_ent(file: FileDTOTypes) -> Type[FileDTOTypes]:
         raise TypeError("not supported type")
 
 
+class DownloadFromInternet:
+    pass
+
+
+class UploadStreamDownload:
+    pass
+
+
+
+class _SaveFile:
+    def __init__(
+        self,
+
+    ):
+        pass
+
+
+
 class FileServiceImpl(FileService):
     def __init__(
         self,
@@ -93,7 +111,6 @@ class FileServiceImpl(FileService):
                 file.file_url = path_url
                 # idk why, but this code is too fast.
                 # somehow need to remove this awful peace of code....
-                await asyncio.sleep(0.2)
                 file_metadata = await self.uow.file.add_file(file)
                 return file_metadata.value
 
