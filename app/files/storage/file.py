@@ -1,4 +1,7 @@
+from typing import Sequence
+
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 from app.base.database.repo import SQLAlchemyRepo
 from app.base.database.result import Result
@@ -38,16 +41,15 @@ class FileRepo(SQLAlchemyRepo, AbstractFileRepo):
         file = await self.session.scalar(stmt)
         return file
 
-    async def add_file(self, file: FileEntityTypes) -> Result[FileEntityTypes, None]:
-        self.session.add(file)
+    async def add_files(self, *files: FileEntityTypes) -> Result[Sequence[FileEntityTypes], None]:
+        self.session.add_all(files)
 
         try:
-            await self.session.commit()
-            await self.session.refresh(file)
-        except Exception:
+            await self.session.flush(files)
+        except IntegrityError:
             raise
 
-        return Result.ok(file)
+        return Result.ok(files)
 
     async def edit_file(self, file: FileEntityTypes) -> Result[FileEntityTypes, FileNotExists]:
         try:

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app.base.api.middlewares.content_size_limit import ContentSizeLimitMiddleware
+from app.base.api.middlewares.logger import LoggingMiddleware
 
 origins = [
     "http://localhost",
@@ -29,3 +30,5 @@ def load_middlewares(
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    app.add_middleware(LoggingMiddleware, debug=debug)

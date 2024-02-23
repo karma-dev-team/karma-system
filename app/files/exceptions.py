@@ -13,6 +13,7 @@ class FileTypeIncorrect(ApplicationError):
 
 class UnableToDownloadFile(ApplicationError):
 	download_url: str
+	message_content: str
 
 	def message(self) -> str:
 		return "unable to download file"

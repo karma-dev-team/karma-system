@@ -1,9 +1,13 @@
+import asyncio
 import os.path
 from pathlib import Path
+from typing import Sequence
 
 import aiofiles
+from aiohttp import StreamReader
+from aiohttp.client_proto import ResponseHandler
 
-from app.files.file_storage.base import FileT, File, AbstractFileStorage
+from app.files.file_storage.base import File, AbstractFileStorage
 
 
 class LocalStorage(AbstractFileStorage):
@@ -26,30 +30,32 @@ class LocalStorage(AbstractFileStorage):
             base_url = self.base_url
         return f"{base_url}/{key}"
 
-    async def upload(self, body: FileT, key: str, mime_type: str) -> str:
+    async def upload(self, file: File) -> str:
         if not os.path.exists(self.base_path):
             os.mkdir(self.base_path)
-        file = File(
-            path=str(self._build_path(key)),
-            mime_type=mime_type,
-            body=body,
-        )
+        file.set_path(self._build_path(file.key))
+
         async with aiofiles.open(file.path, "wb") as new_file:
             # not effective, but does not matter
-            content = await body.read()
+            content = await file.body.read()
 
             await new_file.write(content)
-        return self._build_url(key)
+            return self._build_url(file.key)
+
+    async def upload_files(self, *files: File) -> Sequence[str]:
+        for file in files:
+            yield await self.upload(file)
 
     async def get_file(self, key: str) -> File:
         path = self._build_path(key)
         if not os.path.exists(path):
             raise FileNotFoundError
-        file = aiofiles.open(path, "rb")
+        file = await aiofiles.open(path, "rb")
         file = File(
             body=file,
             mime_type=None,
             path=str(path),
+            key=key,
         )
         return file
 

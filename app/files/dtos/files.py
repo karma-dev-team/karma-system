@@ -29,4 +29,4 @@ class VideoDTO(FileBase):
 
 
 # dont wrap Union into Type, it will crash fastapi
-FileDTOTypes = Union[DocumentDTO, PhotoDTO, VideoDTO]
+FileDTOTypes = Type[Union[DocumentDTO, PhotoDTO, VideoDTO]]

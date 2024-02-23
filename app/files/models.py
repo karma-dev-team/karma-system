@@ -26,8 +26,6 @@ def load_models(registry: registry_class):
 		registry.metadata,
 		*timed_columns(),
 		*files_columns(),
-		Column("width", Integer, nullable=False),
-		Column("height", Integer, nullable=False),
 		Column("duration", Integer, nullable=False),
 	)
 
@@ -36,8 +34,6 @@ def load_models(registry: registry_class):
 		registry.metadata,
 		*timed_columns(),
 		*files_columns(),
-		Column("width", Integer, nullable=False),
-		Column("height", Integer, nullable=False),
 	)
 
 	document_table = Table(

@@ -18,7 +18,7 @@ from app.base.ioc import AbstractIoContainer
 from app.files.file_storage.base import AbstractFileStorage
 from app.files.interfaces.services import FileService
 from app.files.providers import file_storage_provider
-from app.files.services import FileServiceImpl
+from app.files.services import FilesServiceImpl
 from app.games.interfaces.service import AbstractCategoryService, AbstractGameService
 from app.games.services import GameService, CategoryService
 
@@ -99,10 +99,10 @@ class IoContainerImpl(AbstractIoContainer):
         )
 
     def file_service(self) -> FileService:
-        return FileServiceImpl(
+        return FilesServiceImpl(
             uow=self.uow,
             file_storage=self.file_storage,
-            session=self.session,
+            aiohttp_session=self.session,
         )
 
     def auth_service(self) -> AbstractAuthService:

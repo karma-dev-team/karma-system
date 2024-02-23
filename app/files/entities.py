@@ -21,21 +21,14 @@ class FileEntity:
 
 @entity
 class PhotoEntity(FileEntity):
-    width: int = field(validator=instance_of(int))
-    height: int = field(validator=instance_of(int))
-
     @classmethod
     def create_photo(
         cls,
-        width: int,
-        height: int,
         file_url: str | Url,
         mime_type: str | None = None,
         file_name: str | None = None,
     ) -> "PhotoEntity":
         return PhotoEntity(
-            width=width,
-            height=height,
             file_url=file_url,
             file_name=file_name,
             mime_type=mime_type,
@@ -44,24 +37,18 @@ class PhotoEntity(FileEntity):
 
 @entity
 class VideoEntity(FileEntity):
-    width: int = field(validator=instance_of(int))
-    height: int = field(validator=instance_of(int))
     duration: int = field(validator=instance_of(int))
 
     @classmethod
     def create_video(
         cls,
-        width: int,
-        height: int,
         file_url: str | Url,
         duration: int,
         mime_type: str | None = None,
         file_name: str | None = None,
     ) -> "VideoEntity":
         return VideoEntity(
-            width=width,
             duration=duration,
-            height=height,
             file_url=file_url,
             file_name=file_name,
             mime_type=mime_type,

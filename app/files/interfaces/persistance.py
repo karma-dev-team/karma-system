@@ -19,7 +19,7 @@ class AbstractFileRepo(Protocol):
     ) -> FileType | None:
         pass
 
-    async def add_file(self, file: FileType) -> Result[FileType, None]:
+    async def add_files(self, *file: FileType) -> Result[FileType, None]:
         pass
 
     async def edit_file(self, file: FileType) -> Result[FileType, FileNotExists]:

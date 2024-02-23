@@ -1,10 +1,7 @@
 from typing import Optional, Type
 
+from app.base.api.middlewares.exceptions import ContentSizeExceeded
 from app.base.logging.logger import get_logger
-
-
-class ContentSizeExceeded(Exception):
-    pass
 
 
 # copy paste from https://github.com/steinnes/content-size-limit-asgi
@@ -54,6 +51,8 @@ class ContentSizeLimitMiddleware:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
-
-        wrapper = self.receive_wrapper(receive)
-        await self.app(scope, wrapper, send)
+        for header in scope.get("headers", None):
+            if header[1] == "application/json":
+                wrapper = self.receive_wrapper(receive)
+                await self.app(scope, wrapper, send)
+        await self.app(scope, receive, send)

@@ -1,19 +1,17 @@
-import asyncio
-import uuid
 from asyncio import StreamReader
-from typing import Type
 
 from aiohttp import ClientSession
 
 from app.base.logging.logger import get_logger
-from app.base.typeid import TypeID
-from app.files.dtos.files import FileDTOTypes, PhotoDTO, DocumentDTO, VideoDTO
-from app.files.dtos.input_file import InputFile
-from app.files.entities import PhotoEntity, VideoEntity, FileEntityTypes, DocumentEntity, FileEntity
-from app.files.exceptions import FileTypeIncorrect, UnableToDownloadFile
-from app.files.file_storage.base import AbstractFileStorage
+from app.base.use_cases import UseCase
+from app.files.dtos.files import PhotoDTO, DocumentDTO, VideoDTO, FileDTOTypes
+from app.files.dtos.input_file import InputFileType
+from app.files.entities import FileEntityTypes, PhotoEntity, VideoEntity, DocumentEntity, FileEntity
+from app.files.exceptions import UnableToDownloadFile
+from app.files.file_storage.base import AbstractFileStorage, File
 from app.files.interfaces.services import FileService
 from app.files.interfaces.uow import AbstractFileUoW
+
 
 logger = get_logger()
 
@@ -31,6 +29,13 @@ VIDEO_MIMES = [
     "video/mp4",
 ]
 
+DOCUMENT_MIMES = [
+    'application/pdf',
+    'application/vnd.ms-powerpoint',
+    'text/plain',
+    'text/html',
+]
+
 
 def get_type_by_mime_type(mime_type: str) -> FileEntityTypes | None:
     mime_type = mime_type.strip(" ")
@@ -38,121 +43,117 @@ def get_type_by_mime_type(mime_type: str) -> FileEntityTypes | None:
         return PhotoEntity
     elif mime_type in VIDEO_MIMES:
         return VideoEntity
+    elif mime_type in DOCUMENT_MIMES:
+        return DocumentEntity
     else:
         raise ValueError("not supported type", mime_type)
 
 
-def get_dto_type_by_ent(file: FileDTOTypes) -> Type[FileDTOTypes]:
-    if file is PhotoEntity or isinstance(file, PhotoEntity):
-        return PhotoDTO
-    elif file is DocumentEntity or isinstance(file, DocumentEntity):
-        return DocumentDTO
-    elif file is VideoEntity or isinstance(file, VideoEntity):
-        return VideoDTO
-    else:
-        raise TypeError("not supported type")
+dto_ent_to_types = {
+    PhotoEntity: PhotoDTO,
+    DocumentEntity: DocumentDTO,
+    VideoEntity: VideoDTO,
+}
 
 
-class DownloadFromInternet:
-    pass
+def get_dto_type_by_ent(file: FileEntityTypes) -> FileDTOTypes:
+    return dto_ent_to_types.get(file)
 
 
-class UploadStreamDownload:
-    pass
+class DownloadFromInternet(UseCase[str, FileEntityTypes]):
+    def __init__(
+        self,
+        file_storage: AbstractFileStorage,
+        uow: AbstractFileUoW,
+        aiohttp_session: ClientSession,
+    ):
+        self.aiohttp_session = aiohttp_session
+        self.file_storage = file_storage
+        self.uow = uow
 
+    async def __call__(self, download_url: str) -> FileEntityTypes:
+        async with self.aiohttp_session.get(download_url) as response:
+            if response.status != 200:
+                raise UnableToDownloadFile(download_url, str(response.status))
+            mime_type = response.headers.get("Content-Type")
+
+            downloader = DownloadFromBytes(self.file_storage, self.uow)
+            return await downloader.download(response.content, mime_type=mime_type)
+
+
+class DownloadFromBytes:
+    def __init__(
+            self,
+            file_storage: AbstractFileStorage,
+            uow: AbstractFileUoW,
+    ):
+        self.file_storage = file_storage
+        self.uow = uow
+
+    async def download(self, data: StreamReader | bytes, mime_type: str, key: str | None = None) -> FileEntityTypes:
+        if isinstance(data, bytes):
+            file_data = StreamReader()
+            file_data.feed_data(data)
+        async with self.uow.transaction():
+            metadata = get_type_by_mime_type(mime_type)()
+
+            file = File(
+                body=data,
+                key=str(key or metadata.file_id),
+            )
+
+            return await _SaveFile(
+                file_storage=self.file_storage,
+                uow=self.uow,
+            )(file, metadata)
 
 
 class _SaveFile:
     def __init__(
         self,
-
-    ):
-        pass
-
-
-
-class FileServiceImpl(FileService):
-    def __init__(
-        self,
-        uow: AbstractFileUoW,
         file_storage: AbstractFileStorage,
-        session: ClientSession,
-    ) -> None:
+        uow: AbstractFileUoW,
+    ):
         self.file_storage = file_storage
         self.uow = uow
-        self.session = session
 
-    async def download_file_by_url(self, download_url: str) -> FileEntityTypes:
-        async with self.session.get(str(download_url)) as response:
-            if response.status != 200:
-                raise UnableToDownloadFile(download_url)
-            mime_type = response.headers.get("Content-Type")
-
-            ent_type = get_type_by_mime_type(mime_type)
-            if ent_type is PhotoEntity:
-                file = PhotoEntity(
-                    width=1000,  # stub
-                    height=1000,  # stub
-                )
-            elif ent_type is DocumentEntity:
-                file = DocumentEntity(
-                )
-            elif ent_type is VideoEntity:
-                raise NotImplementedError
-            else:
-                raise ValueError("Not supported mime type")
-
-            async with self.uow.transaction():
-                path_url = await self.file_storage.upload(
-                    body=response.content,
-                    key=str(file.file_id),
-                    mime_type=mime_type,
-                )
-                file.file_url = path_url
-                # idk why, but this code is too fast.
-                # somehow need to remove this awful peace of code....
-                file_metadata = await self.uow.file.add_file(file)
-                return file_metadata.value
-
-    async def download_file(self, file: bytes) -> FileEntityTypes:
-        file_ent = PhotoEntity(
-            width=1000,  # stub
-            height=1000,  # stub
-        )
-
-        local_file = StreamReader()
-        local_file.feed_data(file)
+    async def __call__(self, file: File, metadata: FileEntityTypes) -> FileEntityTypes:
         async with self.uow.transaction():
-            path_url = await self.file_storage.upload(
-                local_file,
-                key=str(file_ent.file_id),
-                mime_type="images",
-            )
-            file_ent.file_url = path_url
-            file_metadata = await self.uow.file.add_file(file)
+            path_url = await self.file_storage.upload(file)
+            metadata.file_url = path_url
+            file_metadata = await self.uow.file.add_files(metadata)
             return file_metadata.value
 
-    async def upload_file(
-            self,
-            file_dto: InputFile | str,
-            type_: FileEntityTypes = None
-    ) -> FileEntityTypes:  # не менять на дто сломается все
-        if isinstance(file_dto, str):
-            url = file_dto
-        else:
-            url = file_dto.download_url
-        if url:
-            file = await self.uow.file.file_by_url(url, FileEntity)
-            if not file:
-                file = await self.download_file_by_url(url)
-        elif file_dto.file:
-            file = await self.download_file(file_dto.file)
-        elif file_dto.file_id:
-            file = await self.uow.file.file_by_unique_id(file_dto.file_id, FileEntity)
-        else:
-            raise ValueError("No fileId, mimetype, or download url")
-        if type_:
-            if not isinstance(file, type_):
-                raise FileTypeIncorrect
 
-        return file
+class FilesServiceImpl(FileService):
+    def __init__(
+        self,
+        file_storage: AbstractFileStorage,
+        uow: AbstractFileUoW,
+        aiohttp_session: ClientSession,
+    ):
+        self.file_storage = file_storage
+        self.uow = uow
+        self.aiohttp_session = aiohttp_session
+
+    async def upload_file(self, file: InputFileType) -> FileEntityTypes:
+        file_url = file if isinstance(file, str) else file.download_url
+        if file_url:
+            return await DownloadFromInternet(
+                file_storage=self.file_storage,
+                uow=self.uow,
+                aiohttp_session=self.aiohttp_session,
+            )(str(file_url))
+
+        elif file.file:
+            return await DownloadFromBytes(
+                file_storage=self.file_storage,
+                uow=self.uow,
+            ).download(file.file, file.mime_type)
+        elif file.file_id:
+            return await self.uow.file.file_by_unique_id(
+                file.file_id,
+                FileEntity,
+            )
+
+        raise ValueError("Not correct Input file")
